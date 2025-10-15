@@ -25,9 +25,8 @@ COPY requirements.txt pyproject.toml ./
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Instalar dependencias con cache mount
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip && \
+# Instalar dependencias
+RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Descargar recursos de NLTK en el builder
