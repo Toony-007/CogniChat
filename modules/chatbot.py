@@ -1,22 +1,41 @@
 """
-Pestaña del chatbot
+Pestaña del chatbot con historial y exportación
 """
 
 import streamlit as st
 import time
 from datetime import datetime
-from utils.error_handler import ErrorHandler
-from utils.logger import setup_logger
-from utils.ollama_client import OllamaClient
-from utils.traceability import TraceabilityManager
-from utils.rag_processor import rag_processor
 from config.settings import config
+from utils.logger import setup_logger
+from utils.error_handler import ErrorHandler
+from utils.ollama_client import OllamaClient
+from utils.rag_processor import rag_processor
+from utils.chat_history import chat_history_manager
+from utils.traceability import TraceabilityManager
+
+# Importar exportadores con manejo de errores
+try:
+    from utils.chat_exporter import chat_exporter
+    EXPORT_AVAILABLE = True
+except ImportError:
+    EXPORT_AVAILABLE = False
+
+# Importar pyperclip con manejo de errores
+try:
+    import pyperclip
+    CLIPBOARD_AVAILABLE = True
+except ImportError:
+    CLIPBOARD_AVAILABLE = False
 
 logger = setup_logger()
 error_handler = ErrorHandler()
 
 def render():
     """Renderizar la pestaña del chatbot"""
+    # Inicializar el historial de mensajes si no existe (DEBE SER LO PRIMERO)
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+    
     st.header("💬 Chat Inteligente")
     
     # Inicializar cliente Ollama
@@ -47,7 +66,7 @@ def render():
             if not model_names:
                 st.error("No hay modelos disponibles")
                 # Botón para refrescar modelos
-                if st.button("🔄 Refrescar modelos"):
+                if st.button("🔄 Refrescar modelos", key="refresh_models_chatbot"):
                     st.session_state.available_models = ollama_client.get_available_models(force_refresh=True)
                     st.rerun()
                 return
@@ -107,10 +126,6 @@ def render():
     # Área principal del chat
     chat_container = st.container()
     
-    # Inicializar historial de chat
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-    
     # Mostrar historial de chat con mejor diseño
     with chat_container:
         if not st.session_state.messages:
@@ -126,6 +141,10 @@ def render():
                 st.markdown(message["content"])
                 if "timestamp" in message:
                     st.caption(f"🕒 {message['timestamp']}")
+                
+                # Botones de exportación para mensajes del asistente
+                if message["role"] == "assistant":
+                    render_message_export_buttons(message, i)
                 
                 # Mostrar contexto usado si es un mensaje del asistente
                 if message["role"] == "assistant" and "context_used" in message and message["context_used"]:
@@ -147,41 +166,85 @@ def render():
             st.markdown(prompt)
             st.caption(f"🕒 {timestamp}")
         
-        # Generar respuesta
+        # Generar respuesta con interfaz mejorada
         with st.chat_message("assistant"):
-            with st.spinner("🤔 Pensando..."):
-                try:
-                    # Obtener configuración de debug
-                    debug_mode = st.session_state.get('debug_mode', False)
+            # Crear contenedor para el progreso
+            progress_container = st.empty()
+            response_container = st.empty()
+            
+            # Inicializar variables de control
+            if 'processing_cancelled' not in st.session_state:
+                st.session_state.processing_cancelled = False
+            
+            try:
+                # Paso 1: Inicialización
+                with progress_container.container():
+                    col1, col2 = st.columns([3, 1])
+                    with col1:
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        status_text.text("🚀 Iniciando procesamiento...")
+                    with col2:
+                        if st.button("❌ Cancelar", key="cancel_processing", type="secondary"):
+                            st.session_state.processing_cancelled = True
+                            st.warning("⚠️ Procesamiento cancelado por el usuario")
+                            st.stop()
+                
+                progress_bar.progress(10)
+                time.sleep(0.5)
+                
+                # Verificar cancelación
+                if st.session_state.processing_cancelled:
+                    st.session_state.processing_cancelled = False
+                    st.stop()
+                
+                # Obtener configuración de debug
+                debug_mode = st.session_state.get('debug_mode', False)
+                
+                # Paso 2: Procesamiento RAG
+                status_text.text("🔍 Analizando documentos...")
+                progress_bar.progress(25)
+                
+                context = None
+                relevant_chunks = []
+                query_id = None
+                
+                if use_rag:
+                    if debug_mode:
+                        # Modo debug: usar trazabilidad
+                        context, relevant_chunks, query_id = get_rag_context(prompt, enable_tracing=True)
+                    else:
+                        # Modo normal: usar contexto completo
+                        context = get_rag_context(prompt, enable_tracing=False)
                     
-                    # Obtener contexto RAG si está habilitado
-                    context = None
-                    relevant_chunks = []
-                    query_id = None
+                    progress_bar.progress(50)
                     
-                    if use_rag:
+                    if context:
                         if debug_mode:
-                            # Modo debug: usar trazabilidad
-                            context, relevant_chunks, query_id = get_rag_context(prompt, enable_tracing=True)
+                            status_text.text(f"✅ Contexto recuperado - {len(relevant_chunks)} chunks encontrados")
                         else:
-                            # Modo normal: usar contexto completo
-                            context = get_rag_context(prompt, enable_tracing=False)
-                        
-                        if context:
-                            if debug_mode:
-                                st.success(f"🧠 Contexto recuperado con trazabilidad (Query ID: {query_id})")
-                                st.info(f"📊 {len(relevant_chunks)} chunks relevantes encontrados ({len(context):,} caracteres)")
-                            else:
-                                st.success("🧠 Contexto COMPLETO de todos los documentos cargado para DeepSeek")
-                                st.info(f"📊 Analizando {len(context):,} caracteres de contenido")
-                        else:
-                            st.warning("📄 No hay documentos procesados disponibles")
+                            status_text.text(f"✅ Contexto completo cargado - {len(context):,} caracteres")
+                    else:
+                        status_text.text("⚠️ No hay documentos procesados disponibles")
+                else:
+                    status_text.text("ℹ️ Modo sin RAG - Respuesta general")
+                    progress_bar.progress(50)
+                
+                # Verificar cancelación
+                if st.session_state.processing_cancelled:
+                    st.session_state.processing_cancelled = False
+                    st.stop()
+                
+                # Paso 3: Preparación del prompt
+                status_text.text("📝 Preparando consulta para la IA...")
+                progress_bar.progress(70)
                     
-                    # Construir el prompt optimizado para DeepSeek con contexto completo
-                    if use_rag:
-                        if context:
-                            # Prompt optimizado para DeepSeek con razonamiento profundo
-                            full_prompt = f"""<think>
+                    
+                # Construir el prompt optimizado para DeepSeek con contexto completo
+                if use_rag:
+                    if context:
+                        # Prompt optimizado para DeepSeek con razonamiento profundo
+                        full_prompt = f"""<think>
 El usuario me ha proporcionado documentos completos y me está haciendo una pregunta. Necesito:
 
 1. Analizar cuidadosamente TODA la información disponible en los documentos
@@ -209,9 +272,9 @@ PREGUNTA DEL USUARIO:
 {prompt}
 
 RESPUESTA (basada en análisis profundo de todos los documentos):"""
-                        else:
-                            # Si no hay contexto, informar claramente
-                            full_prompt = f"""<think>
+                    else:
+                        # Si no hay contexto, informar claramente
+                        full_prompt = f"""<think>
 El usuario está preguntando algo pero no hay documentos cargados en el sistema. Necesito explicar esto claramente y guiar al usuario sobre cómo cargar documentos.
 </think>
 
@@ -226,9 +289,9 @@ Para obtener respuestas basadas en tus documentos:
 Tu pregunta: {prompt}
 
 Respuesta: No puedo responder esta pregunta porque no hay documentos cargados para analizar. Por favor, carga y procesa tus documentos primero."""
-                    else:
-                        # Modo sin RAG - advertencia clara
-                        full_prompt = f"""<think>
+                else:
+                    # Modo sin RAG - advertencia clara
+                    full_prompt = f"""<think>
 El sistema RAG está deshabilitado, pero el usuario está haciendo una pregunta. Debo informar que para obtener respuestas basadas en documentos específicos, necesita habilitar el RAG.
 </think>
 
@@ -237,19 +300,51 @@ NOTA: El sistema RAG está deshabilitado. Para obtener respuestas basadas en doc
 Pregunta: {prompt}
 
 Respuesta: Para responder basándome en tus documentos específicos, necesitas habilitar el sistema RAG y cargar tus documentos."""
-                    
-                    # Generar respuesta con configuración de tokens
-                    response = ollama_client.generate_response(
-                        model=selected_model,
-                        prompt=full_prompt,
-                        context=None,  # El contexto ya está incluido en el prompt
-                        max_tokens=max_tokens
-                    )
-                    
-                    if response:
+                
+                # Verificar cancelación antes de generar
+                if st.session_state.processing_cancelled:
+                    st.session_state.processing_cancelled = False
+                    st.stop()
+                
+                # Paso 4: Generación de respuesta
+                status_text.text("🤖 Generando respuesta con IA...")
+                progress_bar.progress(85)
+                
+                # Generar respuesta con configuración de tokens
+                response = ollama_client.generate_response(
+                    model=selected_model,
+                    prompt=full_prompt,
+                    context=None,  # El contexto ya está incluido en el prompt
+                    max_tokens=max_tokens
+                )
+                
+                # Verificar cancelación después de generar
+                if st.session_state.processing_cancelled:
+                    st.session_state.processing_cancelled = False
+                    st.stop()
+                
+                # Paso 5: Finalización
+                status_text.text("✅ Respuesta generada exitosamente")
+                progress_bar.progress(100)
+                time.sleep(0.5)
+                
+                # Limpiar el contenedor de progreso y mostrar respuesta
+                progress_container.empty()
+                
+                if response:
+                    with response_container.container():
                         st.markdown(response)
                         response_timestamp = datetime.now().strftime("%H:%M:%S")
                         st.caption(f"🕒 {response_timestamp}")
+                        
+                        # Mostrar información de contexto si está disponible
+                        if use_rag and context:
+                            if debug_mode:
+                                st.success(f"🧠 Contexto recuperado con trazabilidad (Query ID: {query_id})")
+                                st.info(f"📊 {len(relevant_chunks)} chunks relevantes encontrados ({len(context):,} caracteres)")
+                            else:
+                                st.success("🧠 Contexto COMPLETO de todos los documentos utilizado")
+                                st.info(f"📊 Analizados {len(context):,} caracteres de contenido")
                         
                         # Mostrar información de debug si está habilitado
                         if debug_mode and use_rag and context:
@@ -348,17 +443,27 @@ Respuesta: Para responder basándome en tus documentos específicos, necesitas h
                                 )
                             except Exception as e:
                                 logger.warning(f"Error al guardar historial: {e}")
-                    else:
+                else:
+                    with response_container.container():
                         st.error("❌ No se pudo generar una respuesta")
                         
-                except Exception as e:
+            except Exception as e:
+                # Limpiar contenedores en caso de error
+                progress_container.empty()
+                with response_container.container():
                     error_handler.handle_error(e, "Error al generar respuesta del chat")
                     st.error("❌ Ha ocurrido un error al generar la respuesta")
+            
+            finally:
+                # Limpiar estado de cancelación
+                if 'processing_cancelled' in st.session_state:
+                    st.session_state.processing_cancelled = False
     
     # Panel de control del chat
     if st.session_state.messages:
         st.divider()
         
+        # Métricas de la conversación
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
@@ -377,6 +482,216 @@ Respuesta: Para responder basándome en tus documentos específicos, necesitas h
             if st.button("🧹 Limpiar Chat", type="secondary"):
                 st.session_state.messages = []
                 st.rerun()
+        
+        # Controles de exportación de conversación completa
+        st.divider()
+        render_conversation_export_controls()
+    
+    # Renderizar sidebar de historial
+    render_history_sidebar()
+
+def render_history_sidebar():
+    """Renderizar sidebar para gestión de historial"""
+    with st.sidebar:
+        st.header("📚 Historial de Conversaciones")
+        
+        # Guardar conversación actual
+        if st.session_state.messages:
+            st.subheader("💾 Guardar Conversación")
+            
+            conversation_name = st.text_input(
+                "Nombre de la conversación",
+                placeholder="Ej: Análisis de datos 2024",
+                key="conversation_name_input"
+            )
+            
+            if st.button("💾 Guardar Conversación Actual", type="primary"):
+                try:
+                    filename = chat_history_manager.save_conversation(
+                        st.session_state.messages,
+                        conversation_name if conversation_name else None
+                    )
+                    st.success(f"✅ Conversación guardada: {filename}")
+                    # Usar st.rerun() en lugar de modificar directamente el session_state
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Error al guardar: {str(e)}")
+        
+        st.divider()
+        
+        # Cargar conversaciones guardadas
+        st.subheader("📂 Conversaciones Guardadas")
+        
+        conversations = chat_history_manager.list_conversations()
+        
+        if conversations:
+            for conv in conversations:
+                with st.expander(f"📄 {conv['name']}", expanded=False):
+                    st.write(f"**Fecha:** {conv.get('created_at', 'N/A')[:19]}")
+                    st.write(f"**Mensajes:** {conv.get('total_messages', 0)}")
+                    st.write(f"**Tamaño:** {conv.get('file_size', 0)} bytes")
+                    
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        if st.button(f"📥 Cargar", key=f"load_{conv['filename']}"):
+                            try:
+                                conversation_data = chat_history_manager.load_conversation(conv['filename'])
+                                if conversation_data:
+                                    st.session_state.messages = conversation_data['messages']
+                                    st.success(f"✅ Conversación cargada: {conv['name']}")
+                                    st.rerun()
+                                else:
+                                    st.error("❌ Error al cargar la conversación")
+                            except Exception as e:
+                                st.error(f"❌ Error: {str(e)}")
+                    
+                    with col2:
+                        if st.button(f"🗑️ Eliminar", key=f"delete_{conv['filename']}"):
+                            if chat_history_manager.delete_conversation(conv['filename']):
+                                st.success(f"✅ Conversación eliminada")
+                                st.rerun()
+                            else:
+                                st.error("❌ Error al eliminar")
+        else:
+            st.info("No hay conversaciones guardadas")
+
+def render_message_export_buttons(message: dict, message_index: int):
+    """Renderizar botones de exportación para un mensaje individual"""
+    col1, col2, col3 = st.columns([1, 1, 1])
+    
+    with col1:
+        if st.button("📄 DOCX", key=f"docx_{message_index}", help="Exportar a Word"):
+            try:
+                buffer = chat_exporter.export_message_to_docx(message)
+                if buffer:
+                    timestamp = message.get('timestamp', 'mensaje').replace(':', '-')
+                    filename = f"cognichat_mensaje_{timestamp}.docx"
+                    
+                    st.download_button(
+                        label="⬇️ Descargar DOCX",
+                        data=buffer.getvalue(),
+                        file_name=filename,
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        key=f"download_docx_{message_index}"
+                    )
+                else:
+                    st.error("❌ Error al generar DOCX")
+            except ImportError:
+                st.error("❌ python-docx no está instalado")
+            except Exception as e:
+                st.error(f"❌ Error: {str(e)}")
+    
+    with col2:
+        if st.button("📑 PDF", key=f"pdf_{message_index}", help="Exportar a PDF"):
+            try:
+                buffer = chat_exporter.export_message_to_pdf(message)
+                if buffer:
+                    timestamp = message.get('timestamp', 'mensaje').replace(':', '-')
+                    filename = f"cognichat_mensaje_{timestamp}.pdf"
+                    
+                    st.download_button(
+                        label="⬇️ Descargar PDF",
+                        data=buffer.getvalue(),
+                        file_name=filename,
+                        mime="application/pdf",
+                        key=f"download_pdf_{message_index}"
+                    )
+                else:
+                    st.error("❌ Error al generar PDF")
+            except ImportError:
+                st.error("❌ reportlab no está instalado")
+            except Exception as e:
+                st.error(f"❌ Error: {str(e)}")
+    
+    with col3:
+        if st.button("📋 Copiar", key=f"copy_{message_index}", help="Copiar al portapapeles"):
+            try:
+                if CLIPBOARD_AVAILABLE:
+                    text = chat_exporter.get_message_text_for_clipboard(message)
+                    pyperclip.copy(text)
+                    st.success("✅ Copiado al portapapeles")
+                else:
+                    # Fallback: mostrar texto para copiar manualmente
+                    text = chat_exporter.get_message_text_for_clipboard(message)
+                    st.text_area(
+                        "Copiar manualmente:",
+                        value=text,
+                        height=100,
+                        key=f"manual_copy_{message_index}"
+                    )
+            except Exception as e:
+                st.error(f"❌ Error: {str(e)}")
+
+def render_conversation_export_controls():
+    """Renderizar controles de exportación de conversación completa"""
+    st.subheader("📤 Exportar Conversación Completa")
+    
+    if not st.session_state.messages:
+        st.info("No hay mensajes para exportar")
+        return
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("📄 Exportar a DOCX", type="secondary"):
+            try:
+                buffer = chat_exporter.export_conversation_to_docx(st.session_state.messages)
+                if buffer:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"cognichat_conversacion_{timestamp}.docx"
+                    
+                    st.download_button(
+                        label="⬇️ Descargar Conversación DOCX",
+                        data=buffer.getvalue(),
+                        file_name=filename,
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        key="download_conversation_docx"
+                    )
+                else:
+                    st.error("❌ Error al generar DOCX")
+            except ImportError:
+                st.error("❌ python-docx no está instalado")
+            except Exception as e:
+                st.error(f"❌ Error: {str(e)}")
+    
+    with col2:
+        if st.button("📋 Copiar Todo", type="secondary"):
+            try:
+                if CLIPBOARD_AVAILABLE:
+                    # Crear texto completo de la conversación
+                    conversation_text = []
+                    conversation_text.append("=" * 60)
+                    conversation_text.append("CONVERSACIÓN COMPLETA DE COGNICHAT")
+                    conversation_text.append(f"Exportado el: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                    conversation_text.append("=" * 60)
+                    conversation_text.append("")
+                    
+                    for i, message in enumerate(st.session_state.messages, 1):
+                        role_text = "Usuario" if message['role'] == 'user' else "Asistente"
+                        timestamp = message.get('timestamp', 'N/A')
+                        
+                        conversation_text.append(f"--- MENSAJE {i} - {role_text} ({timestamp}) ---")
+                        conversation_text.append(message['content'])
+                        conversation_text.append("")
+                    
+                    conversation_text.append("=" * 60)
+                    
+                    full_text = "\n".join(conversation_text)
+                    pyperclip.copy(full_text)
+                    st.success("✅ Conversación copiada al portapapeles")
+                else:
+                    st.error("❌ pyperclip no está disponible")
+            except Exception as e:
+                st.error(f"❌ Error: {str(e)}")
+    
+    with col3:
+        # Estadísticas de la conversación
+        total_chars = sum(len(m['content']) for m in st.session_state.messages)
+        estimated_tokens = total_chars // 4  # Estimación aproximada
+        
+        st.metric("📊 Caracteres totales", f"{total_chars:,}")
+        st.metric("🎯 Tokens estimados", f"{estimated_tokens:,}")
 
 def get_rag_context(query: str, enable_tracing: bool = False):
     """

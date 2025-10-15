@@ -8,13 +8,6 @@ from typing import List, Dict, Any
 from datetime import datetime
 import time
 
-# Configuración de la página
-st.set_page_config(
-    page_title="Procesamiento de Documentos - CogniChat",
-    page_icon="📄",
-    layout="wide"
-)
-
 # Importaciones locales
 from config.settings import AppConfig
 from utils.logger import setup_logger
@@ -375,7 +368,7 @@ def test_rag_search():
         placeholder="Escribe una pregunta sobre tus documentos..."
     )
     
-    if query and st.button("🔍 Buscar"):
+    if query and st.button("🔍 Buscar", key="search_documents"):
         with st.spinner("Buscando en documentos..."):
             try:
                 # Obtener todos los chunks procesados usando función estandarizada
@@ -603,7 +596,7 @@ MAX_RETRIEVAL_DOCS = {config.MAX_RETRIEVAL_DOCS}
                 st.metric("Promedio chars/chunk", "0")
     
     with st.expander("🔍 Diagnóstico del Sistema"):
-        if st.button("🔍 Ejecutar Diagnóstico"):
+        if st.button("🔍 Ejecutar Diagnóstico", key="execute_diagnostic"):
             with st.spinner("Ejecutando diagnóstico..."):
                 # Verificar conexión Ollama
                 try:
@@ -684,11 +677,11 @@ def main():
                 reprocess_all_documents(uploaded_files)
         
         with col2:
-            if st.button("📊 Actualizar Estadísticas"):
+            if st.button("📊 Actualizar Estadísticas", key="update_stats_processor"):
                 st.rerun()
         
         with col3:
-            if st.button("💾 Guardar Cache"):
+            if st.button("💾 Guardar Cache", key="save_cache_processor"):
                 try:
                     rag_processor.save_cache()
                     st.success("✅ Cache guardado")

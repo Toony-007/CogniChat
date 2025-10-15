@@ -44,7 +44,7 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "pathlib>=1.0.1",
     "psutil>=5.9.0",
-    "PyPDF2>=3.0.1",
+    "pypdf>=3.17.0",
     "python-docx>=0.8.11",
     "openpyxl>=3.1.2",
     "pandas>=2.1.0",
@@ -177,6 +177,10 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
     "unit: marks tests as unit tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:importlib._bootstrap",
+    "ignore:the load_module\\(\\) method is deprecated:DeprecationWarning",
 ]
 
 [tool.coverage.run]

@@ -158,7 +158,7 @@ def render():
             st.write(f"**{len(uploaded_files)} documento(s) disponible(s)**")
         
         with col2:
-            if st.button("🔄 Actualizar Lista"):
+            if st.button("🔄 Actualizar Lista", key="update_document_list"):
                 st.rerun()
         
         with col3:

@@ -6,15 +6,20 @@ Verifica e instala todas las dependencias necesarias para el análisis cualitati
 
 import subprocess
 import sys
-import pkg_resources
 from pathlib import Path
+
+try:
+    from importlib.metadata import version, PackageNotFoundError
+except ImportError:
+    # Fallback para Python < 3.8
+    from importlib_metadata import version, PackageNotFoundError
 
 def check_package_installed(package_name):
     """Verificar si un paquete está instalado"""
     try:
-        pkg_resources.get_distribution(package_name)
+        version(package_name)
         return True
-    except pkg_resources.DistributionNotFound:
+    except PackageNotFoundError:
         return False
 
 def install_package(package):

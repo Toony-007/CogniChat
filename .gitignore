@@ -29,6 +29,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+cognichat-env/
 
 # IDEs
 .vscode/
@@ -45,6 +46,8 @@ logs/
 data/uploads/*
 data/processed/*
 data/cache/*
+data/chat_history/*
+data/temp_exports/*
 !data/uploads/.gitkeep
 !data/processed/.gitkeep
 !data/cache/.gitkeep
@@ -61,3 +64,14 @@ Thumbs.db
 
 # Configuración local
 config/local_settings.py
+
+# Reportes de pruebas y cobertura
+.coverage
+htmlcov/
+.pytest_cache/
+unit_tests/reports/
+tests/test_report.json
+
+# Archivos temporales de desarrollo
+*.tmp
+*.bak

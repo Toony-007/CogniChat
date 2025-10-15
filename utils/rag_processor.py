@@ -16,7 +16,7 @@ from dataclasses import dataclass
 
 # Importaciones para diferentes tipos de archivo
 import docx
-import PyPDF2
+from pypdf import PdfReader
 import pandas as pd
 from bs4 import BeautifulSoup
 
@@ -129,7 +129,7 @@ class RAGProcessor:
         try:
             text = ""
             with open(file_path, 'rb') as f:
-                pdf_reader = PyPDF2.PdfReader(f)
+                pdf_reader = PdfReader(f)
                 for page in pdf_reader.pages:
                     text += page.extract_text() + "\n"
             return text

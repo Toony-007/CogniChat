@@ -32,12 +32,27 @@ Sistema de Recuperación y Generación Aumentada (RAG) con análisis cualitativo
 
 ## 🛠️ Instalación
 
-### Requisitos Previos
+### 🐍 Instalación Recomendada con Conda
+
+**Para una instalación óptima y gestión de dependencias avanzada, recomendamos usar Conda:**
+
+📖 **[Guía Completa de Instalación con Conda](docs/INSTALACION_CONDA.md)**
+
+Esta guía incluye:
+- Instalación paso a paso con Conda
+- Gestión de entornos virtuales
+- Configuración optimizada de dependencias
+- Instrucciones para migración entre dispositivos
+- Solución de problemas comunes
+
+### ⚡ Instalación Rápida (pip/venv)
+
+#### Requisitos Previos
 - Python 3.8+
 - Ollama instalado y configurado
 - Git
 
-### Instalación Rápida
+#### Pasos de Instalación
 
 1. **Clonar el repositorio**:
 ```bash
@@ -45,28 +60,42 @@ git clone <repository-url>
 cd CogniChat
 ```
 
-2. **Verificar dependencias**:
+2. **Crear entorno virtual (recomendado)**:
+```bash
+python -m venv cognichat-env
+
+# Windows
+cognichat-env\Scripts\activate
+
+# Linux/macOS
+source cognichat-env/bin/activate
+```
+
+3. **Verificar dependencias**:
 ```bash
 python scripts/check_dependencies.py
 ```
 
-3. **Instalar dependencias automáticamente**:
+4. **Instalar dependencias automáticamente**:
 ```bash
 python scripts/install_requirements.py
 ```
 
-4. **O instalar manualmente**:
+5. **O instalar manualmente**:
 ```bash
 pip install -r requirements.txt
+
+# Dependencias adicionales para exportación PDF
+pip install reportlab>=4.0.0 pyperclip>=1.8.2
 ```
 
-5. **Configurar variables de entorno**:
+6. **Configurar variables de entorno**:
 ```bash
 cp .env.example .env
 # Editar .env con tus configuraciones
 ```
 
-6. **Ejecutar la aplicación**:
+7. **Ejecutar la aplicación**:
 ```bash
 streamlit run app.py
 ```
@@ -206,7 +235,26 @@ CHUNK_OVERLAP=200
 MAX_RETRIEVAL_DOCS=5
 ```
 
+## 📚 Documentación Adicional
+
+- 📖 **[Guía de Instalación con Conda](docs/INSTALACION_CONDA.md)** - Instalación completa y migración
+- 🔧 **[Solución de Dependencias](docs/SOLUCION_DEPENDENCIAS.md)** - Troubleshooting y mejores prácticas
+- 📋 **[Documentación de Tesis](docs/DOCUMENTACION_TESIS.md)** - Documentación técnica completa
+- 🚀 **[Optimizaciones RAG](docs/OPTIMIZACIONES_RAG.md)** - Mejoras de rendimiento
+
 ## 🐛 Solución de Problemas
+
+### Problemas de Dependencias
+
+**Para problemas relacionados con dependencias faltantes o errores de instalación:**
+
+📖 **Consulta la [Guía de Solución de Dependencias](docs/SOLUCION_DEPENDENCIAS.md)**
+
+Esta guía cubre:
+- Errores comunes de instalación
+- Problemas con reportlab y exportación PDF
+- Diferencias entre Conda y pip
+- Comandos de diagnóstico
 
 ### Ollama no se conecta
 
@@ -233,6 +281,54 @@ MAX_RETRIEVAL_DOCS=5
 1. Usar modelos más pequeños (3B en lugar de 8B)
 2. Reducir el tamaño de chunk en configuraciones
 3. Limitar el número de documentos recuperados
+
+### Problemas con rutas largas en Windows
+
+**Error**: `OSError: [Errno 2] No such file or directory` con rutas muy largas
+
+**Causa**: Windows tiene una limitación histórica de 260 caracteres para rutas de archivos. Algunos paquetes como `torch`, `sentence-transformers` y `spacy-transformers` pueden generar rutas que excedan este límite.
+
+**Solución**:
+
+1. **Habilitar soporte para rutas largas** (requiere permisos de administrador):
+   ```powershell
+   # Ejecutar PowerShell como administrador
+   reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f
+   ```
+
+2. **Reiniciar el sistema** para que los cambios tomen efecto.
+
+3. **Verificar que está habilitado**:
+   ```powershell
+   reg query "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled
+   ```
+
+4. **Instalar las dependencias problemáticas**:
+   ```bash
+   pip install torch torchvision sentence-transformers spacy-transformers
+   ```
+
+**Alternativas si no tienes permisos de administrador**:
+
+1. **Usar un directorio con ruta más corta**:
+   ```bash
+   # Mover el proyecto a C:\CogniChat en lugar de rutas largas
+   ```
+
+2. **Instalar solo las dependencias esenciales**:
+   ```bash
+   # El sistema funcionará sin torch/sentence-transformers con funcionalidad limitada
+   pip install pyvis  # Solo para mapas conceptuales básicos
+   ```
+
+3. **Usar Conda** (recomendado):
+   ```bash
+   # Conda maneja mejor las rutas largas
+   conda install pytorch torchvision -c pytorch
+   conda install -c conda-forge sentence-transformers
+   ```
+
+**Nota**: Este problema es específico de Windows. En Linux y macOS no se presenta esta limitación.
 
 ## 🚀 Próximas Funcionalidades
 

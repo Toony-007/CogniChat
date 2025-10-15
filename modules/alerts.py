@@ -307,11 +307,11 @@ def render():
                     st.error("❌ Error de conexión")
     
     with col2:
-        if st.button("📊 Actualizar Estado"):
+        if st.button("📊 Actualizar Estado", key="update_status_alerts"):
             st.rerun()
     
     with col3:
-        if st.button("🧹 Limpiar Cache"):
+        if st.button("🧹 Limpiar Cache", key="clear_cache_alerts"):
             try:
                 # Limpiar archivos de cache
                 cache_files = list(config.CACHE_DIR.glob("*"))
