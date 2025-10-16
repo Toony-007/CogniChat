@@ -1,367 +1,727 @@
-# 🧠 CogniChat - Sistema RAG Avanzado
+# 🧠 CogniChat - Sistema RAG Avanzado con Análisis Cualitativo Inteligente
 
-Sistema de Recuperación y Generación Aumentada (RAG) con análisis cualitativo avanzado y capacidades de procesamiento de documentos inteligente.
+<div align="center">
 
-## 🚀 Características Principales
+![CogniChat Logo](https://img.shields.io/badge/CogniChat-v1.0.0-blue?style=for-the-badge&logo=brain&logoColor=white)
 
-### 📄 Procesamiento de Documentos
-- **Formatos soportados**: PDF, DOCX, TXT, Excel
-- **Chunking inteligente** con preservación de contexto
-- **Embeddings vectoriales** para búsqueda semántica
-- **Cache optimizado** para rendimiento mejorado
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.29%2B-red?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
+[![Ollama](https://img.shields.io/badge/Ollama-Local%20LLM-green?style=flat-square&logo=ollama&logoColor=white)](https://ollama.ai)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-### 🤖 Chatbot Inteligente
-- **Integración con Ollama** para modelos locales
-- **Respuestas contextuales** basadas en documentos
-- **Historial de conversaciones**
-- **Trazabilidad de fuentes**
+**Sistema de Recuperación y Generación Aumentada (RAG) con capacidades avanzadas de análisis cualitativo, procesamiento inteligente de documentos y visualización interactiva.**
 
-### 📊 Análisis Cualitativo Avanzado
-- **Extracción de temas** con LDA (Latent Dirichlet Allocation)
-- **Clustering de documentos** con K-means y UMAP
-- **Análisis de sentimientos** con VADER y TextBlob
-- **Mapas conceptuales interactivos** con NetworkX
-- **Nubes de palabras** personalizables
-- **Dashboard de métricas** en tiempo real
+[🚀 Inicio Rápido](#-instalación-y-configuración) • [📖 Documentación](#-documentación) • [🎯 Características](#-características-principales) • [🤝 Contribuir](#-contribuciones)
 
-### 🎨 Visualizaciones Interactivas
-- **Gráficos Plotly** interactivos
-- **Redes de conceptos** con NetworkX
-- **Distribuciones estadísticas** con Seaborn
-- **Métricas en tiempo real**
+</div>
 
-## 🛠️ Instalación
+---
 
-### 🐍 Instalación Recomendada con Conda
+## 🎯 Características Principales
 
-**Para una instalación óptima y gestión de dependencias avanzada, recomendamos usar Conda:**
+### 📄 **Procesamiento Inteligente de Documentos**
+- **Formatos Múltiples**: PDF, DOCX, TXT, Excel con validación automática
+- **Chunking Avanzado**: Preservación de contexto semántico
+- **Embeddings Vectoriales**: Búsqueda semántica de alta precisión
+- **Cache Optimizado**: Rendimiento mejorado con almacenamiento inteligente
 
-📖 **[Guía Completa de Instalación con Conda](docs/INSTALACION_CONDA.md)**
+### 🤖 **Chatbot Conversacional Avanzado**
+- **Modelos Locales**: Integración completa con Ollama (DeepSeek-R1, Llama, Mistral)
+- **Respuestas Contextuales**: Basadas en documentos cargados con trazabilidad
+- **Historial Persistente**: Conversaciones guardadas y recuperables
+- **Multi-modelo**: Selección dinámica de LLM según necesidades
 
-Esta guía incluye:
-- Instalación paso a paso con Conda
-- Gestión de entornos virtuales
-- Configuración optimizada de dependencias
-- Instrucciones para migración entre dispositivos
-- Solución de problemas comunes
+### 📊 **Análisis Cualitativo Automatizado**
+- **Extracción de Temas**: LDA (Latent Dirichlet Allocation) y BERTopic
+- **Clustering Inteligente**: K-means, HDBSCAN y UMAP para agrupación
+- **Análisis de Sentimientos**: VADER, TextBlob y modelos transformer
+- **Mapas Conceptuales**: Redes interactivas con NetworkX y Pyvis
+- **Nubes de Palabras**: Visualización personalizable de términos clave
 
-### ⚡ Instalación Rápida (pip/venv)
+### 🎨 **Visualizaciones Interactivas**
+- **Gráficos Dinámicos**: Plotly para exploración interactiva
+- **Redes de Conceptos**: Visualización de relaciones semánticas
+- **Dashboards en Tiempo Real**: Métricas y estadísticas actualizadas
+- **Distribuciones Estadísticas**: Análisis visual con Seaborn y Matplotlib
 
-#### Requisitos Previos
-- Python 3.8+
-- Ollama instalado y configurado
-- Git
+### 🔧 **Características Técnicas Avanzadas**
+- **Arquitectura Modular**: Componentes desacoplados y extensibles
+- **Sistema de Alertas**: Monitoreo en tiempo real y logging avanzado
+- **Configuración Flexible**: Variables de entorno y configuración dinámica
+- **Exportación Completa**: PDF, Excel, JSON con metadatos completos
 
-#### Pasos de Instalación
+---
 
-1. **Clonar el repositorio**:
+## 🚀 Instalación y Configuración
+
+### 📋 **Requisitos del Sistema**
+
+| Componente | Versión Mínima | Recomendado |
+|------------|----------------|-------------|
+| Python | 3.8+ | 3.11+ |
+| RAM | 8GB | 16GB+ |
+| Almacenamiento | 10GB | 20GB+ |
+| Ollama | Latest | Latest |
+
+### 🐳 **Opción 1: Despliegue con Docker (Recomendado)**
+
 ```bash
-git clone <repository-url>
+# 1. Clonar el repositorio
+git clone https://github.com/tu-usuario/CogniChat.git
 cd CogniChat
+
+# 2. Configurar variables de entorno
+cp .env.example .env
+# Editar .env según tus necesidades
+
+# 3. Ejecutar script automatizado
+.\scripts\setup-docker.ps1
+
+# 4. Descargar modelos de IA
+.\scripts\download-models.ps1
+
+# 5. Iniciar servicios
+docker compose up -d
 ```
 
-2. **Crear entorno virtual (recomendado)**:
+**🌐 Acceso**: http://localhost:8501
+
+### 🐍 **Opción 2: Instalación Local**
+
+#### **Paso 1: Preparación del Entorno**
+
 ```bash
+# Clonar repositorio
+git clone https://github.com/tu-usuario/CogniChat.git
+cd CogniChat
+
+# Crear entorno virtual
 python -m venv cognichat-env
 
-# Windows
+# Activar entorno (Windows)
 cognichat-env\Scripts\activate
 
-# Linux/macOS
+# Activar entorno (Linux/macOS)
 source cognichat-env/bin/activate
 ```
 
-3. **Verificar dependencias**:
+#### **Paso 2: Instalación de Dependencias**
+
 ```bash
+# Verificar dependencias del sistema
 python scripts/check_dependencies.py
-```
 
-4. **Instalar dependencias automáticamente**:
-```bash
+# Instalación automática
 python scripts/install_requirements.py
-```
 
-5. **O instalar manualmente**:
-```bash
+# O instalación manual
 pip install -r requirements.txt
-
-# Dependencias adicionales para exportación PDF
-pip install reportlab>=4.0.0 pyperclip>=1.8.2
 ```
 
-6. **Configurar variables de entorno**:
+#### **Paso 3: Configuración de Ollama**
+
 ```bash
+# Instalar Ollama (si no está instalado)
+# Windows: Descargar desde https://ollama.ai
+# Linux: curl -fsSL https://ollama.ai/install.sh | sh
+
+# Descargar modelos requeridos
+ollama pull deepseek-r1:7b
+ollama pull nomic-embed-text:latest
+
+# Verificar instalación
+ollama list
+```
+
+#### **Paso 4: Configuración Final**
+
+```bash
+# Copiar configuración de ejemplo
 cp .env.example .env
-# Editar .env con tus configuraciones
-```
 
-7. **Ejecutar la aplicación**:
-```bash
+# Editar variables de entorno
+# OLLAMA_BASE_URL=http://localhost:11434
+# DEFAULT_LLM_MODEL=deepseek-r1:7b
+# DEFAULT_EMBEDDING_MODEL=nomic-embed-text:latest
+
+# Ejecutar aplicación
 streamlit run app.py
 ```
 
-## 📦 Dependencias Principales
+---
 
-### Framework y UI
-- `streamlit>=1.29.0` - Interfaz web interactiva
-- `streamlit-chat>=0.1.1` - Componentes de chat
+## 📖 Guía de Uso
 
-### Machine Learning y NLP
-- `scikit-learn>=1.3.0` - Algoritmos de ML
-- `nltk>=3.8.1` - Procesamiento de lenguaje natural
-- `textblob>=0.17.1` - Análisis de sentimientos
-- `spacy>=3.7.0` - NLP avanzado
-- `transformers>=4.30.0` - Modelos de transformers
+### 🎮 **Interfaz Principal**
 
-### Visualizaciones
-- `plotly>=5.17.0` - Gráficos interactivos
-- `matplotlib>=3.7.0` - Gráficos estáticos
-- `seaborn>=0.12.0` - Visualizaciones estadísticas
-- `networkx>=3.2.1` - Análisis de redes
-- `wordcloud>=1.9.2` - Nubes de palabras
+La aplicación se organiza en **4 pestañas principales**:
 
-### Análisis Avanzado
-- `umap-learn>=0.5.3` - Reducción dimensional
-- `hdbscan>=0.8.33` - Clustering jerárquico
-- `scipy>=1.11.0` - Computación científica
-- `statsmodels>=0.14.0` - Modelos estadísticos
+#### 📄 **1. Gestión de Documentos**
+```python
+# Formatos soportados
+SUPPORTED_FORMATS = {
+    'PDF': ['.pdf'],
+    'Word': ['.docx', '.doc'],
+    'Excel': ['.xlsx', '.xls'],
+    'Texto': ['.txt', '.md']
+}
 
-## 🎯 Uso
-
-### Iniciar la aplicación
-
-```bash
-streamlit run app.py
+# Límites de archivo
+MAX_FILE_SIZE = 50  # MB por archivo
+MAX_TOTAL_SIZE = 200  # MB total
 ```
 
-La aplicación estará disponible en `http://localhost:8501`
+**Funcionalidades**:
+- ✅ Carga múltiple con drag & drop
+- ✅ Validación automática de formato y tamaño
+- ✅ Vista previa de contenido
+- ✅ Eliminación selectiva o masiva
+- ✅ Estadísticas de procesamiento
 
-### Modelos disponibles
+#### 💬 **2. Chat Inteligente**
+```python
+# Configuración de chat
+CHAT_CONFIG = {
+    'max_history': 50,
+    'context_window': 4096,
+    'temperature': 0.7,
+    'top_p': 0.9
+}
+```
 
-El sistema detecta automáticamente los modelos instalados en Ollama. Actualmente tienes:
+**Capacidades**:
+- 🤖 Conversación natural con IA
+- 📚 Respuestas basadas en documentos cargados
+- 🔄 Selección dinámica de modelos LLM
+- 📝 Historial persistente con timestamps
+- 🔍 Trazabilidad de fuentes citadas
 
-- **llama3.1:8b** - Modelo principal para chat
-- **deepseek-r1:7b** - Modelo alternativo con excelente razonamiento
-- **nomic-embed-text:latest** - Modelo de embeddings multilingüe
-- **all-minilm:latest** - Modelo de embeddings eficiente
+#### 📊 **3. Análisis Cualitativo**
+```python
+# Técnicas de análisis disponibles
+ANALYSIS_METHODS = {
+    'topic_modeling': ['LDA', 'BERTopic', 'NMF'],
+    'clustering': ['K-means', 'HDBSCAN', 'Agglomerative'],
+    'sentiment': ['VADER', 'TextBlob', 'Transformers'],
+    'visualization': ['WordCloud', 'NetworkX', 'UMAP']
+}
+```
 
-### Funcionalidades principales
+**Análisis Disponibles**:
+- 🎯 **Extracción de Temas**: Identificación automática de tópicos principales
+- 🔗 **Clustering de Documentos**: Agrupación por similitud semántica
+- 😊 **Análisis de Sentimientos**: Polaridad y emociones en el texto
+- 🕸️ **Mapas Conceptuales**: Redes de relaciones entre conceptos
+- ☁️ **Nubes de Palabras**: Visualización de términos frecuentes
 
-#### 📄 Gestión de Documentos
-- Carga múltiples archivos simultáneamente
-- Validación automática de formatos y tamaños
-- Visualización de archivos cargados
-- Eliminación individual o masiva
+#### ⚙️ **4. Configuración y Monitoreo**
+- 🔧 Gestión de modelos LLM y embeddings
+- 📊 Métricas de rendimiento en tiempo real
+- 🚨 Sistema de alertas y logs
+- 💾 Exportación/importación de configuraciones
 
-#### 💬 Chat Inteligente
-- Conversación natural con IA
-- Integración automática con documentos cargados
-- Selección de modelos en tiempo real
-- Historial de conversación persistente
+---
 
-#### 🚨 Centro de Alertas
-- Monitoreo en tiempo real del sistema
-- Registro detallado de errores y advertencias
-- Estado de conectividad con Ollama
-- Logs del sistema
+## 🏗️ Arquitectura del Sistema
 
-#### ⚙️ Configuraciones
-- Gestión de modelos LLM y embeddings
-- Parámetros de procesamiento de documentos
-- Configuración del sistema
-- Exportar/importar configuraciones
+```mermaid
+graph TB
+    subgraph "Frontend Layer"
+        UI[Streamlit UI]
+        Chat[Chat Interface]
+        Viz[Visualizations]
+    end
+    
+    subgraph "Application Layer"
+        App[App Controller]
+        Doc[Document Processor]
+        QA[Qualitative Analysis]
+        Bot[Chatbot Engine]
+    end
+    
+    subgraph "AI/ML Layer"
+        Ollama[Ollama LLM]
+        Embed[Embeddings]
+        NLP[NLP Pipeline]
+        ML[ML Algorithms]
+    end
+    
+    subgraph "Data Layer"
+        Vec[Vector Store]
+        Cache[Cache System]
+        Files[File Storage]
+        Config[Configuration]
+    end
+    
+    UI --> App
+    Chat --> Bot
+    Viz --> QA
+    App --> Doc
+    App --> QA
+    Bot --> Ollama
+    Doc --> Embed
+    QA --> ML
+    QA --> NLP
+    Embed --> Vec
+    Doc --> Files
+    App --> Config
+    ML --> Cache
+```
+
+### 🔧 **Componentes Principales**
+
+| Componente | Tecnología | Propósito |
+|------------|------------|-----------|
+| **Frontend** | Streamlit + HTML/CSS | Interfaz de usuario interactiva |
+| **Backend** | Python + FastAPI | Lógica de negocio y APIs |
+| **IA/ML** | Ollama + Transformers | Modelos de lenguaje y embeddings |
+| **Análisis** | Scikit-learn + NLTK | Algoritmos de ML y NLP |
+| **Visualización** | Plotly + NetworkX | Gráficos interactivos y redes |
+| **Almacenamiento** | ChromaDB + SQLite | Base de datos vectorial y relacional |
+
+---
 
 ## 📁 Estructura del Proyecto
 
 ```
 CogniChat/
-├── app.py                      # Aplicación principal
-├── requirements.txt            # Dependencias
-├── .env.example               # Variables de entorno
-├── .gitignore                 # Exclusiones Git
-├── README.md                  # Documentación
-├── config/
-│   ├── __init__.py
-│   └── settings.py            # Configuraciones centralizadas
-├── utils/
-│   ├── __init__.py
-│   ├── logger.py              # Sistema de logging
-│   ├── error_handler.py       # Manejo de errores
-│   └── ollama_client.py       # Cliente Ollama
-├── pages/
-│   ├── __init__.py
-│   ├── document_upload.py     # Pestaña de documentos
-│   ├── chatbot.py             # Pestaña de chat
-│   ├── alerts.py              # Pestaña de alertas
-│   └── settings.py            # Pestaña de configuración
-└── data/                      # Datos (creado automáticamente)
-    ├── uploads/               # Archivos subidos
-    ├── processed/             # Archivos procesados
-    └── cache/                 # Cache del sistema
+├── 📄 Configuración
+│   ├── .env.example              # Variables de entorno
+│   ├── docker-compose.yml        # Configuración Docker
+│   ├── Dockerfile               # Imagen de contenedor
+│   ├── requirements.txt         # Dependencias Python
+│   └── pyproject.toml          # Configuración del proyecto
+│
+├── 🚀 Aplicación Principal
+│   ├── app.py                  # Punto de entrada Streamlit
+│   └── config/
+│       └── settings.py         # Configuraciones centralizadas
+│
+├── 🧩 Módulos Core
+│   ├── modules/
+│   │   ├── chatbot.py          # Motor de conversación
+│   │   ├── document_processor.py # Procesamiento de documentos
+│   │   ├── document_upload.py   # Gestión de carga
+│   │   ├── qualitative_analysis.py # Análisis cualitativo
+│   │   ├── alerts.py           # Sistema de alertas
+│   │   └── settings.py         # Configuración UI
+│   │
+│   └── utils/
+│       ├── database.py         # Gestión de BD
+│       ├── logger.py           # Sistema de logging
+│       ├── error_handler.py    # Manejo de errores
+│       └── ollama_client.py    # Cliente Ollama
+│
+├── 🐳 Docker & Scripts
+│   ├── scripts/
+│   │   ├── setup-docker.ps1    # Configuración Docker
+│   │   ├── download-models.ps1 # Descarga de modelos
+│   │   ├── check_dependencies.py # Verificación de deps
+│   │   └── install_requirements.py # Instalación automática
+│   │
+│   └── data/                   # Datos (auto-generado)
+│       ├── uploads/            # Archivos subidos
+│       ├── processed/          # Documentos procesados
+│       ├── cache/              # Cache del sistema
+│       └── logs/               # Archivos de log
+│
+├── 📚 Documentación
+│   ├── docs/
+│   │   ├── INSTALACION_CONDA.md
+│   │   ├── DESPLIEGUE_DOCKER.md
+│   │   ├── DOCUMENTACION_TESIS.md
+│   │   └── ARQUITECTURA_DETALLADA.md
+│   │
+└── 🧪 Testing
+    └── unit_tests/
+        ├── test_document_processor.py
+        ├── test_chatbot.py
+        └── fixtures/
 ```
+
+---
+
+## 🛠️ Tecnologías y Dependencias
+
+### 🎨 **Frontend & UI**
+```python
+streamlit>=1.29.0           # Framework web principal
+streamlit-chat>=0.1.1       # Componentes de chat
+plotly>=5.17.0             # Gráficos interactivos
+matplotlib>=3.7.0          # Visualizaciones estáticas
+seaborn>=0.12.0           # Gráficos estadísticos
+```
+
+### 🤖 **IA y Machine Learning**
+```python
+transformers>=4.30.0       # Modelos transformer
+scikit-learn>=1.3.0       # Algoritmos de ML
+nltk>=3.8.1              # Procesamiento de lenguaje
+spacy>=3.7.0             # NLP avanzado
+textblob>=0.17.1         # Análisis de sentimientos
+umap-learn>=0.5.3        # Reducción dimensional
+hdbscan>=0.8.33          # Clustering jerárquico
+```
+
+### 📊 **Análisis y Visualización**
+```python
+networkx>=3.2.1           # Análisis de redes
+wordcloud>=1.9.2         # Nubes de palabras
+scipy>=1.11.0            # Computación científica
+statsmodels>=0.14.0      # Modelos estadísticos
+pandas>=2.1.0            # Manipulación de datos
+numpy>=1.24.0            # Computación numérica
+```
+
+### 💾 **Almacenamiento y Datos**
+```python
+chromadb>=0.4.0          # Base de datos vectorial
+pypdf>=3.17.0            # Procesamiento PDF
+python-docx>=0.8.11      # Documentos Word
+openpyxl>=3.1.2          # Archivos Excel
+```
+
+---
 
 ## 🔧 Configuración Avanzada
 
-### Modelos de Ollama
-
-Para descargar modelos adicionales:
+### 🎛️ **Variables de Entorno**
 
 ```bash
-# Modelos LLM recomendados
-ollama pull llama3.2:3b        # Modelo ligero
-ollama pull mistral:7b         # Multilingüe
-ollama pull gemma2:9b          # Google Research
-
-# Modelos de embeddings
-ollama pull mxbai-embed-large  # Embeddings de alto rendimiento
-ollama pull bge-large          # BAAI General Embedding
-```
-
-### Variables de entorno
-
-Edita el archivo `.env` para personalizar:
-
-```env
-# URL de Ollama (cambiar si usas Docker o servidor remoto)
+# Configuración de Ollama
 OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_TIMEOUT=120
 
 # Modelos por defecto
-DEFAULT_LLM_MODEL=llama3.1:8b
+DEFAULT_LLM_MODEL=deepseek-r1:7b
 DEFAULT_EMBEDDING_MODEL=nomic-embed-text:latest
 
 # Configuración RAG
 CHUNK_SIZE=1000
 CHUNK_OVERLAP=200
 MAX_RETRIEVAL_DOCS=5
+SIMILARITY_THRESHOLD=0.7
+
+# Configuración de análisis
+MAX_TOPICS=10
+MIN_CLUSTER_SIZE=5
+SENTIMENT_THRESHOLD=0.1
+
+# Configuración del sistema
+MAX_FILE_SIZE_MB=50
+MAX_TOTAL_SIZE_MB=200
+CACHE_TTL_HOURS=24
+LOG_LEVEL=INFO
 ```
 
-## 📚 Documentación Adicional
+### 🤖 **Modelos Recomendados**
 
-- 📖 **[Guía de Instalación con Conda](docs/INSTALACION_CONDA.md)** - Instalación completa y migración
-- 🔧 **[Solución de Dependencias](docs/SOLUCION_DEPENDENCIAS.md)** - Troubleshooting y mejores prácticas
-- 📋 **[Documentación de Tesis](docs/DOCUMENTACION_TESIS.md)** - Documentación técnica completa
-- 🚀 **[Optimizaciones RAG](docs/OPTIMIZACIONES_RAG.md)** - Mejoras de rendimiento
+#### **Modelos LLM**
+```bash
+# Modelos principales (recomendados)
+ollama pull deepseek-r1:7b      # Razonamiento avanzado
+ollama pull llama3.1:8b         # Conversación general
+ollama pull mistral:7b          # Multilingüe
 
-## 🐛 Solución de Problemas
+# Modelos ligeros (para hardware limitado)
+ollama pull llama3.2:3b         # Modelo compacto
+ollama pull phi3:mini           # Ultra ligero
+```
 
-### Problemas de Dependencias
-
-**Para problemas relacionados con dependencias faltantes o errores de instalación:**
-
-📖 **Consulta la [Guía de Solución de Dependencias](docs/SOLUCION_DEPENDENCIAS.md)**
-
-Esta guía cubre:
-- Errores comunes de instalación
-- Problemas con reportlab y exportación PDF
-- Diferencias entre Conda y pip
-- Comandos de diagnóstico
-
-### Ollama no se conecta
-
-1. Verificar que Ollama esté ejecutándose:
-   ```bash
-   ollama list
-   ```
-
-2. Reiniciar el servicio:
-   ```bash
-   ollama serve
-   ```
-
-3. Verificar la URL en configuraciones
-
-### Error al cargar archivos
-
-1. Verificar que el archivo no exceda el tamaño máximo
-2. Comprobar que el formato esté soportado
-3. Revisar permisos de escritura en la carpeta `data/`
-
-### Problemas de rendimiento
-
-1. Usar modelos más pequeños (3B en lugar de 8B)
-2. Reducir el tamaño de chunk en configuraciones
-3. Limitar el número de documentos recuperados
-
-### Problemas con rutas largas en Windows
-
-**Error**: `OSError: [Errno 2] No such file or directory` con rutas muy largas
-
-**Causa**: Windows tiene una limitación histórica de 260 caracteres para rutas de archivos. Algunos paquetes como `torch`, `sentence-transformers` y `spacy-transformers` pueden generar rutas que excedan este límite.
-
-**Solución**:
-
-1. **Habilitar soporte para rutas largas** (requiere permisos de administrador):
-   ```powershell
-   # Ejecutar PowerShell como administrador
-   reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f
-   ```
-
-2. **Reiniciar el sistema** para que los cambios tomen efecto.
-
-3. **Verificar que está habilitado**:
-   ```powershell
-   reg query "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled
-   ```
-
-4. **Instalar las dependencias problemáticas**:
-   ```bash
-   pip install torch torchvision sentence-transformers spacy-transformers
-   ```
-
-**Alternativas si no tienes permisos de administrador**:
-
-1. **Usar un directorio con ruta más corta**:
-   ```bash
-   # Mover el proyecto a C:\CogniChat en lugar de rutas largas
-   ```
-
-2. **Instalar solo las dependencias esenciales**:
-   ```bash
-   # El sistema funcionará sin torch/sentence-transformers con funcionalidad limitada
-   pip install pyvis  # Solo para mapas conceptuales básicos
-   ```
-
-3. **Usar Conda** (recomendado):
-   ```bash
-   # Conda maneja mejor las rutas largas
-   conda install pytorch torchvision -c pytorch
-   conda install -c conda-forge sentence-transformers
-   ```
-
-**Nota**: Este problema es específico de Windows. En Linux y macOS no se presenta esta limitación.
-
-## 🚀 Próximas Funcionalidades
-
-- [ ] Sistema RAG completo con vectores
-- [ ] Soporte para más formatos de archivo
-- [ ] Integración con bases de datos vectoriales
-- [ ] API REST para integración externa
-- [ ] Modo multi-usuario
-- [ ] Análisis de sentimientos
-- [ ] Generación de resúmenes automáticos
-
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📞 Soporte
-
-Si tienes problemas o preguntas:
-
-1. Revisa la pestaña de **Alertas** en la aplicación
-2. Consulta los logs en `data/logs/`
-3. Abre un issue en el repositorio
+#### **Modelos de Embeddings**
+```bash
+# Embeddings multilingües
+ollama pull nomic-embed-text:latest    # Recomendado
+ollama pull mxbai-embed-large         # Alto rendimiento
+ollama pull all-minilm:latest         # Eficiente
+```
 
 ---
 
-**Desarrollado con ❤️ usando Streamlit y Ollama**
+## 📊 Ejemplos de Uso
+
+### 🔍 **Análisis de Documentos Académicos**
+
+```python
+# Ejemplo: Análisis de papers de investigación
+documents = [
+    "paper1.pdf",  # "Machine Learning in Healthcare"
+    "paper2.pdf",  # "AI Ethics and Bias"
+    "paper3.pdf"   # "Natural Language Processing"
+]
+
+# Resultados automáticos:
+topics_extracted = [
+    "Healthcare Applications (35%)",
+    "Ethical Considerations (28%)",
+    "Technical Implementation (22%)",
+    "Future Research (15%)"
+]
+
+sentiment_analysis = {
+    "positive": 0.65,
+    "neutral": 0.28,
+    "negative": 0.07
+}
+```
+
+### 💬 **Consultas Inteligentes**
+
+```
+Usuario: "¿Cuáles son los principales desafíos éticos en IA según los documentos?"
+
+CogniChat: Basándome en los documentos analizados, los principales desafíos éticos en IA incluyen:
+
+1. **Sesgo Algorítmico** (mencionado en 3/5 documentos):
+   - Discriminación en sistemas de contratación
+   - Sesgos en reconocimiento facial
+   
+2. **Transparencia y Explicabilidad** (2/5 documentos):
+   - Modelos "caja negra" en decisiones críticas
+   - Necesidad de interpretabilidad
+
+3. **Privacidad de Datos** (4/5 documentos):
+   - Uso no autorizado de datos personales
+   - Anonimización insuficiente
+
+📚 Fuentes: documento_etica_ia.pdf (p.15-23), ai_bias_study.pdf (p.8-12)
+```
+
+---
+
+## 🚀 Roadmap y Futuras Mejoras
+
+### 📅 **Versión 1.1 (Q2 2025)**
+- [ ] 🔌 **API REST** completa para integración externa
+- [ ] 🌐 **Soporte multiidioma** (ES, EN, FR, PT)
+- [ ] 📱 **Interfaz móvil** responsiva
+- [ ] 🔄 **Sincronización en la nube** (Google Drive, OneDrive)
+
+### 📅 **Versión 1.2 (Q3 2025)**
+- [ ] 👥 **Modo multi-usuario** con autenticación
+- [ ] 🎯 **Análisis de sentimientos avanzado** con emociones
+- [ ] 📈 **Dashboard de métricas** en tiempo real
+- [ ] 🔍 **Búsqueda semántica** mejorada con filtros
+
+### 📅 **Versión 2.0 (Q4 2025)**
+- [ ] 🧠 **Modelos personalizados** fine-tuning
+- [ ] 🌊 **Procesamiento en streaming** para archivos grandes
+- [ ] 🔗 **Integración con bases de datos** externas
+- [ ] 🎨 **Editor de visualizaciones** personalizable
+
+### 🔮 **Visión a Largo Plazo**
+- [ ] 🤖 **Agentes autónomos** para análisis automatizado
+- [ ] 🌍 **Despliegue en la nube** con escalabilidad automática
+- [ ] 📊 **BI integrado** con reportes automáticos
+- [ ] 🎓 **Modo educativo** con tutoriales interactivos
+
+---
+
+## 🐛 Solución de Problemas
+
+### ❗ **Problemas Comunes**
+
+<details>
+<summary><strong>🔴 Ollama no se conecta</strong></summary>
+
+**Síntomas**: Error de conexión, modelos no disponibles
+
+**Soluciones**:
+```bash
+# 1. Verificar que Ollama esté ejecutándose
+ollama list
+
+# 2. Reiniciar el servicio
+ollama serve
+
+# 3. Verificar la URL en .env
+OLLAMA_BASE_URL=http://localhost:11434
+
+# 4. Verificar firewall/antivirus
+# Permitir puerto 11434
+```
+</details>
+
+<details>
+<summary><strong>🟡 Error al cargar archivos</strong></summary>
+
+**Síntomas**: Archivos no se procesan, errores de formato
+
+**Soluciones**:
+```bash
+# 1. Verificar tamaño de archivo (máx 50MB)
+# 2. Verificar formato soportado (PDF, DOCX, TXT, XLSX)
+# 3. Verificar permisos de escritura en data/
+chmod 755 data/uploads/
+
+# 4. Limpiar cache si es necesario
+rm -rf data/cache/*
+```
+</details>
+
+<details>
+<summary><strong>🟠 Problemas de rendimiento</strong></summary>
+
+**Síntomas**: Respuestas lentas, alta utilización de memoria
+
+**Soluciones**:
+```bash
+# 1. Usar modelos más pequeños
+DEFAULT_LLM_MODEL=llama3.2:3b
+
+# 2. Reducir tamaño de chunks
+CHUNK_SIZE=500
+CHUNK_OVERLAP=100
+
+# 3. Limitar documentos recuperados
+MAX_RETRIEVAL_DOCS=3
+
+# 4. Aumentar memoria disponible
+# Cerrar aplicaciones innecesarias
+```
+</details>
+
+### 🔧 **Comandos de Diagnóstico**
+
+```bash
+# Verificar estado del sistema
+python scripts/check_dependencies.py
+
+# Ver logs en tiempo real
+tail -f data/logs/cognichat.log
+
+# Verificar modelos de Ollama
+ollama list
+
+# Verificar espacio en disco
+df -h
+
+# Verificar memoria RAM
+free -h  # Linux
+Get-ComputerInfo | Select-Object TotalPhysicalMemory  # Windows
+```
+
+---
+
+## 📚 Documentación
+
+### 📖 **Guías Detalladas**
+
+| Documento | Descripción | Audiencia |
+|-----------|-------------|-----------|
+| [📋 Instalación con Conda](docs/INSTALACION_CONDA.md) | Guía completa de instalación | Usuarios |
+| [🐳 Despliegue Docker](docs/DESPLIEGUE_DOCKER.md) | Configuración con contenedores | DevOps |
+| [🏗️ Arquitectura Detallada](docs/ARQUITECTURA_DETALLADA.md) | Diseño técnico del sistema | Desarrolladores |
+| [📊 Documentación de Tesis](docs/DOCUMENTACION_TESIS.md) | Documentación académica completa | Investigadores |
+| [🔧 Solución de Dependencias](docs/SOLUCION_DEPENDENCIAS.md) | Troubleshooting avanzado | Técnicos |
+
+### 🎓 **Recursos de Aprendizaje**
+
+- 📺 **[Video Tutoriales](https://youtube.com/cognichat)** - Guías paso a paso
+- 📝 **[Blog Técnico](https://blog.cognichat.com)** - Artículos y casos de uso
+- 💬 **[Comunidad Discord](https://discord.gg/cognichat)** - Soporte y discusiones
+- 📧 **[Newsletter](https://newsletter.cognichat.com)** - Actualizaciones y novedades
+
+---
+
+## 🤝 Contribuciones
+
+¡Las contribuciones son bienvenidas y valoradas! 🎉
+
+### 🚀 **Cómo Contribuir**
+
+1. **🍴 Fork** el repositorio
+2. **🌿 Crear** una rama para tu feature
+   ```bash
+   git checkout -b feature/nueva-funcionalidad
+   ```
+3. **💻 Desarrollar** tu contribución
+4. **✅ Ejecutar** las pruebas
+   ```bash
+   pytest unit_tests/
+   ```
+5. **📝 Commit** tus cambios
+   ```bash
+   git commit -m "feat: agregar nueva funcionalidad increíble"
+   ```
+6. **🚀 Push** a tu rama
+   ```bash
+   git push origin feature/nueva-funcionalidad
+   ```
+7. **🔄 Crear** un Pull Request
+
+### 📋 **Tipos de Contribuciones**
+
+- 🐛 **Bug Fixes** - Corrección de errores
+- ✨ **Features** - Nuevas funcionalidades
+- 📚 **Documentación** - Mejoras en docs
+- 🎨 **UI/UX** - Mejoras de interfaz
+- ⚡ **Performance** - Optimizaciones
+- 🧪 **Tests** - Pruebas adicionales
+
+### 🏆 **Reconocimientos**
+
+Agradecemos a todos los contribuidores que han hecho posible CogniChat:
+
+<a href="https://github.com/cognichat/cognichat/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cognichat/cognichat" />
+</a>
+
+---
+
+## 📄 Licencia
+
+Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+```
+MIT License
+
+Copyright (c) 2025 CogniChat Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+```
+
+---
+
+## 📞 Soporte y Contacto
+
+### 🆘 **Obtener Ayuda**
+
+1. **📖 Documentación** - Revisa las guías detalladas
+2. **🚨 Sistema de Alertas** - Verifica la pestaña de alertas en la app
+3. **📋 Issues** - Abre un issue en GitHub
+4. **💬 Comunidad** - Únete a nuestro Discord
+
+### 📧 **Contacto**
+
+- **Email**: contact@cognichat.com
+- **Website**: https://cognichat.com
+- **GitHub**: https://github.com/cognichat/cognichat
+- **Discord**: https://discord.gg/cognichat
+
+---
+
+<div align="center">
+
+### 🌟 **¡Dale una estrella si CogniChat te ha sido útil!** ⭐
+
+**Desarrollado con ❤️ por el equipo de CogniChat**
+
+[![GitHub stars](https://img.shields.io/github/stars/cognichat/cognichat?style=social)](https://github.com/cognichat/cognichat/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/cognichat/cognichat?style=social)](https://github.com/cognichat/cognichat/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/cognichat/cognichat?style=social)](https://github.com/cognichat/cognichat/watchers)
+
+---
+
+*"Transformando documentos en conocimiento, una conversación a la vez."* 🧠✨
+
+</div>
