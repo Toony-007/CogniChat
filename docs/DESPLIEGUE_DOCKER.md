@@ -3,11 +3,13 @@
 ## 📋 Tabla de Contenidos
 - [Requisitos Previos](#requisitos-previos)
 - [Configuración Inicial](#configuración-inicial)
+- [Descarga de Modelos IA](#descarga-de-modelos-ia)
 - [Despliegue Rápido](#despliegue-rápido)
 - [Configuración Avanzada](#configuración-avanzada)
 - [Monitoreo y Logs](#monitoreo-y-logs)
 - [Solución de Problemas](#solución-de-problemas)
 - [Mantenimiento](#mantenimiento)
+- [Correcciones Aplicadas](#correcciones-aplicadas)
 
 ## 🔧 Requisitos Previos
 
@@ -56,14 +58,67 @@ MAX_RESPONSE_TOKENS=2500
 LOG_LEVEL=WARNING
 ```
 
+**⚠️ IMPORTANTE**: Para usar CogniChat en otros equipos, debes:
+1. **Copiar** el archivo `.env.production` como `.env` en el directorio raíz
+2. **Modificar** las variables según tu entorno si es necesario
+3. **Asegurar** que los modelos especificados estén disponibles en Ollama
+
 ### 3. Estructura de Directorios
 El sistema creará automáticamente:
 ```
 docker-data/
-├── ollama/          # Modelos de IA descargados
-├── cognichat/       # Base de datos y cache
+├── ollama/          # Modelos de IA descargados (deepseek-r1:7b, nomic-embed-text)
+├── cognichat/       # Base de datos, cache y uploads
+│   └── uploads/     # Archivos subidos por usuarios
 └── logs/            # Logs de la aplicación
-uploads/             # Archivos subidos por usuarios
+```
+
+## 🤖 Descarga de Modelos IA
+
+### Modelos Requeridos
+CogniChat utiliza dos modelos principales:
+- **LLM Principal**: `deepseek-r1:7b` (~4.1GB)
+- **Embeddings**: `nomic-embed-text:latest` (~274MB)
+
+### Descarga Automática (Recomendado)
+```powershell
+# Usar el script automatizado
+.\scripts\download-models.ps1
+
+# O ejecutar manualmente después de iniciar Docker
+docker compose exec ollama ollama pull deepseek-r1:7b
+docker compose exec ollama ollama pull nomic-embed-text:latest
+```
+
+### Descarga Manual (Alternativa)
+```powershell
+# 1. Iniciar solo el servicio Ollama
+docker compose up ollama -d
+
+# 2. Esperar a que esté listo (verificar con docker compose ps)
+docker compose ps
+
+# 3. Descargar modelos uno por uno
+docker compose exec ollama ollama pull deepseek-r1:7b
+docker compose exec ollama ollama pull nomic-embed-text:latest
+
+# 4. Verificar modelos descargados
+docker compose exec ollama ollama list
+
+# 5. Iniciar CogniChat
+docker compose up cognichat -d
+```
+
+### Verificación de Modelos
+```powershell
+# Listar modelos disponibles
+docker compose exec ollama ollama list
+
+# Probar modelo LLM
+docker compose exec ollama ollama run deepseek-r1:7b "Hola, ¿cómo estás?"
+
+# Verificar conectividad desde CogniChat
+curl http://localhost:11434/api/tags
 ```
 
 ## 🚀 Despliegue Rápido
@@ -73,6 +128,9 @@ uploads/             # Archivos subidos por usuarios
 # Configuración completa automática
 .\docker-setup.ps1 setup
 
+# Descargar modelos de IA
+.\scripts\download-models.ps1
+
 # Iniciar servicios
 .\docker-setup.ps1 start
 ```
@@ -80,13 +138,32 @@ uploads/             # Archivos subidos por usuarios
 ### Opción 2: Comandos Manuales
 ```powershell
 # 1. Crear directorios necesarios
-mkdir docker-data\ollama, docker-data\cognichat, docker-data\logs, uploads
+mkdir docker-data\ollama, docker-data\cognichat, docker-data\logs
 
 # 2. Construir imágenes
-docker compose build
+docker compose build --no-cache
 
 # 3. Iniciar servicios
 docker compose up -d
+
+# 4. Descargar modelos (IMPORTANTE)
+docker compose exec ollama ollama pull deepseek-r1:7b
+docker compose exec ollama ollama pull nomic-embed-text:latest
+
+# 5. Verificar que todo funciona
+docker compose ps
+```
+
+### Comandos de Gestión
+```powershell
+# Detener servicios
+docker compose down
+
+# Reiniciar servicios
+docker compose restart
+
+# Ver logs
+docker compose logs -f
 ```
 
 ## 🔗 Acceso a la Aplicación
@@ -339,5 +416,77 @@ docker system prune -af
 ```
 
 ---
+
+## 🔧 Correcciones Aplicadas
+
+### Problemas Solucionados en Esta Versión
+
+#### 1. **Error de Importación: `chat_exporter` not defined**
+- **Problema**: Importación incorrecta de `chat_exporter` desde módulo inexistente
+- **Solución**: Corregida importación en `modules/chatbot.py`:
+  ```python
+  # ANTES (incorrecto):
+  from utils.chat_exporter import chat_exporter
+  
+  # DESPUÉS (correcto):
+  from utils.chat_history import chat_exporter
+  ```
+- **Estado**: ✅ **SOLUCIONADO** - Exportación a DOCX/PDF funciona correctamente
+
+#### 2. **Error de Permisos: Permission denied en directorios de datos**
+- **Problema**: Directorios con permisos de solo lectura (`dr-xr-xr-x`)
+- **Solución**: Actualizado `Dockerfile` con permisos explícitos:
+  ```dockerfile
+  chmod -R 775 /app/data && \
+  chmod -R 775 /app/logs && \
+  chmod 775 /app/data/chat_history && \
+  chmod 775 /app/data/processed && \
+  chmod 775 /app/data/temp_exports && \
+  chmod 775 /app/data/uploads
+  ```
+- **Estado**: ✅ **SOLUCIONADO** - Historial de chat se guarda sin errores
+
+#### 3. **Configuración Incorrecta de Volúmenes**
+- **Problema**: Mapeo directo `./uploads:/app/data/uploads` causaba conflictos
+- **Solución**: Eliminado mapeo directo, usando solo volumen `cognichat_data`
+- **Resultado**: Uploads se guardan correctamente en `docker-data/cognichat/uploads/`
+- **Estado**: ✅ **SOLUCIONADO** - Estructura de directorios optimizada
+
+#### 4. **Modelos de IA No Especificados**
+- **Problema**: Falta de documentación clara sobre modelos requeridos
+- **Solución**: Documentación completa y script automatizado:
+  - `DEFAULT_LLM_MODEL=deepseek-r1:7b`
+  - `DEFAULT_EMBEDDING_MODEL=nomic-embed-text:latest`
+  - Script `scripts/download-models.ps1` para descarga automática
+- **Estado**: ✅ **SOLUCIONADO** - Proceso de setup completamente documentado
+
+### Archivos Modificados en Esta Versión
+- ✅ `modules/chatbot.py` - Corrección de importación
+- ✅ `Dockerfile` - Permisos de directorios
+- ✅ `docker-compose.yml` - Configuración de volúmenes
+- ✅ `docs/DESPLIEGUE_DOCKER.md` - Documentación completa
+- ✅ `scripts/download-models.ps1` - Script de descarga de modelos
+
+### Verificación de Funcionamiento
+```powershell
+# Verificar que todos los problemas están solucionados:
+
+# 1. Exportación funciona
+# Ir a la aplicación → Chatbot → Probar botones "📄 DOCX" y "📑 PDF"
+
+# 2. Permisos correctos
+docker exec cognichat-app ls -la /app/data/
+# Debe mostrar: drwxrwxr-x para chat_history, processed, temp_exports, uploads
+
+# 3. Modelos disponibles
+docker compose exec ollama ollama list
+# Debe mostrar: deepseek-r1:7b y nomic-embed-text:latest
+
+# 4. Aplicación funcionando
+curl http://localhost:8501/_stcore/health
+# Debe retornar: {"status": "ok"}
+```
+
+**Nota**: Esta versión incluye todas las correcciones necesarias para un despliegue exitoso en cualquier equipo con Docker instalado.
 
 **Nota**: Esta guía asume un entorno Windows con Docker Desktop. Para otros sistemas operativos, adaptar los comandos según corresponda.

@@ -65,7 +65,6 @@ services:
     volumes:
       - cognichat_data:/app/data
       - cognichat_logs:/app/logs
-      - ./uploads:/app/data/uploads  # Mapeo directo para uploads
     
     # Variables de entorno (usar archivo .env.production)
     env_file:

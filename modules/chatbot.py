@@ -15,7 +15,7 @@ from utils.traceability import TraceabilityManager
 
 # Importar exportadores con manejo de errores
 try:
-    from utils.chat_exporter import chat_exporter
+    from utils.chat_history import chat_exporter
     EXPORT_AVAILABLE = True
 except ImportError:
     EXPORT_AVAILABLE = False

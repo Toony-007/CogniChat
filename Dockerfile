@@ -81,7 +81,12 @@ RUN mkdir -p /app/data/cache \
 # Crear usuario no-root para seguridad
 RUN useradd --create-home --shell /bin/bash cognichat && \
     chown -R cognichat:cognichat /app && \
-    chmod -R 755 /app/data
+    chmod -R 775 /app/data && \
+    chmod -R 775 /app/logs && \
+    chmod 775 /app/data/chat_history && \
+    chmod 775 /app/data/processed && \
+    chmod 775 /app/data/temp_exports && \
+    chmod 775 /app/data/uploads
 
 # Cambiar a usuario no-root
 USER cognichat
