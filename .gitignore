@@ -75,3 +75,11 @@ tests/test_report.json
 # Archivos temporales de desarrollo
 *.tmp
 *.bak
+
+# Docker - Datos y volúmenes (NO subir)
+docker-data/
+uploads/
+*.env.local
+
+# Archivos sensibles
+.env
