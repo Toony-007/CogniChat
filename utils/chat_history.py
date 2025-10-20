@@ -46,10 +46,20 @@ class ChatHistoryManager:
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 conversation_name = f"conversacion_{timestamp}"
             
+            # Sanitizar el nombre del archivo para Windows
+            import re
+            # Reemplazar caracteres inválidos con guiones bajos
+            safe_conversation_name = re.sub(r'[<>:"/\\|?*]', '_', conversation_name)
+            # Eliminar espacios múltiples y reemplazar con guiones bajos
+            safe_conversation_name = re.sub(r'\s+', '_', safe_conversation_name)
+            # Limitar la longitud del nombre
+            safe_conversation_name = safe_conversation_name[:100]
+            
             # Estructura del historial
             conversation_data = {
                 "metadata": {
-                    "name": conversation_name,
+                    "name": conversation_name,  # Nombre original
+                    "safe_filename": safe_conversation_name,  # Nombre seguro para archivo
                     "created_at": datetime.now().isoformat(),
                     "total_messages": len(messages),
                     "user_messages": len([m for m in messages if m["role"] == "user"]),
@@ -64,7 +74,7 @@ class ChatHistoryManager:
                 }
             }
             
-            filename = f"{conversation_name}.json"
+            filename = f"{safe_conversation_name}.json"
             filepath = self.history_dir / filename
             
             with open(filepath, 'w', encoding='utf-8') as f:
