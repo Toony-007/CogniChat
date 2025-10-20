@@ -1,8 +1,156 @@
 """
 Módulo de Análisis Cualitativo Avanzado
 Análisis profundo de contenido RAG con técnicas de NLP y visualizaciones interactivas
-Incluye mapas conceptuales interactivos, mapas mentales, resúmenes automáticos y triangulación
+
+ORGANIZACIÓN DEL CÓDIGO POR FUNCIONALIDADES:
+================================================================================
+1. IMPORTS Y CONFIGURACIÓN GLOBAL
+2. ENUMS, DATACLASSES Y ESTRUCTURAS DE DATOS
+3. CLASES BASE Y INTERFACES
+4. GESTIÓN DE CACHE Y MEMORIA
+5. PREPROCESAMIENTO DE TEXTO
+6. EXTRACCIÓN DE CONCEPTOS
+7. ANÁLISIS DE TEMAS
+8. ANÁLISIS DE SENTIMIENTOS
+9. CLUSTERING Y AGRUPACIÓN
+10. MAPAS CONCEPTUALES INTERACTIVOS
+11. MAPAS MENTALES
+12. RESUMENES AUTOMÁTICOS
+13. ANÁLISIS DE TRIANGULACIÓN
+14. NUBES DE PALABRAS
+15. VISUALIZACIONES Y GRÁFICOS
+16. ANÁLISIS PARALELO Y OPTIMIZACIÓN
+17. MÉTODOS DE CONFIGURACIÓN
+18. FUNCIONES DE RENDERIZADO (STREAMLIT)
+19. FUNCIÓN PRINCIPAL DE RENDERIZADO
+================================================================================
+
+Cada sección está claramente marcada y separada para fácil localización y modificación.
+
+ÍNDICE DE NAVEGACIÓN RÁPIDA:
+================================================================================
+Para encontrar y modificar cualquier funcionalidad, busca estos separadores:
+
+🔧 CONFIGURACIÓN Y ESTRUCTURAS:
+   - Línea 145:  # 2. ENUMS, DATACLASSES Y ESTRUCTURAS DE DATOS
+   - Línea 199:  # 3. CLASES BASE Y INTERFACES
+   - Línea 223:  # 4. GESTIÓN DE CACHE Y MEMORIA
+   - Línea 1711: # 17. MÉTODOS DE CONFIGURACIÓN
+
+📝 PROCESAMIENTO DE TEXTO:
+   - Línea 276:  # 5. PREPROCESAMIENTO DE TEXTO
+
+🔍 ANÁLISIS DE CONTENIDO:
+   - Línea 346:  # 6. EXTRACCIÓN DE CONCEPTOS
+   - Línea 533:  # 7. ANÁLISIS DE TEMAS
+   - Línea 749:  # 8. ANÁLISIS DE SENTIMIENTOS
+   - Línea 3637: # 9. CLUSTERING Y AGRUPACIÓN
+   - Línea 2320: # 13. ANÁLISIS DE TRIANGULACIÓN
+
+🗺️ VISUALIZACIONES INTERACTIVAS:
+   - Línea 1918: # 10. MAPAS CONCEPTUALES INTERACTIVOS
+   - Línea 2214: # 11. MAPAS MENTALES
+   - Línea 4363: # 15. VISUALIZACIONES Y GRÁFICOS
+
+📄 RESUMENES Y REPORTES:
+   - Línea 1118: # 12. RESUMENES AUTOMÁTICOS
+   - Línea 3819: # 14. NUBES DE PALABRAS
+
+⚡ OPTIMIZACIÓN Y RENDIMIENTO:
+   - Línea 1589: # 16. ANÁLISIS PARALELO Y OPTIMIZACIÓN
+
+🖥️ INTERFAZ DE USUARIO:
+   - Línea 5890: # 19. FUNCIÓN PRINCIPAL DE RENDERIZADO
+
+FUNCIONES CLAVE POR SECCIÓN:
+================================================================================
+🔍 EXTRACCIÓN DE CONCEPTOS (Línea 346):
+   - extract_key_concepts()          → Extraer conceptos clave
+   - _extract_concepts_legacy()      → Método legacy de respaldo
+   - _extract_concepts_with_ngrams() → Extracción inteligente con n-gramas (NUEVO)
+   - _identify_intelligent_main_theme() → Tema central inteligente (NUEVO)
+   - ConceptExtractor.analyze()      → Análisis modular
+
+🎯 ANÁLISIS DE TEMAS (Línea 533):
+   - extract_advanced_themes()       → Análisis LDA avanzado
+   - _extract_advanced_themes_detailed() → Método legacy detallado
+   - ThemeAnalyzer.analyze()         → Análisis modular
+
+😊 ANÁLISIS DE SENTIMIENTOS (Línea 749):
+   - advanced_sentiment_analysis()   → Análisis con VADER/TextBlob
+   - _advanced_sentiment_analysis_detailed() → Método legacy detallado
+   - SentimentAnalyzer.analyze()     → Análisis modular
+
+🗺️ MAPAS CONCEPTUALES (Línea 1918):
+   - create_interactive_concept_map() → Mapa con PyVis (MEJORADO: n-gramas, mejor separación)
+   - _analyze_concept_hierarchy()    → Jerarquía de conceptos (MEJORADO: n-gramas)
+   - _analyze_concept_hierarchy_with_ai() → Análisis con IA (NUEVO)
+   - _extract_concepts_with_ngrams() → Extracción inteligente (NUEVO)
+   - _identify_intelligent_main_theme() → Tema central inteligente (NUEVO)
+   - generate_advanced_concept_map() → Mapa avanzado
+
+🧠 MAPAS MENTALES (Línea 2214):
+   - create_interactive_mind_map()   → Mapa con streamlit-agraph (MEJORADO: texto legible, contenedor completo)
+   - _analyze_intelligent_mind_map_structure() → Estructura inteligente (MEJORADO: n-gramas)
+   - _extract_concepts_with_ngrams() → Extracción inteligente (COMPARTIDO)
+   - _identify_intelligent_main_theme() → Tema central inteligente (COMPARTIDO)
+
+📝 RESUMENES (Línea 1118):
+   - generate_intelligent_summary()  → Resumen con LLM
+   - generate_rag_summary()          → Resumen básico
+   - generate_basic_summary()        → Resumen por frecuencia
+
+🔺 TRIANGULACIÓN (Línea 2320):
+   - perform_triangulation_analysis() → Validación multi-fuente (MEJORADO: soporte una fuente)
+   - _perform_single_source_triangulation() → Triangulación interna (NUEVO)
+
+☁️ NUBES DE PALABRAS (Línea 3819):
+   - generate_word_cloud()           → Generación de nube
+
+🔍 CLUSTERING (Línea 3637):
+   - perform_clustering()            → Agrupación K-means/DBSCAN
+
+⚡ OPTIMIZACIÓN (Línea 1589):
+   - perform_parallel_analysis()     → Análisis paralelo
+   - optimize_performance()          → Optimización automática
+   - get_performance_metrics()       → Métricas del sistema
+
+================================================================================
+
+MEJORAS IMPLEMENTADAS (Última actualización):
+================================================================================
+✅ MAPAS CONCEPTUALES:
+   - Extracción inteligente con n-gramas (frases completas en lugar de palabras sueltas)
+   - Modo normal por defecto (3-5x más rápido que IA)
+   - Mejor separación visual entre nodos
+   - Análisis con IA como opción avanzada
+   - Identificación más coherente del tema central
+
+✅ MAPAS MENTALES:
+   - Texto blanco/gris claro para legibilidad en fondo oscuro
+   - Contenedor más grande (1400x700px) para cubrir pantalla completa
+   - Espaciado mejorado entre nodos (450px por defecto, hasta 800px)
+   - Física más suave para evitar nodos "pegados"
+   - Extracción inteligente con n-gramas
+   - Modo normal por defecto
+
+✅ TRIANGULACIÓN:
+   - Soporte para una sola fuente (triangulación interna)
+   - Análisis por secciones del mismo documento
+   - Validación cruzada mejorada
+
+✅ ARQUITECTURA:
+   - Clases especializadas (ConceptExtractor, ThemeAnalyzer, SentimentAnalyzer)
+   - Sistema de cache optimizado
+   - Procesamiento paralelo
+   - Configuración dinámica
+
+================================================================================
 """
+
+# =============================================================================
+# 1. IMPORTS Y CONFIGURACIÓN GLOBAL
+# =============================================================================
 
 import streamlit as st
 import json
@@ -17,24 +165,31 @@ import plotly.graph_objects as go
 import networkx as nx
 import numpy as np
 import pandas as pd
-from typing import Dict, List, Tuple, Any, Optional
+from typing import Dict, List, Tuple, Any, Optional, Union, Callable
 import sys
 import tempfile
 import base64
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from enum import Enum
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Análisis de texto avanzado
 try:
     from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-    from sklearn.cluster import KMeans, DBSCAN
-    from sklearn.decomposition import LatentDirichletAllocation, PCA
+    from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
+    from sklearn.decomposition import LatentDirichletAllocation, PCA, TruncatedSVD
     from sklearn.metrics.pairwise import cosine_similarity
-    from sklearn.manifold import TSNE
+    from sklearn.manifold import TSNE, MDS
+    from sklearn.preprocessing import StandardScaler
     import nltk
     from textblob import TextBlob
     from wordcloud import WordCloud
     import seaborn as sns
     import matplotlib.pyplot as plt
     import scipy.stats as stats
+    from scipy.cluster.hierarchy import dendrogram, linkage
     ADVANCED_ANALYSIS_AVAILABLE = True
 except ImportError:
     ADVANCED_ANALYSIS_AVAILABLE = False
@@ -69,15 +224,861 @@ from config.settings import config
 
 logger = setup_logger()
 
-class AdvancedQualitativeAnalyzer:
-    """Analizador cualitativo avanzado con técnicas de NLP y mapas conceptuales interactivos"""
+# =============================================================================
+# 2. ENUMS, DATACLASSES Y ESTRUCTURAS DE DATOS
+# =============================================================================
+# En esta sección se definen los tipos de datos y estructuras fundamentales
+# que usa todo el módulo. Modificar aquí si necesitas:
+# - Agregar nuevos tipos de análisis
+# - Cambiar la configuración por defecto
+# - Modificar estructuras de datos
+
+class AnalysisType(Enum):
+    """Tipos de análisis disponibles"""
+    CONCEPT_EXTRACTION = "concept_extraction"
+    THEME_ANALYSIS = "theme_analysis"
+    SENTIMENT_ANALYSIS = "sentiment_analysis"
+    CLUSTERING = "clustering"
+    CONCEPT_MAP = "concept_map"
+    MIND_MAP = "mind_map"
+    SUMMARY = "summary"
+    TRIANGULATION = "triangulation"
+
+class VisualizationType(Enum):
+    """Tipos de visualización disponibles"""
+    INTERACTIVE_NETWORK = "interactive_network"
+    STATIC_GRAPH = "static_graph"
+    HIERARCHICAL_TREE = "hierarchical_tree"
+    FORCE_DIRECTED = "force_directed"
+    CIRCULAR = "circular"
+
+@dataclass
+class AnalysisConfig:
+    """Configuración para análisis cualitativo"""
+    min_frequency: int = 2
+    max_concepts: int = 50
+    similarity_threshold: float = 0.6
+    chunk_size: int = 2000
+    enable_cache: bool = True
+    parallel_processing: bool = True
+    max_workers: int = 4
+    
+@dataclass
+class ConceptData:
+    """Datos de un concepto extraído"""
+    concept: str
+    score: float
+    frequency: int
+    context: List[str] = field(default_factory=list)
+    related_concepts: List[str] = field(default_factory=list)
+    sentiment: Optional[float] = None
+    category: Optional[str] = None
+
+@dataclass
+class AnalysisResult:
+    """Resultado de un análisis"""
+    analysis_type: AnalysisType
+    data: Dict[str, Any]
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    timestamp: datetime = field(default_factory=datetime.now)
+    processing_time: float = 0.0
+
+# =============================================================================
+# 3. CLASES BASE Y INTERFACES
+# =============================================================================
+
+class BaseAnalyzer(ABC):
+    """Clase base para todos los analizadores"""
+    
+    def __init__(self, config: AnalysisConfig):
+        self.config = config
+        self.cache = {}
+        self.logger = logger
+    
+    @abstractmethod
+    def analyze(self, chunks: List[Dict]) -> AnalysisResult:
+        """Realizar análisis específico"""
+        pass
+    
+    def _validate_input(self, chunks: List[Dict]) -> bool:
+        """Validar entrada de datos"""
+        if not chunks or not isinstance(chunks, list):
+            return False
+        return any(isinstance(chunk, dict) and chunk.get('content') 
+                  for chunk in chunks)
+
+# =============================================================================
+# 4. GESTIÓN DE CACHE Y MEMORIA
+# =============================================================================
+
+class CacheManager:
+    """Gestor de cache optimizado para análisis cualitativo"""
+    
+    def __init__(self, max_size: int = 1000):
+        self.cache = {}
+        self.max_size = max_size
+        self.access_times = {}
+        self.lock = threading.Lock()
+    
+    def get(self, key: str) -> Optional[Any]:
+        """Obtener elemento del cache"""
+        with self.lock:
+            if key in self.cache:
+                self.access_times[key] = datetime.now()
+                return self.cache[key]
+            return None
+    
+    def set(self, key: str, value: Any) -> None:
+        """Guardar elemento en cache"""
+        with self.lock:
+            if len(self.cache) >= self.max_size:
+                self._evict_oldest()
+            self.cache[key] = value
+            self.access_times[key] = datetime.now()
+    
+    def _evict_oldest(self) -> None:
+        """Eliminar el elemento más antiguo"""
+        if not self.access_times:
+            return
+        oldest_key = min(self.access_times.keys(), 
+                        key=lambda k: self.access_times[k])
+        del self.cache[oldest_key]
+        del self.access_times[oldest_key]
+    
+    def clear(self) -> None:
+        """Limpiar cache"""
+        with self.lock:
+            self.cache.clear()
+            self.access_times.clear()
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Obtener estadísticas del cache"""
+        with self.lock:
+            return {
+                'size': len(self.cache),
+                'max_size': self.max_size,
+                'hit_ratio': getattr(self, '_hit_ratio', 0.0)
+            }
+
+# =============================================================================
+# 5. PREPROCESAMIENTO DE TEXTO
+# =============================================================================
+
+class TextPreprocessor:
+    """Preprocesador de texto especializado"""
     
     def __init__(self):
-        self.rag_processor = RAGProcessor()
-        self.cache_path = Path(config.CACHE_DIR) / "rag_cache.json"
-        self.analysis_cache_path = Path(config.CACHE_DIR) / "qualitative_analysis_cache.json"
+        self.stopwords_cache = None
+        self.logger = logger
+    
+    def get_spanish_stopwords(self) -> List[str]:
+        """Obtener stopwords en español con cache"""
+        if self.stopwords_cache is None:
+            try:
+                if ADVANCED_ANALYSIS_AVAILABLE:
+                    from nltk.corpus import stopwords
+                    spanish_stopwords = set(stopwords.words('spanish'))
+                    # Agregar stopwords adicionales específicas del dominio
+                    additional_stopwords = {
+                        'también', 'puede', 'ser', 'está', 'están', 'hacer', 'hace',
+                        'tiene', 'tienen', 'dice', 'dice', 'muy', 'más', 'menos',
+                        'bien', 'mal', 'bueno', 'malo', 'nuevo', 'viejo', 'grande',
+                        'pequeño', 'mucho', 'poco', 'todo', 'nada', 'algo', 'alguno',
+                        'algunos', 'cada', 'cualquier', 'mismo', 'misma', 'otros',
+                        'otras', 'varios', 'varias', 'diferentes', 'importante',
+                        'necesario', 'posible', 'imposible', 'general', 'específico'
+                    }
+                    spanish_stopwords.update(additional_stopwords)
+                    self.stopwords_cache = list(spanish_stopwords)
+                else:
+                    # Fallback básico
+                    self.stopwords_cache = [
+                        'el', 'la', 'de', 'que', 'y', 'a', 'en', 'un', 'es', 'se',
+                        'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son', 'con',
+                        'para', 'al', 'del', 'los', 'las', 'una', 'como', 'más',
+                        'pero', 'sus', 'todo', 'esta', 'sobre', 'entre', 'cuando',
+                        'muy', 'sin', 'hasta', 'desde', 'está', 'mi', 'porque',
+                        'qué', 'sólo', 'han', 'yo', 'hay', 'vez', 'puede', 'todos',
+                        'así', 'nos', 'ni', 'parte', 'tiene', 'él', 'uno', 'donde',
+                        'bien', 'tiempo', 'mismo', 'ahora', 'cada', 'e', 'vida',
+                        'otro', 'después', 'te', 'otros', 'me', 'esas', 'le', 'suya',
+                        'misma', 'yo', 'también', 'hasta', 'año', 'dos', 'bajo',
+                        'arriba', 'encima', 'debajo', 'dentro', 'fuera', 'aquí',
+                        'allí', 'donde', 'cuando', 'como', 'porque', 'aunque',
+                        'mientras', 'antes', 'después', 'durante', 'hasta', 'desde'
+                    ]
+            except Exception as e:
+                self.logger.warning(f"Error cargando stopwords: {e}")
+                self.stopwords_cache = []
         
-        # Cache para optimización de rendimiento
+        return self.stopwords_cache
+    
+    def preprocess_text(self, text: str) -> str:
+        """Preprocesar texto para análisis"""
+        if not text:
+            return ""
+        
+        # Limpiar texto
+        text = re.sub(r'[^\w\s]', ' ', text.lower())
+        text = re.sub(r'\s+', ' ', text).strip()
+        
+        # Remover stopwords
+        words = text.split()
+        stopwords = self.get_spanish_stopwords()
+        filtered_words = [word for word in words 
+                         if word not in stopwords and len(word) > 2]
+        
+        return ' '.join(filtered_words)
+
+# =============================================================================
+# 6. EXTRACCIÓN DE CONCEPTOS
+# =============================================================================
+# Esta sección maneja la extracción de conceptos clave del contenido.
+# MODIFICAR AQUÍ PARA:
+# - Cambiar algoritmos de extracción (TF-IDF, frecuencia, etc.)
+# - Ajustar umbrales de relevancia
+# - Mejorar la detección de conceptos relacionados
+# 
+# MÉTODOS PRINCIPALES:
+# - extract_key_concepts() → Punto de entrada principal
+# - ConceptExtractor.analyze() → Análisis modular
+# - _extract_concepts_legacy() → Fallback compatible
+
+class ConceptExtractor(BaseAnalyzer):
+    """Extractor de conceptos especializado"""
+    
+    def __init__(self, config: AnalysisConfig):
+        super().__init__(config)
+        self.preprocessor = TextPreprocessor()
+        self.cache_manager = CacheManager()
+    
+    def analyze(self, chunks: List[Dict]) -> AnalysisResult:
+        """Extraer conceptos clave del contenido"""
+        start_time = datetime.now()
+        
+        if not self._validate_input(chunks):
+            return AnalysisResult(
+                analysis_type=AnalysisType.CONCEPT_EXTRACTION,
+                data={'concepts': []},
+                metadata={'error': 'Invalid input data'}
+            )
+        
+        # Generar clave de cache
+        cache_key = self._generate_cache_key(chunks)
+        cached_result = self.cache_manager.get(cache_key)
+        
+        if cached_result and self.config.enable_cache:
+            return cached_result
+        
+        # Procesar chunks
+        concepts = self._extract_concepts_advanced(chunks)
+        
+        processing_time = (datetime.now() - start_time).total_seconds()
+        
+        result = AnalysisResult(
+            analysis_type=AnalysisType.CONCEPT_EXTRACTION,
+            data={'concepts': concepts},
+            metadata={
+                'total_chunks': len(chunks),
+                'concepts_found': len(concepts),
+                'processing_method': 'advanced_tfidf' if ADVANCED_ANALYSIS_AVAILABLE else 'frequency_based'
+            },
+            processing_time=processing_time
+        )
+        
+        if self.config.enable_cache:
+            self.cache_manager.set(cache_key, result)
+        
+        return result
+    
+    def _generate_cache_key(self, chunks: List[Dict]) -> str:
+        """Generar clave única para cache"""
+        content_hash = hash(str(sorted([chunk.get('content', '')[:100] for chunk in chunks])))
+        return f"concepts_{content_hash}_{self.config.min_frequency}_{self.config.max_concepts}"
+    
+    def _extract_concepts_advanced(self, chunks: List[Dict]) -> List[ConceptData]:
+        """Extraer conceptos usando métodos avanzados"""
+        # Preparar textos
+        chunk_texts = []
+        for chunk in chunks:
+            content = chunk.get('content', '').strip()
+            if content:
+                processed = self.preprocessor.preprocess_text(content)
+                if processed and len(processed.split()) > 5:
+                    chunk_texts.append(processed)
+        
+        if not chunk_texts:
+            return []
+        
+        concepts = []
+        
+        # Método avanzado con TF-IDF
+        if ADVANCED_ANALYSIS_AVAILABLE and len(chunk_texts) >= 2:
+            concepts = self._extract_with_tfidf(chunk_texts)
+        
+        # Fallback con análisis de frecuencia
+        if not concepts:
+            concepts = self._extract_with_frequency(chunk_texts)
+        
+        # Enriquecer conceptos con contexto
+        concepts = self._enrich_concepts_with_context(concepts, chunks)
+        
+        return concepts[:self.config.max_concepts]
+    
+    def _extract_with_tfidf(self, texts: List[str]) -> List[ConceptData]:
+        """Extraer conceptos usando TF-IDF"""
+        try:
+            vectorizer = TfidfVectorizer(
+                max_features=200,
+                stop_words=self.preprocessor.get_spanish_stopwords(),
+                ngram_range=(1, 3),
+                min_df=max(1, len(texts) // 10),
+                max_df=0.9
+            )
+            
+            tfidf_matrix = vectorizer.fit_transform(texts)
+            feature_names = vectorizer.get_feature_names_out()
+            
+            # Calcular puntuaciones promedio
+            mean_scores = tfidf_matrix.mean(axis=0).A1
+            
+            concepts = []
+            for i, score in enumerate(mean_scores):
+                if score > 0:
+                    concept = ConceptData(
+                        concept=feature_names[i],
+                        score=float(score),
+                        frequency=int(score * len(texts) * 10)  # Aproximación
+                    )
+                    concepts.append(concept)
+            
+            return sorted(concepts, key=lambda x: x.score, reverse=True)
+            
+        except Exception as e:
+            self.logger.warning(f"Error en TF-IDF: {e}")
+            return []
+    
+    def _extract_with_frequency(self, texts: List[str]) -> List[ConceptData]:
+        """Extraer conceptos usando análisis de frecuencia"""
+        all_text = " ".join(texts)
+        words = all_text.split()
+        word_freq = Counter(words)
+        
+        total_words = len(words)
+        concepts = []
+        
+        for word, freq in word_freq.most_common(100):
+            if (len(word) > 3 and 
+                word not in self.preprocessor.get_spanish_stopwords() and 
+                freq >= self.config.min_frequency and
+                word.isalpha()):
+                
+                concept = ConceptData(
+                    concept=word,
+                    score=freq / total_words,
+                    frequency=freq
+                )
+                concepts.append(concept)
+        
+        return concepts
+    
+    def _enrich_concepts_with_context(self, concepts: List[ConceptData], chunks: List[Dict]) -> List[ConceptData]:
+        """Enriquecer conceptos con contexto y relaciones"""
+        for concept in concepts:
+            # Buscar contexto
+            concept.context = self._find_concept_context(concept.concept, chunks)
+            # Buscar conceptos relacionados
+            concept.related_concepts = self._find_related_concepts(concept.concept, concepts)
+        
+        return concepts
+    
+    def _find_concept_context(self, concept: str, chunks: List[Dict], max_contexts: int = 3) -> List[str]:
+        """Encontrar contexto para un concepto"""
+        contexts = []
+        for chunk in chunks:
+            content = chunk.get('content', '')
+            if concept.lower() in content.lower():
+                # Extraer oración que contiene el concepto
+                sentences = re.split(r'[.!?]+', content)
+                for sentence in sentences:
+                    if concept.lower() in sentence.lower() and len(sentence.strip()) > 20:
+                        contexts.append(sentence.strip())
+                        if len(contexts) >= max_contexts:
+                            break
+                if len(contexts) >= max_contexts:
+                    break
+        return contexts
+    
+    def _find_related_concepts(self, concept: str, all_concepts: List[ConceptData], max_related: int = 5) -> List[str]:
+        """Encontrar conceptos relacionados"""
+        related = []
+        concept_words = set(concept.lower().split())
+        
+        for other_concept in all_concepts:
+            if other_concept.concept == concept:
+                continue
+            
+            other_words = set(other_concept.concept.lower().split())
+            # Calcular similitud basada en palabras compartidas
+            if concept_words & other_words:
+                related.append(other_concept.concept)
+                if len(related) >= max_related:
+                    break
+        
+        return related
+
+# =============================================================================
+# 7. ANÁLISIS DE TEMAS
+# =============================================================================
+
+class ThemeAnalyzer(BaseAnalyzer):
+    """Analizador de temas especializado"""
+    
+    def __init__(self, config: AnalysisConfig):
+        super().__init__(config)
+        self.preprocessor = TextPreprocessor()
+        self.cache_manager = CacheManager()
+    
+    def analyze(self, chunks: List[Dict]) -> AnalysisResult:
+        """Analizar temas del contenido"""
+        start_time = datetime.now()
+        
+        if not self._validate_input(chunks):
+            return AnalysisResult(
+                analysis_type=AnalysisType.THEME_ANALYSIS,
+                data={'themes': []},
+                metadata={'error': 'Invalid input data'}
+            )
+        
+        # Generar clave de cache
+        cache_key = self._generate_cache_key(chunks)
+        cached_result = self.cache_manager.get(cache_key)
+        
+        if cached_result and self.config.enable_cache:
+            return cached_result
+        
+        # Analizar temas
+        themes = self._extract_themes_advanced(chunks)
+        
+        processing_time = (datetime.now() - start_time).total_seconds()
+        
+        result = AnalysisResult(
+            analysis_type=AnalysisType.THEME_ANALYSIS,
+            data={'themes': themes},
+            metadata={
+                'total_chunks': len(chunks),
+                'themes_found': len(themes),
+                'processing_method': 'lda_analysis' if ADVANCED_ANALYSIS_AVAILABLE else 'keyword_clustering'
+            },
+            processing_time=processing_time
+        )
+        
+        if self.config.enable_cache:
+            self.cache_manager.set(cache_key, result)
+        
+        return result
+    
+    def _generate_cache_key(self, chunks: List[Dict]) -> str:
+        """Generar clave única para cache"""
+        content_hash = hash(str(sorted([chunk.get('content', '')[:100] for chunk in chunks])))
+        return f"themes_{content_hash}_{self.config.max_concepts}"
+    
+    def _extract_themes_advanced(self, chunks: List[Dict]) -> List[Dict]:
+        """Extraer temas usando métodos avanzados"""
+        # Preparar textos
+        texts = []
+        for chunk in chunks:
+            content = chunk.get('content', '').strip()
+            if content:
+                processed = self.preprocessor.preprocess_text(content)
+                if processed and len(processed.split()) > 10:
+                    texts.append(processed)
+        
+        if not texts:
+            return []
+        
+        themes = []
+        
+        # Análisis LDA si está disponible
+        if ADVANCED_ANALYSIS_AVAILABLE and len(texts) >= 3:
+            themes = self._extract_themes_with_lda(texts)
+        
+        # Fallback con clustering de palabras clave
+        if not themes:
+            themes = self._extract_themes_with_clustering(texts)
+        
+        return themes
+    
+    def _extract_themes_with_lda(self, texts: List[str]) -> List[Dict]:
+        """Extraer temas usando LDA"""
+        try:
+            # Configurar LDA
+            n_topics = min(8, max(3, len(texts) // 3))
+            
+            vectorizer = TfidfVectorizer(
+                max_features=1000,
+                stop_words=self.preprocessor.get_spanish_stopwords(),
+                ngram_range=(1, 2),
+                min_df=2,
+                max_df=0.8
+            )
+            
+            tfidf_matrix = vectorizer.fit_transform(texts)
+            
+            lda = LatentDirichletAllocation(
+                n_components=n_topics,
+                random_state=42,
+                max_iter=100
+            )
+            
+            lda.fit(tfidf_matrix)
+            
+            # Extraer temas
+            feature_names = vectorizer.get_feature_names_out()
+            themes = []
+            
+            for topic_idx, topic in enumerate(lda.components_):
+                top_words_idx = topic.argsort()[-10:][::-1]
+                top_words = [feature_names[i] for i in top_words_idx]
+                top_weights = [topic[i] for i in top_words_idx]
+                
+                theme = {
+                    'id': topic_idx,
+                    'name': f"Tema {topic_idx + 1}",
+                    'keywords': top_words,
+                    'weights': top_weights,
+                    'coherence': self._calculate_topic_coherence(top_words, texts),
+                    'description': self._generate_theme_description(top_words)
+                }
+                themes.append(theme)
+            
+            return sorted(themes, key=lambda x: x['coherence'], reverse=True)
+            
+        except Exception as e:
+            self.logger.warning(f"Error en LDA: {e}")
+            return []
+    
+    def _extract_themes_with_clustering(self, texts: List[str]) -> List[Dict]:
+        """Extraer temas usando clustering de palabras clave"""
+        try:
+            # Extraer palabras clave
+            all_words = []
+            for text in texts:
+                words = text.split()
+                all_words.extend([w for w in words if len(w) > 3])
+            
+            word_freq = Counter(all_words)
+            stopwords = self.preprocessor.get_spanish_stopwords()
+            
+            # Filtrar palabras clave
+            keywords = [word for word, freq in word_freq.most_common(50)
+                       if word not in stopwords and freq >= 2]
+            
+            if len(keywords) < 5:
+                return []
+            
+            # Crear vectores de palabras
+            vectorizer = TfidfVectorizer(
+                vocabulary=keywords,
+                stop_words=self.preprocessor.get_spanish_stopwords()
+            )
+            
+            tfidf_matrix = vectorizer.fit_transform(texts)
+            
+            # Clustering
+            n_clusters = min(5, max(2, len(keywords) // 10))
+            kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+            cluster_labels = kmeans.fit_predict(tfidf_matrix)
+            
+            # Agrupar palabras por cluster
+            themes = []
+            for cluster_id in range(n_clusters):
+                cluster_words = []
+                for i, word in enumerate(keywords):
+                    if cluster_labels[i] == cluster_id:
+                        cluster_words.append(word)
+                
+                if cluster_words:
+                    theme = {
+                        'id': cluster_id,
+                        'name': f"Tema {cluster_id + 1}",
+                        'keywords': cluster_words[:10],
+                        'weights': [1.0] * len(cluster_words[:10]),
+                        'coherence': len(cluster_words) / len(keywords),
+                        'description': self._generate_theme_description(cluster_words[:5])
+                    }
+                    themes.append(theme)
+            
+            return themes
+            
+        except Exception as e:
+            self.logger.warning(f"Error en clustering: {e}")
+            return []
+    
+    def _calculate_topic_coherence(self, words: List[str], texts: List[str]) -> float:
+        """Calcular coherencia del tema"""
+        if len(words) < 2:
+            return 0.0
+        
+        # Coherencia simple basada en co-ocurrencia
+        co_occurrences = 0
+        total_pairs = 0
+        
+        for text in texts:
+            text_words = set(text.split())
+            for i, word1 in enumerate(words):
+                for word2 in words[i+1:]:
+                    total_pairs += 1
+                    if word1 in text_words and word2 in text_words:
+                        co_occurrences += 1
+        
+        return co_occurrences / total_pairs if total_pairs > 0 else 0.0
+    
+    def _generate_theme_description(self, keywords: List[str]) -> str:
+        """Generar descripción del tema basada en palabras clave"""
+        if not keywords:
+            return "Tema sin descripción"
+        
+        # Crear descripción simple
+        main_keywords = keywords[:3]
+        return f"Tema relacionado con: {', '.join(main_keywords)}"
+
+# =============================================================================
+# 8. ANÁLISIS DE SENTIMIENTOS
+# =============================================================================
+
+class SentimentAnalyzer(BaseAnalyzer):
+    """Analizador de sentimientos especializado"""
+    
+    def __init__(self, config: AnalysisConfig):
+        super().__init__(config)
+        self.preprocessor = TextPreprocessor()
+        self.cache_manager = CacheManager()
+    
+    def analyze(self, chunks: List[Dict]) -> AnalysisResult:
+        """Analizar sentimientos del contenido"""
+        start_time = datetime.now()
+        
+        if not self._validate_input(chunks):
+            return AnalysisResult(
+                analysis_type=AnalysisType.SENTIMENT_ANALYSIS,
+                data={'sentiments': []},
+                metadata={'error': 'Invalid input data'}
+            )
+        
+        # Generar clave de cache
+        cache_key = self._generate_cache_key(chunks)
+        cached_result = self.cache_manager.get(cache_key)
+        
+        if cached_result and self.config.enable_cache:
+            return cached_result
+        
+        # Analizar sentimientos
+        sentiments = self._analyze_sentiments_advanced(chunks)
+        
+        processing_time = (datetime.now() - start_time).total_seconds()
+        
+        result = AnalysisResult(
+            analysis_type=AnalysisType.SENTIMENT_ANALYSIS,
+            data={'sentiments': sentiments},
+            metadata={
+                'total_chunks': len(chunks),
+                'processing_method': 'textblob_vader' if ADVANCED_ANALYSIS_AVAILABLE else 'basic_analysis'
+            },
+            processing_time=processing_time
+        )
+        
+        if self.config.enable_cache:
+            self.cache_manager.set(cache_key, result)
+        
+        return result
+    
+    def _generate_cache_key(self, chunks: List[Dict]) -> str:
+        """Generar clave única para cache"""
+        content_hash = hash(str(sorted([chunk.get('content', '')[:100] for chunk in chunks])))
+        return f"sentiments_{content_hash}"
+    
+    def _analyze_sentiments_advanced(self, chunks: List[Dict]) -> Dict:
+        """Analizar sentimientos usando métodos avanzados"""
+        sentiments = {
+            'overall': {'positive': 0, 'negative': 0, 'neutral': 0},
+            'by_chunk': [],
+            'by_source': {},
+            'trends': [],
+            'emotions': {}
+        }
+        
+        if ADVANCED_ANALYSIS_AVAILABLE:
+            sentiments = self._analyze_with_textblob_vader(chunks)
+        else:
+            sentiments = self._analyze_basic_sentiment(chunks)
+        
+        return sentiments
+    
+    def _analyze_with_textblob_vader(self, chunks: List[Dict]) -> Dict:
+        """Analizar sentimientos usando TextBlob y VADER"""
+        try:
+            from textblob import TextBlob
+            from nltk.sentiment import SentimentIntensityAnalyzer
+            
+            sia = SentimentIntensityAnalyzer()
+            
+            sentiments = {
+                'overall': {'positive': 0, 'negative': 0, 'neutral': 0},
+                'by_chunk': [],
+                'by_source': {},
+                'trends': [],
+                'emotions': {}
+            }
+            
+            for chunk in chunks:
+                content = chunk.get('content', '').strip()
+                source = chunk.get('source', 'Unknown')
+                
+                if not content:
+                    continue
+                
+                # Análisis con TextBlob
+                blob = TextBlob(content)
+                polarity = blob.sentiment.polarity
+                
+                # Análisis con VADER
+                vader_scores = sia.polarity_scores(content)
+                
+                # Determinar sentimiento
+                if polarity > 0.1:
+                    sentiment = 'positive'
+                elif polarity < -0.1:
+                    sentiment = 'negative'
+                else:
+                    sentiment = 'neutral'
+                
+                chunk_sentiment = {
+                    'content': content[:100] + '...' if len(content) > 100 else content,
+                    'source': source,
+                    'sentiment': sentiment,
+                    'polarity': polarity,
+                    'subjectivity': blob.sentiment.subjectivity,
+                    'vader_scores': vader_scores,
+                    'confidence': abs(polarity)
+                }
+                
+                sentiments['by_chunk'].append(chunk_sentiment)
+                sentiments['overall'][sentiment] += 1
+                
+                # Agrupar por fuente
+                if source not in sentiments['by_source']:
+                    sentiments['by_source'][source] = {'positive': 0, 'negative': 0, 'neutral': 0}
+                sentiments['by_source'][source][sentiment] += 1
+            
+            # Calcular tendencias
+            sentiments['trends'] = self._calculate_sentiment_trends(sentiments['by_chunk'])
+            
+            return sentiments
+            
+        except Exception as e:
+            self.logger.warning(f"Error en análisis de sentimientos: {e}")
+            return self._analyze_basic_sentiment(chunks)
+    
+    def _analyze_basic_sentiment(self, chunks: List[Dict]) -> Dict:
+        """Análisis básico de sentimientos"""
+        sentiments = {
+            'overall': {'positive': 0, 'negative': 0, 'neutral': 0},
+            'by_chunk': [],
+            'by_source': {},
+            'trends': [],
+            'emotions': {}
+        }
+        
+        # Palabras positivas y negativas básicas
+        positive_words = ['bueno', 'excelente', 'mejor', 'positivo', 'favorable', 'éxito', 'logro']
+        negative_words = ['malo', 'terrible', 'peor', 'negativo', 'problema', 'error', 'fallo']
+        
+        for chunk in chunks:
+            content = chunk.get('content', '').strip().lower()
+            source = chunk.get('source', 'Unknown')
+            
+            if not content:
+                continue
+            
+            # Contar palabras positivas y negativas
+            pos_count = sum(1 for word in positive_words if word in content)
+            neg_count = sum(1 for word in negative_words if word in content)
+            
+            if pos_count > neg_count:
+                sentiment = 'positive'
+            elif neg_count > pos_count:
+                sentiment = 'negative'
+            else:
+                sentiment = 'neutral'
+            
+            chunk_sentiment = {
+                'content': content[:100] + '...' if len(content) > 100 else content,
+                'source': source,
+                'sentiment': sentiment,
+                'polarity': (pos_count - neg_count) / max(1, pos_count + neg_count),
+                'subjectivity': 0.5,
+                'confidence': abs(pos_count - neg_count) / max(1, pos_count + neg_count)
+            }
+            
+            sentiments['by_chunk'].append(chunk_sentiment)
+            sentiments['overall'][sentiment] += 1
+            
+            # Agrupar por fuente
+            if source not in sentiments['by_source']:
+                sentiments['by_source'][source] = {'positive': 0, 'negative': 0, 'neutral': 0}
+            sentiments['by_source'][source][sentiment] += 1
+        
+        return sentiments
+    
+    def _calculate_sentiment_trends(self, chunk_sentiments: List[Dict]) -> List[Dict]:
+        """Calcular tendencias de sentimiento"""
+        if len(chunk_sentiments) < 3:
+            return []
+        
+        # Agrupar por ventanas de tiempo (simulado por orden)
+        window_size = max(1, len(chunk_sentiments) // 5)
+        trends = []
+        
+        for i in range(0, len(chunk_sentiments), window_size):
+            window = chunk_sentiments[i:i + window_size]
+            
+            positive_count = sum(1 for chunk in window if chunk['sentiment'] == 'positive')
+            negative_count = sum(1 for chunk in window if chunk['sentiment'] == 'negative')
+            neutral_count = sum(1 for chunk in window if chunk['sentiment'] == 'neutral')
+            
+            total = len(window)
+            trend = {
+                'window': i // window_size + 1,
+                'positive_ratio': positive_count / total,
+                'negative_ratio': negative_count / total,
+                'neutral_ratio': neutral_count / total,
+                'dominant_sentiment': 'positive' if positive_count > negative_count else 'negative' if negative_count > positive_count else 'neutral'
+            }
+            trends.append(trend)
+        
+        return trends
+
+class AdvancedQualitativeAnalyzer:
+    """Analizador cualitativo avanzado con arquitectura modular mejorada"""
+    
+    def __init__(self, config: Optional[AnalysisConfig] = None):
+        self.config = config or AnalysisConfig()
+        self.rag_processor = RAGProcessor()
+        
+        # Usar la configuración global para las rutas de cache
+        from config.settings import config as global_config
+        self.cache_path = Path(global_config.CACHE_DIR) / "rag_cache.json"
+        self.analysis_cache_path = Path(global_config.CACHE_DIR) / "qualitative_analysis_cache.json"
+        
+        # Inicializar componentes especializados
+        self.preprocessor = TextPreprocessor()
+        self.cache_manager = CacheManager()
+        self.concept_extractor = ConceptExtractor(self.config)
+        self.theme_analyzer = ThemeAnalyzer(self.config)
+        self.sentiment_analyzer = SentimentAnalyzer(self.config)
+        
+        # Cache legacy para compatibilidad
         self._spanish_stopwords_cache = None
         self._tfidf_vectorizers_cache = {}
         self._processed_text_cache = {}
@@ -97,6 +1098,10 @@ class AdvancedQualitativeAnalyzer:
                         logger.warning(f"No se pudo descargar {resource}: {e}")
             except Exception as e:
                 logger.error(f"Error crítico inicializando NLTK: {e}")
+    
+    # =============================================================================
+    # MÉTODOS DE VALIDACIÓN Y UTILIDADES
+    # =============================================================================
     
     def _validate_chunks(self, chunks: List[Dict]) -> bool:
         """Validar que los chunks sean válidos para procesamiento"""
@@ -123,22 +1128,46 @@ class AdvancedQualitativeAnalyzer:
     def clear_cache(self):
         """Limpiar todos los caches para liberar memoria"""
         try:
+            # Limpiar cache nuevo
+            self.cache_manager.clear()
+            
+            # Limpiar cache legacy para compatibilidad
             self._spanish_stopwords_cache = None
             self._tfidf_vectorizers_cache.clear()
             self._processed_text_cache.clear()
             self._concept_analysis_cache.clear()
+            
             logger.info("Cache limpiado exitosamente")
         except Exception as e:
             logger.error(f"Error limpiando cache: {e}")
     
     def get_cache_stats(self) -> Dict:
         """Obtener estadísticas del cache"""
-        return {
+        new_stats = self.cache_manager.get_stats()
+        legacy_stats = {
             'stopwords_cached': self._spanish_stopwords_cache is not None,
             'tfidf_vectorizers': len(self._tfidf_vectorizers_cache),
             'processed_texts': len(self._processed_text_cache),
             'concept_analyses': len(self._concept_analysis_cache)
         }
+        
+        return {
+            'new_cache': new_stats,
+            'legacy_cache': legacy_stats,
+            'total_cached_items': new_stats['size'] + sum(legacy_stats.values())
+        }
+    
+    # =============================================================================
+    # MÉTODOS DE COMPATIBILIDAD
+    # =============================================================================
+    
+    def _get_spanish_stopwords(self) -> List[str]:
+        """Método de compatibilidad para obtener stopwords"""
+        return self.preprocessor.get_spanish_stopwords()
+    
+    def preprocess_text(self, text: str) -> str:
+        """Método de compatibilidad para preprocesar texto"""
+        return self.preprocessor.preprocess_text(text)
         
     def _get_term_color(self, term: str) -> str:
         """Generar color jerárquico consistente para un término basado en su importancia"""
@@ -182,6 +1211,20 @@ class AdvancedQualitativeAnalyzer:
         except Exception as e:
             logger.error(f"Error cargando datos RAG: {e}")
             return []
+    
+# =============================================================================
+# 12. RESUMENES AUTOMÁTICOS
+# =============================================================================
+# Esta sección maneja la generación de resúmenes automáticos del contenido.
+# MODIFICAR AQUÍ PARA:
+# - Cambiar estrategias de resumen (LLM, extractivo, abstractivo)
+# - Ajustar longitud y nivel de detalle
+# - Modificar prompts para resúmenes con IA
+# 
+# MÉTODOS PRINCIPALES:
+# - generate_intelligent_summary() → Resumen con LLM (IA)
+# - generate_rag_summary() → Resumen básico (TextBlob)
+# - generate_basic_summary() → Resumen por frecuencia
     
     def generate_rag_summary(self, chunks: List[Dict], max_length: int = 500) -> str:
         """Generar resumen automático básico (fallback)"""
@@ -417,8 +1460,467 @@ OBJETIVOS:
             logger.error(f"Error procesando respuesta LLM: {e}")
             return response
     
+    # =============================================================================
+    # MÉTODOS DE ANÁLISIS PRINCIPALES (REFACTORIZADOS)
+    # =============================================================================
+    
     def extract_key_concepts(self, chunks: List[Dict], min_freq: int = 2) -> List[Dict]:
-        """Extraer conceptos clave del contenido RAG con optimización de cache"""
+        """Extraer conceptos clave usando la nueva arquitectura modular"""
+        try:
+            # Actualizar configuración temporal
+            temp_config = AnalysisConfig(
+                min_frequency=min_freq,
+                max_concepts=self.config.max_concepts,
+                similarity_threshold=self.config.similarity_threshold,
+                enable_cache=self.config.enable_cache
+            )
+            
+            # Usar el extractor especializado
+            concept_extractor = ConceptExtractor(temp_config)
+            result = concept_extractor.analyze(chunks)
+            
+            # Convertir ConceptData a formato legacy para compatibilidad
+            concepts = []
+            for concept_data in result.data.get('concepts', []):
+                concepts.append({
+                    'concept': concept_data.concept,
+                    'score': concept_data.score,
+                    'frequency': concept_data.frequency,
+                    'context': concept_data.context,
+                    'related_concepts': concept_data.related_concepts,
+                    'type': 'advanced_extraction'
+                })
+            
+            return concepts
+            
+        except Exception as e:
+            logger.error(f"Error extrayendo conceptos: {e}")
+            # Fallback al método legacy
+            return self._extract_concepts_legacy(chunks, min_freq)
+    
+    def extract_advanced_themes(self, chunks: List[Dict], n_topics: int = 10) -> Dict:
+        """Extraer temas avanzados usando el analizador especializado"""
+        try:
+            # Intentar usar el método detallado legacy que retorna el formato esperado
+            # por las funciones de renderizado existentes
+            result = self._extract_advanced_themes_detailed(chunks, n_topics)
+            
+            # Si hay error o no hay temas, intentar con el analizador moderno
+            if 'error' in result or not result.get('topics'):
+                temp_config = AnalysisConfig(
+                    min_frequency=self.config.min_frequency,
+                    max_concepts=n_topics,
+                    similarity_threshold=self.config.similarity_threshold,
+                    enable_cache=self.config.enable_cache
+                )
+                
+                theme_analyzer = ThemeAnalyzer(temp_config)
+                analyzer_result = theme_analyzer.analyze(chunks)
+                themes_data = analyzer_result.data.get('themes', [])
+                
+                return {
+                    'topics': themes_data,
+                    'metadata': analyzer_result.metadata,
+                    'processing_time': analyzer_result.processing_time,
+                    'method': 'advanced_lda_analysis'
+                }
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error en análisis de temas avanzado: {e}")
+            # Fallback al método legacy
+            return self._extract_themes_legacy(chunks, n_topics)
+    
+    def advanced_sentiment_analysis(self, chunks: List[Dict]) -> Dict:
+        """Análisis de sentimientos avanzado usando el analizador especializado"""
+        try:
+            # Intentar usar el método detallado legacy que retorna el formato esperado
+            # por las funciones de renderizado existentes
+            result = self._advanced_sentiment_analysis_detailed(chunks)
+            
+            # Si hay error, intentar con el analizador moderno
+            if 'error' in result:
+                analyzer_result = self.sentiment_analyzer.analyze(chunks)
+                sentiments_data = analyzer_result.data.get('sentiments', {})
+                
+                return {
+                    'by_source': sentiments_data.get('by_source', {}),
+                    'overall_stats': {
+                        'distribution': sentiments_data.get('overall', {}),
+                        'mean_score': 0.0
+                    },
+                    'metadata': analyzer_result.metadata,
+                    'processing_time': analyzer_result.processing_time,
+                    'method': 'advanced_sentiment_analysis'
+                }
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error en análisis de sentimientos avanzado: {e}")
+            # Fallback al método legacy simple
+            return self._sentiment_analysis_legacy(chunks)
+    
+    def _extract_themes_legacy(self, chunks: List[Dict], n_topics: int = 10) -> Dict:
+        """Método legacy para extraer temas (fallback)"""
+        try:
+            if not self._validate_chunks(chunks):
+                return {'themes': [], 'metadata': {'error': 'Invalid input'}}
+            
+            # Implementación básica de extracción de temas
+            all_text = []
+            for chunk in chunks:
+                content = chunk.get('content', '').strip()
+                if content:
+                    processed = self.preprocess_text(content)
+                    if processed:
+                        all_text.append(processed)
+            
+            if not all_text:
+                return {'themes': [], 'metadata': {'error': 'No valid content'}}
+            
+            # Análisis básico de palabras clave
+            all_words = []
+            for text in all_text:
+                words = text.split()
+                all_words.extend([w for w in words if len(w) > 3])
+            
+            word_freq = Counter(all_words)
+            stopwords = self._get_spanish_stopwords()
+            
+            # Filtrar palabras clave
+            keywords = [word for word, freq in word_freq.most_common(50)
+                       if word not in stopwords and freq >= 2]
+            
+            # Crear temas básicos
+            themes = []
+            chunk_size = max(1, len(keywords) // n_topics)
+            
+            for i in range(0, len(keywords), chunk_size):
+                theme_keywords = keywords[i:i + chunk_size]
+                if theme_keywords:
+                    theme = {
+                        'id': len(themes),
+                        'name': f"Tema {len(themes) + 1}",
+                        'keywords': theme_keywords,
+                        'weights': [1.0] * len(theme_keywords),
+                        'coherence': len(theme_keywords) / len(keywords),
+                        'description': f"Tema relacionado con: {', '.join(theme_keywords[:3])}"
+                    }
+                    themes.append(theme)
+            
+            return {
+                'themes': themes,
+                'metadata': {
+                    'total_chunks': len(chunks),
+                    'themes_found': len(themes),
+                    'processing_method': 'basic_keyword_clustering'
+                },
+                'processing_time': 0.0,
+                'method': 'legacy_theme_extraction'
+            }
+            
+        except Exception as e:
+            logger.error(f"Error en extracción de temas legacy: {e}")
+            return {'themes': [], 'metadata': {'error': str(e)}}
+    
+    def _sentiment_analysis_legacy(self, chunks: List[Dict]) -> Dict:
+        """Método legacy para análisis de sentimientos (fallback)"""
+        try:
+            if not self._validate_chunks(chunks):
+                return {'sentiments': {}, 'metadata': {'error': 'Invalid input'}}
+            
+            # Análisis básico de sentimientos
+            sentiments = {
+                'overall': {'positive': 0, 'negative': 0, 'neutral': 0},
+                'by_chunk': [],
+                'by_source': {},
+                'trends': [],
+                'emotions': {}
+            }
+            
+            # Palabras positivas y negativas básicas
+            positive_words = ['bueno', 'excelente', 'mejor', 'positivo', 'favorable', 'éxito', 'logro']
+            negative_words = ['malo', 'terrible', 'peor', 'negativo', 'problema', 'error', 'fallo']
+            
+            for chunk in chunks:
+                content = chunk.get('content', '').strip().lower()
+                source = chunk.get('source', 'Unknown')
+                
+                if not content:
+                    continue
+                
+                # Contar palabras positivas y negativas
+                pos_count = sum(1 for word in positive_words if word in content)
+                neg_count = sum(1 for word in negative_words if word in content)
+                
+                if pos_count > neg_count:
+                    sentiment = 'positive'
+                elif neg_count > pos_count:
+                    sentiment = 'negative'
+                else:
+                    sentiment = 'neutral'
+                
+                chunk_sentiment = {
+                    'content': content[:100] + '...' if len(content) > 100 else content,
+                    'source': source,
+                    'sentiment': sentiment,
+                    'polarity': (pos_count - neg_count) / max(1, pos_count + neg_count),
+                    'subjectivity': 0.5,
+                    'confidence': abs(pos_count - neg_count) / max(1, pos_count + neg_count)
+                }
+                
+                sentiments['by_chunk'].append(chunk_sentiment)
+                sentiments['overall'][sentiment] += 1
+                
+                # Agrupar por fuente
+                if source not in sentiments['by_source']:
+                    sentiments['by_source'][source] = {'positive': 0, 'negative': 0, 'neutral': 0}
+                sentiments['by_source'][source][sentiment] += 1
+            
+            return {
+                'sentiments': sentiments,
+                'metadata': {
+                    'total_chunks': len(chunks),
+                    'processing_method': 'basic_sentiment_analysis'
+                },
+                'processing_time': 0.0,
+                'method': 'legacy_sentiment_analysis'
+            }
+            
+        except Exception as e:
+            logger.error(f"Error en análisis de sentimientos legacy: {e}")
+            return {'sentiments': {}, 'metadata': {'error': str(e)}}
+    
+# =============================================================================
+# 16. ANÁLISIS PARALELO Y OPTIMIZACIÓN
+# =============================================================================
+
+    def perform_parallel_analysis(self, chunks: List[Dict], analysis_types: List[AnalysisType]) -> Dict[str, AnalysisResult]:
+        """Realizar múltiples análisis en paralelo para optimizar rendimiento"""
+        try:
+            if not self.config.parallel_processing:
+                return self._perform_sequential_analysis(chunks, analysis_types)
+            
+            results = {}
+            
+            with ThreadPoolExecutor(max_workers=self.config.max_workers) as executor:
+                # Crear tareas para cada tipo de análisis
+                future_to_analysis = {}
+                
+                for analysis_type in analysis_types:
+                    if analysis_type == AnalysisType.CONCEPT_EXTRACTION:
+                        future = executor.submit(self.concept_extractor.analyze, chunks)
+                        future_to_analysis[future] = analysis_type
+                    elif analysis_type == AnalysisType.THEME_ANALYSIS:
+                        future = executor.submit(self.theme_analyzer.analyze, chunks)
+                        future_to_analysis[future] = analysis_type
+                    elif analysis_type == AnalysisType.SENTIMENT_ANALYSIS:
+                        future = executor.submit(self.sentiment_analyzer.analyze, chunks)
+                        future_to_analysis[future] = analysis_type
+                
+                # Recopilar resultados
+                for future in as_completed(future_to_analysis):
+                    analysis_type = future_to_analysis[future]
+                    try:
+                        result = future.result()
+                        results[analysis_type.value] = result
+                    except Exception as e:
+                        logger.error(f"Error en análisis paralelo {analysis_type}: {e}")
+                        results[analysis_type.value] = AnalysisResult(
+                            analysis_type=analysis_type,
+                            data={},
+                            metadata={'error': str(e)}
+                        )
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"Error en análisis paralelo: {e}")
+            return self._perform_sequential_analysis(chunks, analysis_types)
+    
+    def _perform_sequential_analysis(self, chunks: List[Dict], analysis_types: List[AnalysisType]) -> Dict[str, AnalysisResult]:
+        """Realizar análisis secuencial como fallback"""
+        results = {}
+        
+        for analysis_type in analysis_types:
+            try:
+                if analysis_type == AnalysisType.CONCEPT_EXTRACTION:
+                    result = self.concept_extractor.analyze(chunks)
+                elif analysis_type == AnalysisType.THEME_ANALYSIS:
+                    result = self.theme_analyzer.analyze(chunks)
+                elif analysis_type == AnalysisType.SENTIMENT_ANALYSIS:
+                    result = self.sentiment_analyzer.analyze(chunks)
+                else:
+                    continue
+                
+                results[analysis_type.value] = result
+                
+            except Exception as e:
+                logger.error(f"Error en análisis secuencial {analysis_type}: {e}")
+                results[analysis_type.value] = AnalysisResult(
+                    analysis_type=analysis_type,
+                    data={},
+                    metadata={'error': str(e)}
+                )
+        
+        return results
+    
+    def get_analysis_summary(self, chunks: List[Dict]) -> Dict:
+        """Obtener resumen completo de análisis cualitativo"""
+        try:
+            start_time = datetime.now()
+            
+            # Realizar análisis paralelo
+            analysis_types = [
+                AnalysisType.CONCEPT_EXTRACTION,
+                AnalysisType.THEME_ANALYSIS,
+                AnalysisType.SENTIMENT_ANALYSIS
+            ]
+            
+            results = self.perform_parallel_analysis(chunks, analysis_types)
+            
+            # Procesar resultados
+            summary = {
+                'overview': {
+                    'total_chunks': len(chunks),
+                    'analysis_types': [t.value for t in analysis_types],
+                    'processing_time': (datetime.now() - start_time).total_seconds(),
+                    'timestamp': datetime.now().isoformat()
+                },
+                'concepts': results.get('concept_extraction', {}).data.get('concepts', []),
+                'themes': results.get('theme_analysis', {}).data.get('themes', []),
+                'sentiments': results.get('sentiment_analysis', {}).data.get('sentiments', {}),
+                'metadata': {
+                    'concept_metadata': results.get('concept_extraction', {}).metadata,
+                    'theme_metadata': results.get('theme_analysis', {}).metadata,
+                    'sentiment_metadata': results.get('sentiment_analysis', {}).metadata
+                }
+            }
+            
+            return summary
+            
+        except Exception as e:
+            logger.error(f"Error generando resumen de análisis: {e}")
+            return {
+                'overview': {
+                    'total_chunks': len(chunks),
+                    'error': str(e),
+                    'timestamp': datetime.now().isoformat()
+                },
+                'concepts': [],
+                'themes': [],
+                'sentiments': {},
+                'metadata': {}
+            }
+    
+# =============================================================================
+# 17. MÉTODOS DE CONFIGURACIÓN
+# =============================================================================
+
+    def update_config(self, **kwargs) -> None:
+        """Actualizar configuración dinámicamente"""
+        try:
+            for key, value in kwargs.items():
+                if hasattr(self.config, key):
+                    setattr(self.config, key, value)
+                    logger.info(f"Configuración actualizada: {key} = {value}")
+                else:
+                    logger.warning(f"Parámetro de configuración no válido: {key}")
+        except Exception as e:
+            logger.error(f"Error actualizando configuración: {e}")
+    
+    def get_performance_metrics(self) -> Dict[str, Any]:
+        """Obtener métricas de rendimiento del sistema"""
+        try:
+            cache_stats = self.get_cache_stats()
+            
+            metrics = {
+                'cache_performance': cache_stats,
+                'memory_usage': {
+                    'concept_extractor_cache': len(self.concept_extractor.cache_manager.cache),
+                    'theme_analyzer_cache': len(self.theme_analyzer.cache_manager.cache),
+                    'sentiment_analyzer_cache': len(self.sentiment_analyzer.cache_manager.cache),
+                    'total_cached_items': sum([
+                        len(self.concept_extractor.cache_manager.cache),
+                        len(self.theme_analyzer.cache_manager.cache),
+                        len(self.sentiment_analyzer.cache_manager.cache)
+                    ])
+                },
+                'configuration': {
+                    'parallel_processing': self.config.parallel_processing,
+                    'max_workers': self.config.max_workers,
+                    'enable_cache': self.config.enable_cache,
+                    'max_concepts': self.config.max_concepts,
+                    'similarity_threshold': self.config.similarity_threshold
+                },
+                'system_info': {
+                    'advanced_analysis_available': ADVANCED_ANALYSIS_AVAILABLE,
+                    'pyvis_available': PYVIS_AVAILABLE,
+                    'agraph_available': AGRAPH_AVAILABLE,
+                    'graphviz_available': GRAPHVIZ_AVAILABLE
+                }
+            }
+            
+            return metrics
+            
+        except Exception as e:
+            logger.error(f"Error obteniendo métricas de rendimiento: {e}")
+            return {'error': str(e)}
+    
+    def optimize_performance(self) -> Dict[str, Any]:
+        """Optimizar rendimiento del sistema"""
+        try:
+            optimizations = []
+            
+            # Limpiar caches si están muy llenos
+            cache_stats = self.get_cache_stats()
+            total_items = cache_stats.get('total_cached_items', 0)
+            
+            if total_items > 500:
+                self.clear_cache()
+                optimizations.append("Cache limpiado - demasiados elementos")
+            
+            # Ajustar configuración basada en recursos disponibles
+            try:
+                import psutil
+                cpu_count = psutil.cpu_count()
+                memory_gb = psutil.virtual_memory().total / (1024**3)
+                
+                if cpu_count >= 4 and memory_gb >= 8:
+                    if not self.config.parallel_processing:
+                        self.config.parallel_processing = True
+                        self.config.max_workers = min(4, cpu_count)
+                        optimizations.append("Procesamiento paralelo habilitado")
+                else:
+                    if self.config.parallel_processing:
+                        self.config.parallel_processing = False
+                        optimizations.append("Procesamiento paralelo deshabilitado - recursos limitados")
+                
+                system_resources = {
+                    'cpu_count': cpu_count,
+                    'memory_gb': round(memory_gb, 2)
+                }
+            except ImportError:
+                system_resources = {'error': 'psutil no disponible'}
+            
+            return {
+                'optimizations_applied': optimizations,
+                'new_config': {
+                    'parallel_processing': self.config.parallel_processing,
+                    'max_workers': self.config.max_workers,
+                    'enable_cache': self.config.enable_cache
+                },
+                'system_resources': system_resources
+            }
+            
+        except Exception as e:
+            logger.error(f"Error optimizando rendimiento: {e}")
+            return {'error': str(e), 'optimizations_applied': []}
+    
+    def _extract_concepts_legacy(self, chunks: List[Dict], min_freq: int = 2) -> List[Dict]:
+        """Método legacy para extraer conceptos (fallback)"""
         try:
             if not self._validate_chunks(chunks):
                 return []
@@ -429,7 +1931,7 @@ OBJETIVOS:
             
             # Verificar cache
             if cache_key in self._concept_analysis_cache:
-                logger.info("Usando conceptos desde cache")
+                logger.info("Usando conceptos desde cache legacy")
                 return self._concept_analysis_cache[cache_key]
             
             # Procesar cada chunk por separado para TF-IDF
@@ -517,8 +2019,22 @@ OBJETIVOS:
             return result
             
         except Exception as e:
-            logger.error(f"Error extrayendo conceptos: {e}")
+            logger.error(f"Error en extracción legacy: {e}")
             return []
+    
+# =============================================================================
+# 10. MAPAS CONCEPTUALES INTERACTIVOS
+# =============================================================================
+# Esta sección maneja la generación de mapas conceptuales interactivos.
+# MODIFICAR AQUÍ PARA:
+# - Cambiar la visualización (PyVis, layouts, colores)
+# - Ajustar la jerarquía de conceptos
+# - Modificar relaciones entre nodos
+# 
+# MÉTODOS PRINCIPALES:
+# - create_interactive_concept_map() → Genera mapa con PyVis
+# - _analyze_concept_hierarchy() → Analiza jerarquía de conceptos
+# - generate_advanced_concept_map() → Mapa avanzado con TF-IDF
     
     def create_interactive_concept_map(self, chunks: List[Dict], layout_type: str = "spring") -> Optional[str]:
         """Crear mapa conceptual interactivo estructurado usando PyVis con paleta de colores profesional mejorada"""
@@ -540,26 +2056,26 @@ OBJETIVOS:
                 directed=True  # Dirigido para mostrar relaciones jerárquicas
             )
             
-            # Configurar física para mejor organización jerárquica
+            # Configurar física para mejor organización jerárquica con MEJOR SEPARACIÓN
             net.set_options("""
             var options = {
               "physics": {
                 "enabled": true,
-                "stabilization": {"iterations": 300},
+                "stabilization": {"iterations": 400},
                 "hierarchicalRepulsion": {
-                  "centralGravity": 0.3,
-                  "springLength": 140,
-                  "springConstant": 0.02,
-                  "nodeDistance": 180,
-                  "damping": 0.12
+                  "centralGravity": 0.2,
+                  "springLength": 200,
+                  "springConstant": 0.015,
+                  "nodeDistance": 250,
+                  "damping": 0.15
                 }
               },
               "layout": {
                 "hierarchical": {
                   "enabled": true,
-                  "levelSeparation": 180,
-                  "nodeSpacing": 120,
-                  "treeSpacing": 250,
+                  "levelSeparation": 250,
+                  "nodeSpacing": 180,
+                  "treeSpacing": 350,
                   "blockShifting": true,
                   "edgeMinimization": true,
                   "parentCentralization": true,
@@ -589,11 +2105,17 @@ OBJETIVOS:
               "nodes": {
                 "borderWidth": 3,
                 "borderWidthSelected": 5,
+                "margin": 15,
+                "widthConstraint": {
+                  "minimum": 120,
+                  "maximum": 250
+                },
                 "font": {
                   "size": 16,
                   "face": "Arial",
                   "strokeWidth": 2,
-                  "strokeColor": "#ffffff"
+                  "strokeColor": "#ffffff",
+                  "vadjust": 0
                 }
               }
             }
@@ -812,6 +2334,10 @@ OBJETIVOS:
             logger.error(f"Error creando mapa conceptual: {e}")
             return None
     
+# =============================================================================
+# 11. MAPAS MENTALES
+# =============================================================================
+    
     def create_interactive_mind_map(self, chunks: List[Dict], node_spacing: int = 250, return_data: bool = False) -> Optional[Dict]:
         """Crear mapa mental interactivo estructurado usando streamlit-agraph con análisis inteligente"""
         if not AGRAPH_AVAILABLE:
@@ -826,15 +2352,16 @@ OBJETIVOS:
             nodes = []
             edges = []
             
-            # Nodo central (tema principal) con colores jerárquicos mejorados
+            # Nodo central (tema principal) con mejor tamaño y separación
             central_theme = mind_structure['central_theme']
             nodes.append({
                 'id': "central",
                 'label': central_theme['name'],
                 'title': f"Tema Central: {central_theme['name']}\n\n{central_theme['description']}",
-                'size': 60,  # Tamaño más grande para el centro
+                'size': 70,  # AUMENTADO: de 60 a 70 para mejor visibilidad
                 'color': "#1a237e",  # Azul profundo para el tema central
-                'font_size': 20
+                'font_size': 22,  # AUMENTADO: de 20 a 22
+                'level': 0  # Nivel jerárquico
             })
             
             # Paleta de colores jerárquica mejorada para ramas principales
@@ -853,14 +2380,15 @@ OBJETIVOS:
                 branch_id = f"branch_{i}"
                 branch_color = hierarchical_branch_colors[i % len(hierarchical_branch_colors)]
                 
-                # Nodo de rama principal con colores jerárquicos
+                # Nodo de rama principal con mejor tamaño
                 nodes.append({
                     'id': branch_id,
                     'label': branch['name'],
                     'title': f"Concepto Principal: {branch['name']}\nImportancia: {branch['importance']:.2f}\n\n{branch['description']}",
-                    'size': max(35, int(branch['importance'] * 45)),  # Tamaños jerárquicos más grandes
+                    'size': max(45, int(branch['importance'] * 55)),  # AUMENTADO: de 35/45 a 45/55
                     'color': branch_color,
-                    'font_size': 17
+                    'font_size': 18,  # AUMENTADO: de 17 a 18
+                    'level': 1  # Nivel jerárquico
                 })
                 
                 # Conectar con el centro usando colores jerárquicos
@@ -882,9 +2410,10 @@ OBJETIVOS:
                         'id': sub_id,
                         'label': sub_branch['name'],
                         'title': f"Sub-concepto: {sub_branch['name']}\nRelación: {sub_branch['relation']}\n\n{sub_branch['context'][:150]}...",
-                        'size': max(20, int(sub_branch['relevance'] * 30)),  # Tamaños jerárquicos menores
+                        'size': max(25, int(sub_branch['relevance'] * 35)),  # AUMENTADO: de 20/30 a 25/35
                         'color': sub_color,
-                        'font_size': 14
+                        'font_size': 15,  # AUMENTADO: de 14 a 15
+                        'level': 2  # Nivel jerárquico
                     })
                     
                     # Conectar con la rama principal usando colores jerárquicos
@@ -914,8 +2443,18 @@ OBJETIVOS:
             logger.error(f"Error creando mapa mental: {e}")
             return None
     
+# =============================================================================
+# 13. ANÁLISIS DE TRIANGULACIÓN
+# =============================================================================
+    
     def perform_triangulation_analysis(self, chunks: List[Dict]) -> Dict:
-        """Realizar triangulación de información para validar conceptos"""
+        """
+        Realizar triangulación de información para validar conceptos
+        
+        MEJORA: Ahora funciona con una sola fuente también
+        - Con 1 fuente: Analiza frecuencia y distribución de conceptos por secciones
+        - Con 2+ fuentes: Triangulación clásica entre fuentes
+        """
         try:
             if not chunks:
                 return {'error': 'No hay datos disponibles'}
@@ -926,9 +2465,11 @@ OBJETIVOS:
                 source = chunk.get('metadata', {}).get('source_file', 'Desconocido')
                 sources[source].append(chunk)
             
-            if len(sources) < 2:
-                return {'error': 'Se necesitan al menos 2 fuentes para triangulación'}
+            # NUEVO: Manejar caso de una sola fuente
+            if len(sources) == 1:
+                return self._perform_single_source_triangulation(chunks, list(sources.keys())[0])
             
+            # Caso normal: 2 o más fuentes (triangulación clásica)
             # Extraer conceptos por fuente
             concepts_by_source = {}
             for source, source_chunks in sources.items():
@@ -950,13 +2491,17 @@ OBJETIVOS:
                         sources_with_concept.append(source)
                         total_score += concepts[concept]
                 
-                if len(sources_with_concept) >= 2:  # Concepto presente en al menos 2 fuentes
+                # MODIFICADO: Con 2 fuentes, acepta conceptos en al menos 1
+                min_sources = 2 if len(sources) > 2 else 1
+                
+                if len(sources_with_concept) >= min_sources:
                     triangulated_concepts.append({
                         'concept': concept,
                         'sources': sources_with_concept,
                         'source_count': len(sources_with_concept),
                         'avg_score': total_score / len(sources_with_concept),
-                        'reliability': len(sources_with_concept) / len(sources)
+                        'reliability': len(sources_with_concept) / len(sources),
+                        'validation_type': 'multi-source' if len(sources_with_concept) > 1 else 'single-source'
                     })
             
             # Ordenar por confiabilidad
@@ -967,11 +2512,99 @@ OBJETIVOS:
                 'total_sources': len(sources),
                 'total_concepts': len(all_concepts),
                 'validated_concepts': len(triangulated_concepts),
-                'sources': list(sources.keys())
+                'sources': list(sources.keys()),
+                'analysis_mode': 'multi-source'
             }
             
         except Exception as e:
             logger.error(f"Error en triangulación: {e}")
+            return {'error': str(e)}
+    
+    def _perform_single_source_triangulation(self, chunks: List[Dict], source_name: str) -> Dict:
+        """
+        Realizar análisis de triangulación interna para una sola fuente
+        
+        En lugar de triangular entre fuentes, triangula entre secciones del mismo documento:
+        - Divide el documento en secciones
+        - Analiza conceptos por sección
+        - Identifica conceptos que aparecen en múltiples secciones (triangulación interna)
+        """
+        try:
+            # Dividir chunks en secciones (grupos de 3-5 chunks)
+            section_size = max(3, len(chunks) // 5)  # Al menos 5 secciones si es posible
+            sections = []
+            
+            for i in range(0, len(chunks), section_size):
+                section_chunks = chunks[i:i + section_size]
+                if section_chunks:
+                    sections.append({
+                        'id': f"Sección {len(sections) + 1}",
+                        'chunks': section_chunks,
+                        'start_chunk': i,
+                        'end_chunk': min(i + section_size, len(chunks))
+                    })
+            
+            # Extraer conceptos por sección
+            concepts_by_section = {}
+            for section in sections:
+                section_concepts = self.extract_key_concepts(section['chunks'])
+                concepts_by_section[section['id']] = {c['concept']: c['score'] for c in section_concepts}
+            
+            # Encontrar conceptos que aparecen en múltiples secciones
+            all_concepts = set()
+            for concepts in concepts_by_section.values():
+                all_concepts.update(concepts.keys())
+            
+            triangulated_concepts = []
+            for concept in all_concepts:
+                sections_with_concept = []
+                total_score = 0
+                
+                for section_id, concepts in concepts_by_section.items():
+                    if concept in concepts:
+                        sections_with_concept.append(section_id)
+                        total_score += concepts[concept]
+                
+                # Concepto debe aparecer en al menos 2 secciones para ser considerado "triangulado"
+                if len(sections_with_concept) >= 2:
+                    triangulated_concepts.append({
+                        'concept': concept,
+                        'sources': sections_with_concept,  # Ahora son secciones
+                        'source_count': len(sections_with_concept),
+                        'avg_score': total_score / len(sections_with_concept),
+                        'reliability': len(sections_with_concept) / len(sections),
+                        'validation_type': 'internal-triangulation',
+                        'distribution': f"Aparece en {len(sections_with_concept)}/{len(sections)} secciones"
+                    })
+                elif len(sections_with_concept) == 1:
+                    # Conceptos únicos de una sola sección (baja confiabilidad)
+                    triangulated_concepts.append({
+                        'concept': concept,
+                        'sources': sections_with_concept,
+                        'source_count': len(sections_with_concept),
+                        'avg_score': total_score,
+                        'reliability': 1 / len(sections),  # Baja confiabilidad
+                        'validation_type': 'single-section',
+                        'distribution': f"Solo en {sections_with_concept[0]}"
+                    })
+            
+            # Ordenar por confiabilidad
+            triangulated_concepts.sort(key=lambda x: (x['reliability'], x['avg_score']), reverse=True)
+            
+            return {
+                'triangulated_concepts': triangulated_concepts[:30],  # Más conceptos para fuente única
+                'total_sources': 1,
+                'total_sections': len(sections),
+                'total_concepts': len(all_concepts),
+                'validated_concepts': len([c for c in triangulated_concepts if c['source_count'] >= 2]),
+                'unique_concepts': len([c for c in triangulated_concepts if c['source_count'] == 1]),
+                'sources': [source_name],
+                'analysis_mode': 'single-source-internal',
+                'info': f"Análisis interno del documento dividido en {len(sections)} secciones"
+            }
+            
+        except Exception as e:
+            logger.error(f"Error en triangulación de fuente única: {e}")
             return {'error': str(e)}
     
     def _get_concept_context(self, concept: str, chunks: List[Dict], max_length: int = 300) -> str:
@@ -1075,8 +2708,252 @@ OBJETIVOS:
             logger.warning(f"Error encontrando conceptos relacionados: {e}")
             return []
     
+    def _extract_concepts_with_ngrams(self, chunks: List[Dict], max_concepts: int = 30) -> List[Dict]:
+        """
+        Extraer conceptos usando N-GRAMAS para detectar frases completas
+        
+        Mejora significativa sobre extracción simple:
+        - Detecta frases de 1-3 palabras ("inteligencia artificial", "aprendizaje profundo")
+        - Filtra conceptos más relevantes y coherentes
+        - Prioriza conceptos compuestos sobre palabras sueltas
+        """
+        try:
+            if not ADVANCED_ANALYSIS_AVAILABLE:
+                # Fallback al método simple
+                return self.extract_key_concepts(chunks)
+            
+            # Preparar textos
+            all_texts = []
+            for chunk in chunks:
+                content = chunk.get('content', '').strip()
+                if content:
+                    # Preprocesar manteniendo más contexto
+                    processed = re.sub(r'[^\w\s]', ' ', content.lower())
+                    processed = re.sub(r'\s+', ' ', processed).strip()
+                    all_texts.append(processed)
+            
+            if not all_texts:
+                return self.extract_key_concepts(chunks)
+            
+            # Usar TF-IDF con n-gramas para detectar frases importantes
+            vectorizer = TfidfVectorizer(
+                max_features=100,
+                stop_words=self._get_spanish_stopwords(),
+                ngram_range=(1, 3),  # Detecta frases de hasta 3 palabras
+                min_df=max(1, len(all_texts) // 10),
+                max_df=0.85,
+                token_pattern=r'\b[a-záéíóúñü]+\b'  # Solo palabras válidas en español
+            )
+            
+            tfidf_matrix = vectorizer.fit_transform(all_texts)
+            feature_names = vectorizer.get_feature_names_out()
+            mean_scores = tfidf_matrix.mean(axis=0).A1
+            
+            # Crear lista de conceptos con scores
+            concepts = []
+            for i, score in enumerate(mean_scores):
+                if score > 0:
+                    concept_text = feature_names[i]
+                    # Priorizar conceptos compuestos (frases)
+                    word_count = len(concept_text.split())
+                    adjusted_score = score * (1 + (word_count - 1) * 0.3)  # Bonus para n-gramas
+                    
+                    concepts.append({
+                        'concept': concept_text.title(),  # Capitalizar para mejor presentación
+                        'score': float(adjusted_score),
+                        'type': 'ngram' if word_count > 1 else 'unigram',
+                        'word_count': word_count
+                    })
+            
+            # Ordenar por score ajustado y retornar top conceptos
+            concepts_sorted = sorted(concepts, key=lambda x: x['score'], reverse=True)
+            
+            return concepts_sorted[:max_concepts]
+            
+        except Exception as e:
+            logger.warning(f"Error extrayendo conceptos con n-gramas: {e}")
+            # Fallback al método simple
+            return self.extract_key_concepts(chunks)
+    
+    def _identify_intelligent_main_theme(self, chunks: List[Dict], concepts: List[Dict]) -> Dict:
+        """
+        Identificar tema principal de forma INTELIGENTE
+        
+        Mejoras:
+        - Considera los conceptos más frecuentes Y relevantes
+        - Analiza el contexto completo del documento
+        - Genera nombre descriptivo y coherente
+        """
+        try:
+            # Tomar los top 3 conceptos más relevantes
+            top_concepts = concepts[:3] if concepts else []
+            
+            if not top_concepts:
+                return {
+                    'name': 'Análisis de Contenido',
+                    'description': 'Tema principal del documento'
+                }
+            
+            # Crear nombre del tema combinando conceptos principales
+            if len(top_concepts) >= 2:
+                # Combinar los 2-3 conceptos más importantes
+                theme_parts = [c['concept'] for c in top_concepts[:2]]
+                theme_name = " y ".join(theme_parts)
+            else:
+                theme_name = top_concepts[0]['concept']
+            
+            # Generar descripción basada en contexto
+            description_parts = []
+            for concept in top_concepts[:3]:
+                context = self._get_concept_context(concept['concept'], chunks, max_length=150)
+                if context and "no encontrado" not in context.lower():
+                    description_parts.append(context[:100])
+            
+            description = " | ".join(description_parts) if description_parts else f"Análisis centrado en {theme_name}"
+            
+            return {
+                'name': theme_name,
+                'description': description,
+                'key_concepts': [c['concept'] for c in top_concepts],
+                'confidence': sum(c['score'] for c in top_concepts) / len(top_concepts)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error identificando tema principal: {e}")
+            return {
+                'name': 'Tema Principal',
+                'description': 'Análisis de contenido del documento'
+            }
+    
+    def _analyze_concept_hierarchy_with_ai(self, chunks: List[Dict]) -> Optional[Dict]:
+        """
+        Analizar jerarquía de conceptos usando IA (LLM) para análisis semántico profundo
+        
+        Este método usa el modelo de lenguaje para identificar:
+        - Conceptos principales de forma semántica (no solo frecuencia)
+        - Relaciones jerárquicas reales entre conceptos
+        - Agrupaciones temáticas coherentes
+        """
+        try:
+            from utils.ollama_client import OllamaClient
+            from config.settings import config as global_config
+            
+            # Combinar contenido de chunks (limitado para eficiencia)
+            combined_content = "\n\n".join([
+                chunk.get('content', '')[:800] for chunk in chunks[:15]  # Máximo 15 chunks
+            ])
+            
+            # Prompt para análisis con IA
+            analysis_prompt = f"""Analiza el siguiente texto y extrae una jerarquía de conceptos coherente y bien estructurada.
+
+TEXTO A ANALIZAR:
+{combined_content}
+
+INSTRUCCIONES:
+1. Identifica el TEMA CENTRAL del texto (una frase descriptiva)
+2. Identifica 5-6 CONCEPTOS PRINCIPALES más importantes
+3. Para cada concepto principal, identifica 2-3 SUB-CONCEPTOS relacionados
+4. Proporciona contexto breve para cada concepto
+
+Responde SOLO en formato JSON válido:
+{{
+  "tema_central": "nombre del tema central",
+  "descripcion": "descripción breve del tema",
+  "conceptos_principales": [
+    {{
+      "nombre": "concepto 1",
+      "relevancia": 0.9,
+      "contexto": "contexto breve",
+      "sub_conceptos": [
+        {{"nombre": "sub-concepto 1", "relacion": "es parte de", "relevancia": 0.7}}
+      ]
+    }}
+  ]
+}}"""
+            
+            # Usar LLM para análisis
+            ollama_client = OllamaClient()
+            response = ollama_client.generate_response(
+                model=global_config.DEFAULT_LLM_MODEL,
+                prompt=analysis_prompt,
+                max_tokens=1500
+            )
+            
+            # Intentar parsear respuesta JSON
+            import json
+            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            if json_match:
+                try:
+                    ai_analysis = json.loads(json_match.group())
+                    
+                    # Convertir a formato de jerarquía
+                    hierarchy = {
+                        'main_theme': {
+                            'name': ai_analysis.get('tema_central', 'Tema Principal'),
+                            'description': ai_analysis.get('descripcion', 'Análisis del documento')
+                        },
+                        'main_concepts': [],
+                        'cross_relations': [],
+                        'info': {
+                            'total_concepts': len(ai_analysis.get('conceptos_principales', [])),
+                            'analysis_method': 'ai_semantic_analysis',
+                            'documents_analyzed': len(chunks),
+                            'model_used': global_config.DEFAULT_LLM_MODEL
+                        }
+                    }
+                    
+                    # Convertir conceptos principales
+                    for concepto in ai_analysis.get('conceptos_principales', [])[:6]:
+                        concept_data = {
+                            'name': concepto.get('nombre', 'Concepto'),
+                            'relevance': concepto.get('relevancia', 0.5),
+                            'context': concepto.get('contexto', 'Sin contexto')[:200],
+                            'sub_concepts': []
+                        }
+                        
+                        # Agregar sub-conceptos
+                        for sub in concepto.get('sub_conceptos', [])[:4]:
+                            sub_concept = {
+                                'name': sub.get('nombre', 'Sub-concepto'),
+                                'relation': sub.get('relacion', 'relacionado con'),
+                                'relevance': sub.get('relevancia', 0.5),
+                                'context': sub.get('contexto', f"Sub-concepto de {concept_data['name']}")[:150]
+                            }
+                            concept_data['sub_concepts'].append(sub_concept)
+                        
+                        hierarchy['main_concepts'].append(concept_data)
+                    
+                    # Identificar relaciones cruzadas
+                    hierarchy['cross_relations'] = self._identify_cross_relations(hierarchy['main_concepts'])
+                    
+                    logger.info(f"Análisis con IA completado: {len(hierarchy['main_concepts'])} conceptos")
+                    return hierarchy
+                    
+                except json.JSONDecodeError as e:
+                    logger.warning(f"Error parseando JSON de IA: {e}")
+                    # Fallback a análisis normal
+                    logger.info("Fallback a análisis normal después de error JSON")
+                    return None  # Retornar None para forzar uso del método normal
+            else:
+                # Si no hay JSON, usar análisis normal
+                logger.warning("No se encontró JSON en respuesta de IA, usando análisis normal")
+                return None  # Retornar None para forzar uso del método normal
+            
+        except Exception as e:
+            logger.error(f"Error en análisis con IA: {e}")
+            # Fallback a análisis normal
+            return None  # Retornar None para forzar uso del método normal
+    
     def _analyze_concept_hierarchy(self, chunks: List[Dict]) -> Optional[Dict]:
-        """Analizar jerarquía de conceptos para mapa conceptual estructurado con caché"""
+        """
+        Analizar jerarquía de conceptos de forma INTELIGENTE Y COHERENTE
+        
+        MEJORAS:
+        - Usa n-gramas para detectar conceptos compuestos (ej: "inteligencia artificial")
+        - Agrupa conceptos relacionados semánticamente
+        - Identifica relaciones jerárquicas reales (no solo frecuencia)
+        - Detecta tema central considerando contexto completo
+        """
         try:
             # Crear clave de caché basada en el contenido
             content_hash = hashlib.md5(
@@ -1092,13 +2969,13 @@ OBJETIVOS:
             if not self._validate_chunks(chunks):
                 return None
             
-            # Extraer conceptos clave con contexto (ya optimizado con caché)
-            concepts = self.extract_key_concepts(chunks)
+            # MEJORA 1: Extraer conceptos con N-GRAMAS (detecta frases completas)
+            concepts = self._extract_concepts_with_ngrams(chunks)
             if not concepts:
                 return None
             
-            # Identificar tema principal (optimizado)
-            main_theme = self._identify_main_theme(chunks)
+            # MEJORA 2: Identificar tema central de forma más inteligente
+            main_theme = self._identify_intelligent_main_theme(chunks, concepts)
             
             # Clasificar conceptos por niveles jerárquicos
             hierarchy = {
@@ -1148,22 +3025,28 @@ OBJETIVOS:
             return None
     
     def _analyze_intelligent_mind_map_structure(self, chunks: List[Dict]) -> Optional[Dict]:
-        """Análisis rápido para estructura de mapa mental usando métodos tradicionales (igual que mapa conceptual)"""
+        """
+        Análisis MEJORADO para estructura de mapa mental
+        
+        MEJORAS:
+        - Usa n-gramas para conceptos más coherentes
+        - Identifica tema central inteligente
+        - Agrupa conceptos relacionados semánticamente
+        """
         try:
-            logger.info("Iniciando análisis rápido de estructura de mapa mental...")
+            logger.info("Iniciando análisis inteligente de estructura de mapa mental...")
             
-            # Usar el mismo método que el mapa conceptual para velocidad
-            # 1. Extraer conceptos clave con contexto
-            concepts = self.extract_key_concepts(chunks)
+            # MEJORA 1: Usar extracción con n-gramas para conceptos más coherentes
+            concepts = self._extract_concepts_with_ngrams(chunks)
             if not concepts:
                 logger.warning("No se encontraron conceptos, usando estructura básica")
                 return self._fallback_mind_map_structure(chunks)
             
-            # 2. Identificar tema principal (método rápido)
-            main_theme = self._identify_main_theme(chunks)
+            # MEJORA 2: Identificar tema central de forma inteligente
+            central_theme_data = self._identify_intelligent_main_theme(chunks, concepts)
             central_theme = {
-                'name': main_theme.get('name', 'Análisis de Contenido'),
-                'description': main_theme.get('description', 'Tema central identificado mediante análisis tradicional')
+                'name': central_theme_data.get('name', 'Análisis de Contenido'),
+                'description': central_theme_data.get('description', 'Tema central del documento')
             }
             
             # 3. Convertir conceptos a ramas principales (método directo)
@@ -1818,60 +3701,6 @@ OBJETIVOS:
         except Exception:
             return "#cccccc"  # Color por defecto si hay error
     
-    def _get_spanish_stopwords(self) -> List[str]:
-        """Obtener lista de palabras vacías en español con cache"""
-        if self._spanish_stopwords_cache is not None:
-            return self._spanish_stopwords_cache
-        
-        # Lista base de stopwords en español
-        spanish_stopwords = [
-            'el', 'la', 'de', 'que', 'y', 'a', 'en', 'un', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 'son',
-            'con', 'para', 'al', 'del', 'los', 'las', 'una', 'como', 'pero', 'sus', 'le', 'ya', 'o', 'fue', 'este',
-            'ha', 'si', 'porque', 'esta', 'son', 'entre', 'cuando', 'muy', 'sin', 'sobre', 'ser', 'tiene', 'también',
-            'me', 'hasta', 'hay', 'donde', 'han', 'quien', 'están', 'estado', 'desde', 'todo', 'nos', 'durante',
-            'todos', 'uno', 'les', 'ni', 'contra', 'otros', 'fueron', 'ese', 'eso', 'había', 'ante', 'ellos', 'e',
-            'esto', 'mí', 'antes', 'algunos', 'qué', 'unos', 'yo', 'otro', 'otras', 'otra', 'él', 'tanto', 'esa',
-            'estos', 'mucho', 'quienes', 'nada', 'muchos', 'cual', 'sea', 'poco', 'ella', 'estar', 'haber', 'estas',
-            'estaba', 'estamos', 'pueden', 'hacen', 'cada', 'fin', 'incluso', 'primero', 'además', 'mientras', 'sin',
-            'nueva', 'las', 'suelen', 'cómo', 'después', 'gran', 'tiempo', 'años', 'sobre', 'otras', 'manera', 'bien',
-            'trabajo', 'vida', 'ejemplo', 'llevar', 'crear', 'gustar', 'hablar', 'hacer', 'ver', 'dar', 'ir', 'venir',
-            'decir', 'deber', 'poder', 'saber', 'querer', 'llegar', 'poner', 'parecer', 'seguir', 'encontrar', 'llamar',
-            'venir', 'pensar', 'salir', 'volver', 'tomar', 'conocer', 'vivir', 'sentir', 'tratar', 'mirar', 'contar',
-            'empezar', 'esperar', 'buscar', 'existir', 'entrar', 'trabajar', 'escribir', 'perder', 'producir', 'ocurrir'
-        ]
-        
-        # Agregar stopwords de NLTK si está disponible
-        if ADVANCED_ANALYSIS_AVAILABLE:
-            try:
-                from nltk.corpus import stopwords
-                nltk_stopwords = stopwords.words('spanish')
-                spanish_stopwords.extend(nltk_stopwords)
-            except Exception as e:
-                logger.warning(f"No se pudieron cargar stopwords de NLTK: {e}")
-        
-        # Eliminar duplicados y guardar en cache
-        self._spanish_stopwords_cache = list(set(spanish_stopwords))
-        return self._spanish_stopwords_cache
-    
-    def _get_concept_context(self, concept: str, chunks: List[Dict]) -> str:
-        """Obtener contexto de un concepto en los chunks"""
-        try:
-            concept_lower = concept.lower()
-            
-            for chunk in chunks:
-                content = chunk.get('content', '').lower()
-                if concept_lower in content:
-                    # Encontrar la oración que contiene el concepto
-                    sentences = re.split(r'[.!?]+', content)
-                    for sentence in sentences:
-                        if concept_lower in sentence and len(sentence.strip()) > 10:
-                            return sentence.strip()
-            
-            return f"Contexto de {concept}"
-            
-        except Exception as e:
-            logger.error(f"Error obteniendo contexto del concepto: {e}")
-            return f"Análisis de {concept}"
     
     def _identify_main_theme(self, chunks: List[Dict]) -> Dict:
         """Identificar el tema principal del contenido con caché"""
@@ -2120,34 +3949,29 @@ OBJETIVOS:
         else:
             return "#95a5a6"  # Gris para muy baja relevancia
     
-    def preprocess_text(self, text: str) -> str:
-        """Preprocesar texto para análisis con cache"""
-        if not text:
-            return ""
-        
-        # Verificar cache
-        text_hash = hash(text)
-        if text_hash in self._processed_text_cache:
-            return self._processed_text_cache[text_hash]
-        
-        # Limpiar texto
-        processed = re.sub(r'[^\w\s]', ' ', text.lower())
-        processed = re.sub(r'\s+', ' ', processed).strip()
-        
-        # Guardar en cache
-        self._processed_text_cache[text_hash] = processed
-        
-        # Limitar tamaño del cache
-        if len(self._processed_text_cache) > 1000:
-            # Eliminar la mitad más antigua
-            keys_to_remove = list(self._processed_text_cache.keys())[:500]
-            for key in keys_to_remove:
-                del self._processed_text_cache[key]
-        
-        return processed
+    def _calculate_topic_coherence(self, words: List[str], texts: List[str]) -> float:
+        """Calcular coherencia de un tema"""
+        try:
+            # Implementación básica de coherencia
+            word_counts = Counter()
+            for text in texts:
+                text_words = set(text.lower().split())
+                for word in words:
+                    if word in text_words:
+                        word_counts[word] += 1
+            
+            if not word_counts:
+                return 0.0
+            
+            # Coherencia basada en co-ocurrencia
+            coherence = sum(word_counts.values()) / len(words)
+            return min(coherence / len(texts), 1.0)
+        except:
+            return 0.0
     
-    def extract_advanced_themes(self, chunks: List[Dict], n_topics: int = 10) -> Dict:
-        """Extracción avanzada de temas usando LDA con optimización"""
+    
+    def _extract_advanced_themes_detailed(self, chunks: List[Dict], n_topics: int = 10) -> Dict:
+        """Extracción avanzada de temas usando LDA con optimización (método legacy detallado)"""
         if not self._validate_chunks(chunks) or not ADVANCED_ANALYSIS_AVAILABLE:
             return self._basic_theme_extraction(chunks)
         
@@ -2270,33 +4094,49 @@ OBJETIVOS:
         
         # Validar entrada
         if not chunks:
-            return {'themes': {}, 'method': 'frequency', 'total_words': 0}
+            return {'topics': [], 'themes': {}, 'method': 'frequency', 'total_words': 0}
         
         # Procesar texto de forma eficiente
         all_text = " ".join([chunk.get('content', '') for chunk in chunks if chunk.get('content')])
         if not all_text.strip():
-            return {'themes': {}, 'method': 'frequency', 'total_words': 0}
+            return {'topics': [], 'themes': {}, 'method': 'frequency', 'total_words': 0}
         
         # Usar texto preprocesado si está disponible
         processed_text = self.preprocess_text(all_text)
-        words = processed_text.split()
+        words_list = processed_text.split()
         
-        if not words:
-            return {'themes': {}, 'method': 'frequency', 'total_words': 0}
+        if not words_list:
+            return {'topics': [], 'themes': {}, 'method': 'frequency', 'total_words': 0}
         
-        word_freq = Counter(words)
+        word_freq = Counter(words_list)
         
         # Filtrar palabras usando stopwords cacheadas
         stop_words = set(self._get_spanish_stopwords())
-        themes = {
+        themes_dict = {
             word: count for word, count in word_freq.most_common(30) 
             if len(word) > 3 and word not in stop_words and word.isalpha()
         }
         
+        # Convertir a formato de topics para compatibilidad
+        topics = []
+        for i, (word, count) in enumerate(list(themes_dict.items())[:10]):
+            topic = {
+                'id': i,
+                'name': f"Tema {i+1}",
+                'words': [word],
+                'keywords': [word],
+                'weight': count / len(words_list),
+                'weights': [count / len(words_list)],
+                'coherence': count / len(words_list),
+                'description': f"Tema relacionado con: {word}"
+            }
+            topics.append(topic)
+        
         result = {
-            'themes': themes,
+            'topics': topics,  # Formato nuevo para compatibilidad
+            'themes': themes_dict,  # Formato legacy
             'method': 'frequency',
-            'total_words': len(words),
+            'total_words': len(words_list),
             'unique_words': len(word_freq),
             'documents_analyzed': len(chunks)
         }
@@ -2305,51 +4145,10 @@ OBJETIVOS:
         self._concept_analysis_cache[cache_key] = result
         return result
     
-    def _get_spanish_stopwords(self) -> list:
-        """Obtener palabras vacías en español"""
-        spanish_stopwords = [
-            'el', 'la', 'de', 'que', 'y', 'a', 'en', 'un', 'es', 'se', 'no', 'te', 'lo', 'le', 'da', 'su', 'por', 
-            'son', 'con', 'para', 'al', 'del', 'los', 'las', 'una', 'como', 'más', 'pero', 'sus', 'me', 'ya', 
-            'muy', 'mi', 'sin', 'sobre', 'este', 'ser', 'tiene', 'todo', 'esta', 'era', 'cuando', 'él', 'uno', 
-            'donde', 'bien', 'tiempo', 'cada', 'aquí', 'hacer', 'cómo', 'sólo', 'durante', 'todos', 'lugar', 
-            'vida', 'gran', 'hasta', 'desde', 'había', 'sido', 'años', 'año', 'puede', 'tienen', 'país', 'parte', 
-            'entre', 'ciudad', 'mundo', 'forma', 'estado', 'mayor', 'día', 'grupo', 'agua', 'casa', 'caso', 
-            'gobierno', 'sistema', 'trabajo', 'desarrollo', 'proceso', 'nivel', 'área', 'población', 'región', 
-            'zona', 'tipo', 'número', 'millones', 'miles', 'importante', 'nacional', 'social', 'general', 'local', 
-            'público', 'principal', 'internacional', 'natural', 'cultural', 'económico', 'político', 'histórico'
-        ]
-        
-        if ADVANCED_ANALYSIS_AVAILABLE:
-            try:
-                from nltk.corpus import stopwords
-                nltk_stopwords = stopwords.words('spanish')
-                spanish_stopwords.extend(nltk_stopwords)
-                # Eliminar duplicados manteniendo el orden
-                spanish_stopwords = list(dict.fromkeys(spanish_stopwords))
-            except:
-                pass
-        
-        return spanish_stopwords
     
-    def _calculate_topic_coherence(self, words: List[str], texts: List[str]) -> float:
-        """Calcular coherencia de un tema"""
-        try:
-            # Implementación básica de coherencia
-            word_counts = Counter()
-            for text in texts:
-                text_words = set(text.lower().split())
-                for word in words:
-                    if word in text_words:
-                        word_counts[word] += 1
-            
-            if not word_counts:
-                return 0.0
-            
-            # Coherencia basada en co-ocurrencia
-            coherence = sum(word_counts.values()) / len(words)
-            return min(coherence / len(texts), 1.0)
-        except:
-            return 0.0
+# =============================================================================
+# 9. CLUSTERING Y AGRUPACIÓN
+# =============================================================================
     
     def perform_clustering(self, chunks: List[Dict], n_clusters: int = 5) -> Dict:
         """Realizar clustering de documentos"""
@@ -2434,8 +4233,8 @@ OBJETIVOS:
             logger.error(f"Error en clustering: {e}")
             return {'error': str(e)}
     
-    def advanced_sentiment_analysis(self, chunks: List[Dict]) -> Dict:
-        """Análisis avanzado de sentimientos con optimización"""
+    def _advanced_sentiment_analysis_detailed(self, chunks: List[Dict]) -> Dict:
+        """Análisis avanzado de sentimientos con optimización (método legacy detallado para compatibilidad)"""
         if not self._validate_chunks(chunks):
             return {'error': 'No hay datos válidos disponibles'}
         
@@ -2529,6 +4328,10 @@ OBJETIVOS:
             logger.error(f"Error en análisis de sentimientos: {e}")
             return {'error': str(e)}
     
+# =============================================================================
+# 14. NUBES DE PALABRAS
+# =============================================================================
+    
     def generate_word_cloud(self, chunks: List[Dict], source_filter: Optional[str] = None) -> Optional[str]:
         """Generar nube de palabras con cache optimizado"""
         if not self._validate_chunks(chunks) or not ADVANCED_ANALYSIS_AVAILABLE:
@@ -2582,7 +4385,8 @@ OBJETIVOS:
             ).generate(processed_text)
             
             # Crear directorio de cache si no existe
-            cache_dir = Path(config.CACHE_DIR) / "wordclouds"
+            from config.settings import config as global_config
+            cache_dir = Path(global_config.CACHE_DIR) / "wordclouds"
             cache_dir.mkdir(parents=True, exist_ok=True)
             
             # Guardar imagen con nombre único pero predecible
@@ -2816,7 +4620,7 @@ OBJETIVOS:
             logger.error(f"Error generando mapa conceptual: {e}")
             return {'error': str(e)}
     
-    def _create_basic_concept_map(self, chunks: List[Dict]) -> Dict:
+    def _create_basic_concept_map(self, chunks: List[Dict], layout_type: str = "spring") -> Dict:
         """Crear mapa conceptual básico sin IA"""
         try:
             if not chunks:
@@ -2890,7 +4694,7 @@ OBJETIVOS:
             logger.error(f"Error creando mapa conceptual básico: {e}")
             return {'error': str(e)}
     
-    def _create_basic_mind_map(self, chunks: List[Dict]) -> Dict:
+    def _create_basic_mind_map(self, chunks: List[Dict], node_spacing: int = 250, return_data: bool = False) -> Dict:
         """Crear mapa mental básico sin IA"""
         try:
             if not chunks:
@@ -3068,6 +4872,10 @@ OBJETIVOS:
             logger.error(f"Error generando resumen básico: {e}")
             return f"Error al generar resumen: {str(e)}"
 
+# =============================================================================
+# 15. VISUALIZACIONES Y GRÁFICOS
+# =============================================================================
+
 def render_advanced_dashboard(analyzer: AdvancedQualitativeAnalyzer, chunks: List[Dict]):
     """Dashboard avanzado con métricas clave"""
     st.header("📊 Dashboard de Análisis")
@@ -3163,19 +4971,23 @@ def render_advanced_themes(analyzer: AdvancedQualitativeAnalyzer, chunks: List[D
         for i, topic in enumerate(theme_analysis['topics']):
             with st.expander(f"**Tema {i+1}** - Coherencia: {topic.get('coherence', 0):.3f}"):
                 st.write("**Palabras clave:**")
-                st.write(", ".join(topic['words'][:8]))
-                st.write(f"**Peso:** {topic['weight']:.3f}")
+                # Compatibilidad con ambos formatos: 'words' y 'keywords'
+                keywords = topic.get('words', topic.get('keywords', []))
+                st.write(", ".join([str(w) for w in keywords[:8]]))
+                st.write(f"**Peso:** {topic.get('weight', 0):.3f}")
         
         # Visualización de temas
         if len(theme_analysis['topics']) > 1:
             # Preparar datos para visualización
             topic_data = []
             for topic in theme_analysis['topics']:
+                # Compatibilidad con ambos formatos
+                keywords = topic.get('words', topic.get('keywords', []))
                 topic_data.append({
-                    'Tema': f"Tema {topic['id']+1}",
-                    'Peso': topic['weight'],
+                    'Tema': f"Tema {topic.get('id', 0)+1}",
+                    'Peso': topic.get('weight', 0),
                     'Coherencia': topic.get('coherence', 0),
-                    'Palabras': ', '.join(topic['words'][:5])
+                    'Palabras': ', '.join([str(w) for w in keywords[:5]])
                 })
             
             df_topics = pd.DataFrame(topic_data)
@@ -3721,12 +5533,13 @@ def render_interactive_concept_map(analyzer: AdvancedQualitativeAnalyzer, chunks
     with col1:
         generation_mode = st.selectbox(
             "🎯 Modo de Generación:",
-            options=["ai", "normal"],
+            options=["normal", "ai"],  # Cambio: normal primero (por defecto)
             format_func=lambda x: {
-                "normal": "⚡ Generación Normal (Rápida)",
-                "ai": "🧠 Generación con IA (Inteligente)"
+                "normal": "⚡ Generación Normal (Recomendado)",
+                "ai": "🧠 Generación con IA (Experimental)"
             }[x],
-            help="Elige entre generación inteligente con IA o procesamiento tradicional rápido"
+            help="Modo Normal: Rápido y coherente | Modo IA: Más lento pero con análisis semántico profundo",
+            index=0  # Normal por defecto
         )
     
     with col2:
@@ -3795,13 +5608,26 @@ def render_interactive_concept_map(analyzer: AdvancedQualitativeAnalyzer, chunks
         
         with st.spinner(spinner_text):
             if generation_mode == "ai":
-                # Generación inteligente con IA
-                html_file = analyzer.create_interactive_concept_map(selected_chunks, layout_type)
-                concept_structure = analyzer._analyze_concept_hierarchy(selected_chunks)
+                # Generación inteligente con IA (usa LLM para análisis semántico)
+                try:
+                    # Intentar análisis con IA usando el modelo LLM
+                    concept_structure = analyzer._analyze_concept_hierarchy_with_ai(selected_chunks)
+                    
+                    # Si falla (retorna None), usar modo normal
+                    if concept_structure is None:
+                        logger.info("Análisis con IA retornó None, usando modo normal")
+                        concept_structure = analyzer._analyze_concept_hierarchy(selected_chunks)
+                    
+                    html_file = analyzer.create_interactive_concept_map(selected_chunks, layout_type)
+                except Exception as e:
+                    logger.warning(f"Error en generación con IA: {e}. Usando modo normal.")
+                    # Fallback a modo normal
+                    concept_structure = analyzer._analyze_concept_hierarchy(selected_chunks)
+                    html_file = analyzer.create_interactive_concept_map(selected_chunks, layout_type)
             else:
-                # Generación normal/rápida
-                html_file = analyzer._create_basic_concept_map(selected_chunks, layout_type)
-                concept_structure = analyzer._analyze_basic_concept_structure(selected_chunks)
+                # Generación normal/rápida - análisis mejorado con n-gramas
+                concept_structure = analyzer._analyze_concept_hierarchy(selected_chunks)
+                html_file = analyzer.create_interactive_concept_map(selected_chunks, layout_type)
             
             st.session_state[cache_key] = {
                 'html_file': html_file,
@@ -3951,23 +5777,24 @@ def render_interactive_mind_map(analyzer: AdvancedQualitativeAnalyzer, chunks: L
     with col1:
         generation_mode = st.selectbox(
             "🎯 Modo de Generación:",
-            options=["ai", "normal"],
+            options=["normal", "ai"],  # CAMBIO: Normal primero (por defecto)
             format_func=lambda x: {
-                "normal": "⚡ Generación Normal (Rápida)",
-                "ai": "🧠 Generación con IA (Inteligente)"
+                "normal": "⚡ Generación Normal (Recomendado)",
+                "ai": "🧠 Generación con IA (Experimental)"
             }[x],
-            help="Elige entre generación inteligente con IA o procesamiento tradicional rápido",
-            key="mind_map_generation_mode"
+            help="Modo Normal: Rápido y coherente | Modo IA: Más lento pero con análisis semántico profundo",
+            key="mind_map_generation_mode",
+            index=0  # Normal por defecto
         )
     
     with col2:
         node_spacing = st.slider(
             "Espaciado entre Nodos:",
-            min_value=100,
-            max_value=500,
-            value=250,
+            min_value=200,  # AUMENTADO: de 150 a 200
+            max_value=800,  # AUMENTADO: de 600 a 800
+            value=450,  # AUMENTADO: de 350 a 450 para mejor separación
             step=50,
-            help="Controla la distancia entre los nodos del mapa mental"
+            help="Controla la distancia entre los nodos del mapa mental (mayor = más separado)"
         )
     
     with col3:
@@ -4113,10 +5940,10 @@ def render_interactive_mind_map(analyzer: AdvancedQualitativeAnalyzer, chunks: L
                     )
                     edges.append(edge)
                 
-                # Configuración mejorada del grafo con tamaño optimizado
+                # Configuración mejorada del grafo con tamaño optimizado para pantalla completa
                 config = Config(
-                    width=1200,  # Ancho mantenido
-                    height=500,  # Altura reducida
+                    width=1400,  # AUMENTADO: de 1200 a 1400 para cubrir más ancho
+                    height=700,  # AUMENTADO: de 500 a 700 para mejor altura
                     directed=False,
                     physics=True,
                     hierarchical=False,
@@ -4128,19 +5955,19 @@ def render_interactive_mind_map(analyzer: AdvancedQualitativeAnalyzer, chunks: L
                         'size': 400,  # Tamaño aumentado
                         'highlightStrokeColor': '#A23B72',  # Color de resaltado mejorado
                         'fontSize': 16,  # Fuente más grande
-                        'fontColor': '#2c3e50'  # Color de fuente legible
+                        'fontColor': '#ffffff'  # CAMBIO: Texto blanco para mejor contraste en fondo oscuro
                     },
                     link={
                         'labelProperty': 'label',
                         'renderLabel': True,
                         'fontSize': 14,  # Fuente más grande para etiquetas
-                        'fontColor': '#2c3e50'  # Color de fuente legible
+                        'fontColor': '#e0e0e0'  # CAMBIO: Texto gris claro para mejor legibilidad
                     },
                     d3={
                         'alphaTarget': 0.05,
-                        'gravity': -physics_strength * 100,
-                        'linkDistance': node_spacing,
-                        'linkStrength': physics_strength,
+                        'gravity': -physics_strength * 80,  # REDUCIDO: de 100 a 80 para menos atracción
+                        'linkDistance': node_spacing * 1.5,  # AUMENTADO: 50% más distancia entre nodos
+                        'linkStrength': physics_strength * 0.7,  # REDUCIDO: de 1.0 a 0.7 para menos fuerza
                         'disableLinkForce': False
                     }
                 )
@@ -4519,7 +6346,7 @@ Fragmentos procesados: {metadata.get('chunks_processed', 'N/A')}
         """)
 
 def render_triangulation_analysis(analyzer: AdvancedQualitativeAnalyzer, chunks: List[Dict]):
-    """Renderizar análisis de triangulación"""
+    """Renderizar análisis de triangulación (funciona con 1 o más fuentes)"""
     st.header("🔺 Análisis de Triangulación")
     
     if not chunks:
@@ -4538,17 +6365,32 @@ def render_triangulation_analysis(analyzer: AdvancedQualitativeAnalyzer, chunks:
         st.error(f"Error en triangulación: {triangulation['error']}")
         return
     
+    # Detectar modo de análisis
+    analysis_mode = triangulation.get('analysis_mode', 'multi-source')
+    
+    # Mostrar información según el modo
+    if analysis_mode == 'single-source-internal':
+        st.info(f"ℹ️ **Modo: Triangulación Interna** - {triangulation.get('info', 'Análisis de una sola fuente')}")
+    else:
+        st.info(f"ℹ️ **Modo: Triangulación Multi-Fuente** - Validación cruzada entre {triangulation['total_sources']} fuentes")
+    
     # Estadísticas generales
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("📚 Fuentes Totales", triangulation['total_sources'])
+        if analysis_mode == 'single-source-internal':
+            st.metric("📚 Fuentes", triangulation['total_sources'])
+            st.caption(f"📑 {triangulation.get('total_sections', 0)} secciones")
+        else:
+            st.metric("📚 Fuentes Totales", triangulation['total_sources'])
     
     with col2:
         st.metric("🔍 Conceptos Totales", triangulation['total_concepts'])
     
     with col3:
         st.metric("✅ Conceptos Validados", triangulation['validated_concepts'])
+        if analysis_mode == 'single-source-internal' and 'unique_concepts' in triangulation:
+            st.caption(f"🔸 {triangulation['unique_concepts']} únicos")
     
     with col4:
         validation_rate = (triangulation['validated_concepts'] / triangulation['total_concepts']) * 100 if triangulation['total_concepts'] > 0 else 0
@@ -4559,37 +6401,85 @@ def render_triangulation_analysis(analyzer: AdvancedQualitativeAnalyzer, chunks:
     for i, source in enumerate(triangulation['sources'], 1):
         st.write(f"{i}. {source}")
     
-    # Conceptos triangulados
-    st.subheader("🔺 Conceptos Triangulados")
+    # Título dinámico según modo
+    if analysis_mode == 'single-source-internal':
+        st.subheader("🔺 Conceptos por Frecuencia de Aparición en Secciones")
+        st.caption("Los conceptos que aparecen en múltiples secciones tienen mayor confiabilidad")
+    else:
+        st.subheader("🔺 Conceptos Triangulados Entre Fuentes")
+        st.caption("Los conceptos que aparecen en múltiples fuentes están validados")
     
     if triangulation['triangulated_concepts']:
         # Crear DataFrame para visualización
         concepts_data = []
+        label_fuentes = "Secciones" if analysis_mode == 'single-source-internal' else "Fuentes"
+        
         for concept in triangulation['triangulated_concepts']:
+            # Agregar información de tipo de validación
+            validation_type = concept.get('validation_type', 'multi-source')
+            validation_icon = {
+                'internal-triangulation': '🔄',
+                'single-section': '📍',
+                'multi-source': '✅',
+                'single-source': '⚠️'
+            }.get(validation_type, '📊')
+            
             concepts_data.append({
-                'Concepto': concept['concept'],
-                'Fuentes': concept['source_count'],
+                'Concepto': f"{validation_icon} {concept['concept']}",
+                label_fuentes: concept['source_count'],
                 'Confiabilidad': f"{concept['reliability']:.2%}",
                 'Puntuación Promedio': f"{concept['avg_score']:.3f}",
-                'Fuentes Específicas': ', '.join(concept['sources'][:3]) + ('...' if len(concept['sources']) > 3 else '')
+                'Ubicaciones': concept.get('distribution', ', '.join(concept['sources'][:3]) + ('...' if len(concept['sources']) > 3 else ''))
             })
         
         df_concepts = pd.DataFrame(concepts_data)
         st.dataframe(df_concepts, use_container_width=True)
         
+        # Leyenda de iconos
+        if analysis_mode == 'single-source-internal':
+            st.caption("🔄 Aparece en múltiples secciones | 📍 Aparece en una sola sección")
+        
         # Gráfico de confiabilidad
         if len(concepts_data) > 1:
             fig = px.scatter(
                 df_concepts.head(15),
-                x='Fuentes',
+                x=label_fuentes,
                 y='Puntuación Promedio',
-                size='Fuentes',
+                size=label_fuentes,
                 hover_data=['Concepto', 'Confiabilidad'],
-                title="Conceptos por Fuentes y Puntuación"
+                title=f"Conceptos por {label_fuentes} y Puntuación",
+                labels={
+                    label_fuentes: label_fuentes,
+                    'Puntuación Promedio': 'Relevancia'
+                }
             )
             st.plotly_chart(fig, use_container_width=True)
     else:
-        st.info("No se encontraron conceptos que aparezcan en múltiples fuentes.")
+        if analysis_mode == 'single-source-internal':
+            st.info("No se encontraron conceptos que aparezcan en múltiples secciones del documento.")
+        else:
+            st.info("No se encontraron conceptos que aparezcan en múltiples fuentes.")
+    
+    # Información adicional para fuente única (mostrar siempre)
+    if analysis_mode == 'single-source-internal':
+        st.divider()
+        st.markdown("### 💡 Interpretación de Resultados")
+        st.markdown("""
+        **Triangulación Interna** analiza la consistencia de conceptos dentro de un mismo documento:
+        
+        - **Alta confiabilidad** (>50%): El concepto aparece en más de la mitad de las secciones → concepto central
+        - **Media confiabilidad** (25-50%): El concepto aparece regularmente → concepto importante
+        - **Baja confiabilidad** (<25%): El concepto es específico de ciertas secciones → concepto especializado
+        
+        Esta técnica es útil para:
+        - ✅ Identificar temas centrales vs. específicos
+        - ✅ Detectar la estructura del documento
+        - ✅ Validar la coherencia del contenido
+        """)
+
+# =============================================================================
+# 19. FUNCIÓN PRINCIPAL DE RENDERIZADO
+# =============================================================================
 
 def render():
     """Función principal para renderizar el módulo de análisis cualitativo avanzado"""
