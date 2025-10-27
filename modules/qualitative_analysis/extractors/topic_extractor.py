@@ -1200,3 +1200,52 @@ IMPORTANTE:
         except Exception as e:
             logger.error(f"Error exportando análisis: {str(e)}")
             return {}
+    
+    def get_topic_summary(self, result: TopicAnalysisResult) -> Dict[str, Any]:
+        """
+        Generar resumen estadístico de los temas extraídos
+        
+        Args:
+            result: Resultado del análisis de temas
+            
+        Returns:
+            Diccionario con estadísticas
+        """
+        if not result or not result.topics:
+            return {
+                'total_topics': 0,
+                'total_frequency': 0,
+                'avg_coherence': 0.0,
+                'avg_confidence': 0.0,
+                'unique_sources': 0,
+                'total_citations': 0
+            }
+        
+        total_freq = sum(topic.frequency for topic in result.topics)
+        avg_coherence = sum(topic.coherence_score for topic in result.topics) / len(result.topics)
+        avg_confidence = sum(topic.confidence for topic in result.topics) / len(result.topics)
+        
+        all_sources = set()
+        total_citations = 0
+        
+        for topic in result.topics:
+            for doc in topic.documents:
+                all_sources.add(doc)
+            total_citations += len(topic.citations)
+        
+        return {
+            'total_concepts': len(result.topics),  # Para compatibilidad con show_statistics_panel
+            'total_topics': len(result.topics),
+            'total_frequency': total_freq,
+            'avg_relevance': avg_coherence,  # Para compatibilidad con show_statistics_panel
+            'avg_coherence': avg_coherence,
+            'avg_confidence': avg_confidence,
+            'unique_sources': len(all_sources),
+            'total_citations': total_citations,
+            'top_concept': result.topics[0].topic_name if result.topics else None,  # Para compatibilidad
+            'citation_stats': {
+                'total_citations': total_citations,
+                'unique_sources': len(all_sources),
+                'avg_relevance': avg_coherence
+            }
+        }

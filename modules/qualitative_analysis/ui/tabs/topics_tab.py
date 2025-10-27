@@ -135,8 +135,39 @@ def render_topics_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
     Si necesitas modificar algún parámetro específico, puedes hacerlo directamente en el código.
     """)
     
-    # Botón para ejecutar análisis híbrido
-    if st.button("🚀 Analizar Temas", type="primary", use_container_width=True):
+    # Botones de análisis
+    col1, col2, col3 = st.columns([2, 1, 2])
+    
+    with col1:
+        if st.session_state.get('topics_analyzed', False):
+            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis"):
+                # Limpiar session state
+                st.session_state.topics_analyzed = False
+                st.session_state.topic_analysis_result = None
+                st.session_state.topic_analysis_config = None
+                st.session_state.topic_extractor = None
+                st.session_state.topics_summary = None
+                st.rerun()
+    
+    with col2:
+        if not st.session_state.get('topics_analyzed', False):
+            analyze_button = st.button(
+                "🚀 Analizar Temas",
+                type="primary",
+                use_container_width=True,
+                help="Iniciar análisis de temas con enfoque híbrido"
+            )
+        else:
+            analyze_button = False
+    
+    with col3:
+        if st.session_state.get('topics_analyzed', False):
+            st.success("✅ Análisis completado")
+    
+    # Realizar análisis solo si se presiona el botón Y no hay resultados previos
+    if analyze_button and not st.session_state.get('topics_analyzed', False):
+        
+        # Mostrar spinner durante análisis
         with st.spinner("🎯 Analizando temas con enfoque híbrido..."):
             try:
                 # Crear extractor de temas
@@ -146,29 +177,39 @@ def render_topics_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 result = extractor.extract_topics_hybrid(chunks)
                 
                 # Guardar resultado en session_state
-                st.session_state['topic_analysis_result'] = result
-                st.session_state['topic_analysis_config'] = {
+                st.session_state.topics_analyzed = True
+                st.session_state.topic_analysis_result = result
+                st.session_state.topic_analysis_config = {
                     'algorithm': config.topic_algorithm,
                     'max_topics': config.max_topics,
                     'enable_refinement': config.enable_topic_refinement
                 }
+                st.session_state.topic_extractor = extractor
                 
-                st.success(f"✅ Análisis completado: {result.total_topics} temas identificados")
+                # Obtener resumen
+                summary = extractor.get_topic_summary(result)
+                st.session_state.topics_summary = summary
+                
+                # Forzar re-ejecución para mostrar resultados
                 st.rerun()
                 
             except Exception as e:
-                st.error(f"❌ Error en el análisis: {str(e)}")
-                st.info("💡 Intenta con menos temas o verifica que hay suficiente contenido")
+                st.error(f"❌ **Error en el análisis:** {str(e)}")
+                st.exception(e)
+                return
     
-    # Mostrar resultados si existen
-    if 'topic_analysis_result' in st.session_state:
-        result = st.session_state['topic_analysis_result']
+    # Mostrar resultados si ya están disponibles
+    if st.session_state.get('topics_analyzed', False):
+        # Obtener datos de session state
+        result = st.session_state.topic_analysis_result
         config_used = st.session_state.get('topic_analysis_config', {})
+        extractor = st.session_state.topic_extractor
+        summary = st.session_state.topics_summary
         
-        render_topic_results(result, config_used, chunks)
+        render_topic_results(result, config_used, chunks, extractor, summary)
 
 
-def render_topic_results(result: TopicAnalysisResult, config: Dict[str, Any], chunks: List[Dict[str, Any]]):
+def render_topic_results(result: TopicAnalysisResult, config: Dict[str, Any], chunks: List[Dict[str, Any]], extractor: TopicExtractor, summary: Dict[str, Any]):
     """
     Renderizar resultados del análisis de temas
     
@@ -176,8 +217,21 @@ def render_topic_results(result: TopicAnalysisResult, config: Dict[str, Any], ch
         result: Resultado del análisis de temas
         config: Configuración utilizada
         chunks: Chunks originales para referencias
+        extractor: Extractor de temas para funcionalidades adicionales
+        summary: Resumen estadístico del análisis
     """
     st.markdown("#### 📊 Resultados del Análisis de Temas")
+    
+    # Mostrar resultados
+    st.success(f"✅ **Análisis completado:** {result.total_topics} temas identificados")
+    
+    st.divider()
+    
+    # Panel de estadísticas
+    from ..components.educational import show_statistics_panel
+    show_statistics_panel(summary)
+    
+    st.divider()
     
     # Mostrar resumen del análisis
     col1, col2, col3, col4 = st.columns(4)
