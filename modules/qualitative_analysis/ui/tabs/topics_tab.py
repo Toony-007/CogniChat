@@ -140,7 +140,7 @@ def render_topics_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
     
     with col1:
         if st.session_state.get('topics_analyzed', False):
-            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis"):
+            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis", key="topics_new_analysis"):
                 # Limpiar session state
                 st.session_state.topics_analyzed = False
                 st.session_state.topic_analysis_result = None
@@ -155,7 +155,8 @@ def render_topics_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 "🚀 Analizar Temas",
                 type="primary",
                 use_container_width=True,
-                help="Iniciar análisis de temas con enfoque híbrido"
+                help="Iniciar análisis de temas con enfoque híbrido",
+                key="topics_analyze"
             )
         else:
             analyze_button = False
@@ -500,14 +501,16 @@ def render_topic_export(result: TopicAnalysisResult):
         include_relationships = st.checkbox(
             "Incluir análisis de relaciones",
             value=True,
-            help="Incluye la matriz de similitud y temas relacionados"
+            help="Incluye la matriz de similitud y temas relacionados",
+            key="topics_include_relationships"
         )
     
     with col2:
         include_visualizations = st.checkbox(
             "Incluir datos de visualización",
             value=True,
-            help="Incluye métricas de coherencia y confianza"
+            help="Incluye métricas de coherencia y confianza",
+            key="topics_include_visualizations"
         )
     
     # Información del documento
@@ -518,14 +521,16 @@ def render_topic_export(result: TopicAnalysisResult):
         document_title = st.text_input(
             "Título del documento",
             value="Análisis de Temas",
-            help="Título que aparecerá en el documento"
+            help="Título que aparecerá en el documento",
+            key="topics_document_title"
         )
     
     with col2:
         author_name = st.text_input(
             "Autor",
             value="Investigador",
-            help="Nombre del autor del análisis"
+            help="Nombre del autor del análisis",
+            key="topics_author_name"
         )
     
     # Botones de exportación
@@ -533,7 +538,7 @@ def render_topic_export(result: TopicAnalysisResult):
     
     with col1:
         # Exportación a Word
-        if st.button("📄 Generar Documento Word", type="primary", use_container_width=True):
+        if st.button("📄 Generar Documento Word", type="primary", use_container_width=True, key="topics_generate_word"):
             try:
                 # Crear documento Word
                 doc_content = extractor.generate_word_document(
@@ -598,7 +603,7 @@ def render_topic_export(result: TopicAnalysisResult):
         """)
     
     # Botón para limpiar resultados
-    if st.button("🗑️ Limpiar Resultados", type="secondary"):
+    if st.button("🗑️ Limpiar Resultados", type="secondary", key="topics_clear_results"):
         if 'topic_analysis_result' in st.session_state:
             del st.session_state['topic_analysis_result']
         if 'topic_analysis_config' in st.session_state:

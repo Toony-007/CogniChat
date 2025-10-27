@@ -211,7 +211,8 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
     use_custom_categories = st.checkbox(
         "Usar categorías iniciales personalizadas",
         value=config.use_custom_categories,
-        help="Define categorías específicas para dirigir la extracción de conceptos"
+        help="Define categorías específicas para dirigir la extracción de conceptos",
+        key="concepts_use_custom_categories"
     )
     
     if use_custom_categories:
@@ -231,20 +232,20 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                     new_category = st.text_input(
                         f"Categoría {i+1}",
                         value=category,
-                        key=f"category_{i}",
+                        key=f"concepts_category_{i}",
                         help="Nombre de la categoría (ej: Metodología de investigación)"
                     )
                     
                     new_definition = st.text_area(
                         f"Definición {i+1}",
                         value=definition,
-                        key=f"definition_{i}",
+                        key=f"concepts_definition_{i}",
                         height=100,
                         help="Descripción detallada de qué incluye esta categoría"
                     )
                 
                 with col2:
-                    if st.button("🗑️", key=f"remove_{i}", help="Eliminar categoría"):
+                    if st.button("🗑️", key=f"concepts_remove_{i}", help="Eliminar categoría"):
                         categories_to_remove.append(category)
                 
                 # Actualizar categoría si cambió
@@ -264,7 +265,7 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 st.rerun()
         
         # Botón para agregar nueva categoría
-        if st.button("➕ Agregar Nueva Categoría", type="secondary"):
+        if st.button("➕ Agregar Nueva Categoría", type="secondary", key="concepts_add_category"):
             new_key = f"new_category_{len(st.session_state.custom_categories)}"
             st.session_state.custom_categories[new_key] = ""
             st.rerun()
@@ -294,7 +295,7 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
     
     with col1:
         if st.session_state.get('concepts_extracted', False):
-            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis"):
+            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis", key="concepts_new_analysis"):
                 # Limpiar session state
                 st.session_state.concepts_extracted = False
                 st.session_state.extracted_concepts = None
@@ -308,7 +309,8 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 "🚀 Extraer Conceptos",
                 type="primary",
                 use_container_width=True,
-                help="Iniciar análisis de extracción de conceptos"
+                help="Iniciar análisis de extracción de conceptos",
+                key="concepts_analyze"
             )
         else:
             analyze_button = False
@@ -389,13 +391,15 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 filter_text = st.text_input(
                     "🔍 Filtrar conceptos",
                     placeholder="Escribe para buscar...",
-                    help="Filtra los conceptos por texto"
+                    help="Filtra los conceptos por texto",
+                    key="concepts_filter_text"
                 )
             with col2:
                 sort_by = st.selectbox(
                     "Ordenar por",
                     ["Relevancia", "Frecuencia", "Nombre"],
-                    help="Criterio de ordenamiento"
+                    help="Criterio de ordenamiento",
+                    key="concepts_sort_by"
                 )
             
             # Aplicar filtros
@@ -422,7 +426,8 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                     page = st.selectbox(
                         "Página",
                         range(1, total_pages + 1),
-                        format_func=lambda x: f"Página {x} de {total_pages}"
+                        format_func=lambda x: f"Página {x} de {total_pages}",
+                        key="concepts_page_selector"
                     )
             else:
                 page = 1
@@ -459,7 +464,8 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
             selected_concept_name = st.selectbox(
                 "Selecciona un concepto para ver sus relaciones",
                 concept_names,
-                help="Muestra conceptos que co-ocurren con el seleccionado"
+                help="Muestra conceptos que co-ocurren con el seleccionado",
+                key="concepts_relation_selector"
             )
             
             # Encontrar concepto seleccionado
@@ -596,14 +602,16 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 include_explanations = st.checkbox(
                     "Incluir explicaciones de conceptos",
                     value=True,
-                    help="Incluye las explicaciones generadas por la IA para cada concepto"
+                    help="Incluye las explicaciones generadas por la IA para cada concepto",
+                    key="concepts_include_explanations"
                 )
             
             with col2:
                 include_citations = st.checkbox(
                     "Incluir citas y referencias",
                     value=True,
-                    help="Incluye las citas específicas donde aparece cada concepto"
+                    help="Incluye las citas específicas donde aparece cada concepto",
+                    key="concepts_include_citations"
                 )
             
             # Información del documento
@@ -614,18 +622,20 @@ def render_concepts_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 document_title = st.text_input(
                     "Título del documento",
                     value="Análisis de Conceptos Clave",
-                    help="Título que aparecerá en el documento"
+                    help="Título que aparecerá en el documento",
+                    key="concepts_document_title"
                 )
             
             with col2:
                 author_name = st.text_input(
                     "Autor",
                     value="Investigador",
-                    help="Nombre del autor del análisis"
+                    help="Nombre del autor del análisis",
+                    key="concepts_author_name"
                 )
             
             # Generar documento Word
-            if st.button("📄 Generar Documento Word", type="primary", use_container_width=True):
+            if st.button("📄 Generar Documento Word", type="primary", use_container_width=True, key="concepts_generate_word"):
                 try:
                     # Crear documento Word
                     doc_content = _generate_word_document(
