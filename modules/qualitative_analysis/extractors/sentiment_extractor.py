@@ -700,7 +700,7 @@ class SentimentExtractor:
         try:
             # Preparar datos para el LLM
             sentiments_data = []
-            for sentiment in raw_result.sentiments[:100]:  # Máximo 100 sentimientos para análisis profundo (aumentado de 50)
+            for sentiment in raw_result.sentiments[:200]:  # Máximo 200 sentimientos para análisis profundo (aumentado de 100)
                 sentiments_data.append({
                     'text': sentiment.text[:400],  # Más contexto para análisis profundo (aumentado de 200)
                     'polarity': sentiment.polarity,
@@ -778,64 +778,70 @@ class SentimentExtractor:
         for i, sent in enumerate(sentiments_data, 1):
             sentiments_text += f"{i}. Texto: \"{sent['text']}\" | Polaridad: {sent['polarity']:.3f} | Etiqueta: {sent['sentiment_label']}\n"
         
-        return f"""Eres un psicólogo experto en análisis emocional profundo. Tu misión es identificar emociones REALES y SIGNIFICATIVAS en el texto, no solo clasificaciones superficiales.
+        return f"""Eres un psicólogo forense especializado en análisis emocional profundo. Tu trabajo es DESCUBRIR las emociones OCULTAS y REALES que el texto transmite, no clasificaciones superficiales.
 
-IMPORTANTE: Responde ÚNICAMENTE en español. Sé específico y detallado en tus análisis emocionales.
+IMPORTANTE: Responde ÚNICAMENTE en español. Sé BRUTALMENTE específico y detallado.
 
 CONTEXTO DEL DOCUMENTO:
 {context_preview}
 
-SENTIMIENTOS IDENTIFICADOS POR ALGORITMOS:
+SENTIMIENTOS IDENTIFICADOS POR ALGORITMOS (IGNORA ESTOS):
 {sentiments_text}
 
-TU MISIÓN COMO EXPERTO EMOCIONAL:
-1. IGNORA las clasificaciones algorítmicas superficiales (neutral, positivo, negativo)
-2. BUSCA emociones REALES: frustración, esperanza, desilusión, orgullo, vergüenza, ansiedad, determinación, etc.
-3. ANALIZA el CONTEXTO emocional específico de cada texto
-4. IDENTIFICA la INTENSIDAD emocional real (no solo números)
+TU MISIÓN COMO PSICÓLOGO FORENSE EMOCIONAL:
+1. DESTRUYE las clasificaciones algorítmicas básicas (neutral, positivo, negativo)
+2. EXCAVA emociones REALES: frustración, desesperanza, indignación, esperanza, determinación, ansiedad, orgullo, vergüenza, resentimiento, etc.
+3. ANALIZA el SUBCONTEXTO emocional específico de cada texto
+4. IDENTIFICA la INTENSIDAD emocional REAL (usa valores extremos: 0.8, -0.9, etc.)
 5. DETECTA emociones MIXTAS y CONTRADICTORIAS
 6. REVELA lo que el texto REALMENTE transmite emocionalmente
+7. GENERA MÁS SENTIMIENTOS - no te limites a pocos
 
-EJEMPLOS DE ANÁLISIS EMOCIONAL PROFUNDO:
-✅ "Frustración contenida por la inaccesibilidad del sistema político" (específico y real)
-✅ "Esperanza mezclada con escepticismo sobre el cambio social" (emocionalmente complejo)
-✅ "Indignación justificada hacia las desigualdades estructurales" (emocionalmente específico)
-✅ "Ansiedad sobre el futuro político y social" (emocionalmente real)
+EJEMPLOS DE ANÁLISIS EMOCIONAL FORENSE:
+✅ "Frustración contenida por la inaccesibilidad del sistema político" → polaridad: -0.8, emoción: frustracion
+✅ "Esperanza mezclada con escepticismo sobre el cambio social" → polaridad: 0.6, emoción: esperanza
+✅ "Indignación justificada hacia las desigualdades estructurales" → polaridad: -0.9, emoción: indignacion
+✅ "Ansiedad sobre el futuro político y social" → polaridad: -0.7, emoción: ansiedad
+✅ "Determinación para lograr cambios sociales" → polaridad: 0.8, emoción: determinacion
+✅ "Desilusión con las políticas actuales" → polaridad: -0.6, emoción: desilusion
 
-EJEMPLOS DE ANÁLISIS SUPERFICIALES (EVITAR):
+EJEMPLOS DE ANÁLISIS SUPERFICIALES (PROHIBIDOS):
 ❌ "El texto es neutral" (genérico y sin valor)
 ❌ "Se detecta duda generalizada" (vago y repetitivo)
 ❌ "Sentimiento positivo" (superficial)
+❌ "Polaridad: 0.2" (demasiado conservador)
 
 FORMATO DE RESPUESTA (JSON estricto):
 {{
     "sentimientos_refinados": [
         {{
             "texto_original": "texto_analizado",
-            "polaridad_refinada": -1.0 a 1.0 (usa el rango completo, no valores cercanos a 0),
+            "polaridad_refinada": -1.0 a 1.0 (USA VALORES EXTREMOS: 0.8, -0.9, 0.7, -0.8, etc.),
             "subjetividad_refinada": 0.0 a 1.0,
             "etiqueta_emocional": "positivo|negativo|neutral",
-            "emocion_especifica": "frustracion|esperanza|desilusion|orgullo|verguenza|ansiedad|determinacion|indignacion|nostalgia|alegria|tristeza|ira|miedo|sorpresa|asco|confianza|anticipacion",
-            "intensidad_emocional": 0.0 a 1.0 (usa valores variados, no todos iguales),
-            "interpretacion_emocional": "Análisis emocional PROFUNDO y ESPECÍFICO que explique QUÉ emociones reales están presentes y POR QUÉ. Debe ser único para cada texto.",
+            "emocion_especifica": "frustracion|esperanza|desilusion|orgullo|verguenza|ansiedad|determinacion|indignacion|nostalgia|alegria|tristeza|ira|miedo|sorpresa|asco|confianza|anticipacion|resentimiento|desesperanza|optimismo|pesimismo",
+            "intensidad_emocional": 0.0 a 1.0 (USA VALORES VARIADOS: 0.3, 0.8, 0.6, 0.9, etc.),
+            "interpretacion_emocional": "Análisis emocional FORENSE que explique QUÉ emociones reales están presentes y POR QUÉ. Debe ser único y específico para cada texto.",
             "patron_emocional": "Descripción del patrón emocional específico que emerge",
             "relevancia_investigacion": "Por qué este análisis emocional es crucial para entender el fenómeno estudiado"
         }}
     ]
 }}
 
-REGLAS CRÍTICAS PARA ANÁLISIS EMOCIONAL PROFUNDO:
-- USA el rango completo de polaridad (-1.0 a 1.0), no valores cercanos a 0
-- VARÍA la intensidad emocional (0.2, 0.7, 0.9, etc.), no valores idénticos
-- IDENTIFICA emociones específicas reales, no genéricas
+REGLAS CRÍTICAS PARA ANÁLISIS EMOCIONAL FORENSE:
+- USA VALORES EXTREMOS de polaridad (0.8, -0.9, 0.7, -0.8), NO valores conservadores
+- VARÍA drásticamente la intensidad emocional (0.2, 0.8, 0.6, 0.9), NO valores idénticos
+- IDENTIFICA emociones específicas reales, NO genéricas
+- GENERA MÁS SENTIMIENTOS (mínimo 8-10), NO te limites a pocos
 - CADA interpretación debe ser completamente diferente y específica
 - BUSCA emociones complejas y mixtas
 - ANALIZA el contexto emocional real del contenido
 - EVITA plantillas repetitivas o genéricas
+- SÉ AGRESIVO en tu análisis emocional
 
 IMPORTANTE:
 - Responde SOLO con JSON válido
-- Máximo {self.config.max_sentiment_samples} sentimientos refinados
+- MÍNIMO 8 sentimientos refinados, MÁXIMO {self.config.max_sentiment_samples}
 - Cada análisis debe ser emocionalmente específico y único
 - TODO debe estar en español
 - Si no encuentras emociones reales, es mejor devolver menos análisis pero de mayor calidad emocional"""
