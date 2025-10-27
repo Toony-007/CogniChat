@@ -114,28 +114,6 @@ class AnalysisConfig:
     min_cooccurrence: int = 2
     """Co-ocurrencias mínimas para considerar relación - MODIFICAR AQUÍ"""
     
-    # Configuración de análisis de sentimientos (OPTIMIZADA)
-    enable_sentiment_analysis: bool = True
-    """Activar análisis de sentimientos - MODIFICAR AQUÍ"""
-    
-    sentiment_algorithm: str = "hybrid"
-    """Algoritmo para análisis de sentimientos: 'vader', 'textblob', 'hybrid' - MODIFICAR AQUÍ"""
-    
-    max_sentiment_samples: int = 200
-    """Número máximo de muestras para análisis de sentimientos - MODIFICAR AQUÍ"""
-    
-    min_text_length: int = 10
-    """Longitud mínima del texto para análisis de sentimientos - MODIFICAR AQUÍ"""
-    
-    enable_sentiment_refinement: bool = True
-    """Activar refinamiento de sentimientos con IA - MODIFICAR AQUÍ"""
-    
-    include_emotion_analysis: bool = True
-    """Incluir análisis de emociones específicas - MODIFICAR AQUÍ"""
-    
-    include_temporal_analysis: bool = True
-    """Incluir análisis temporal de evolución de sentimientos - MODIFICAR AQUÍ"""
-    
     # Configuración de procesamiento
     chunk_size: int = 2000
     """Tamaño de fragmentos de texto para procesamiento"""
@@ -199,13 +177,6 @@ class AnalysisConfig:
             'include_relation_explanations': self.include_relation_explanations,
             'relation_window_size': self.relation_window_size,
             'min_cooccurrence': self.min_cooccurrence,
-            'enable_sentiment_analysis': self.enable_sentiment_analysis,
-            'sentiment_algorithm': self.sentiment_algorithm,
-            'max_sentiment_samples': self.max_sentiment_samples,
-            'min_text_length': self.min_text_length,
-            'enable_sentiment_refinement': self.enable_sentiment_refinement,
-            'include_emotion_analysis': self.include_emotion_analysis,
-            'include_temporal_analysis': self.include_temporal_analysis,
             'chunk_size': self.chunk_size,
             'chunk_overlap': self.chunk_overlap,
             'enable_citations': self.enable_citations,

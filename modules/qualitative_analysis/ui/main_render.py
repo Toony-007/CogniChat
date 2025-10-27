@@ -11,7 +11,6 @@ from ..core.analyzer import QualitativeAnalyzer
 from ..core.rag_cache_manager import RAGCacheManager
 from .tabs.concepts_tab import render_concepts_tab
 from .tabs.topics_tab import render_topics_tab
-from .tabs.sentiment_tab import render_sentiment_tab
 from .tabs.relations_tab import render_relations_tab
 from .components.cache_management import render_cache_management_panel
 
@@ -80,7 +79,6 @@ def render():
         
         **En desarrollo futuro:**
         - 🔜 **Análisis de Temas**: Identificación de temas principales con LDA
-        - 🔜 **Análisis de Sentimientos**: Evaluación de tono y emociones
         - 🔜 **Triangulación**: Validación cruzada entre múltiples fuentes
         - 🔜 **Mapas Conceptuales**: Visualización de relaciones entre conceptos
         - 🔜 **Análisis de Relaciones**: Identificación de conexiones y patrones
@@ -191,7 +189,6 @@ def render():
         **Funcionalidades Implementadas:**
         - 🔍 **Conceptos Clave**: Identifica términos importantes con TF-IDF
         - 🎯 **Análisis de Temas**: Extrae temas principales usando LDA
-        - 😊 **Análisis de Sentimientos**: Detecta polaridad y subjetividad
         - 🔗 **Análisis de Relaciones**: Descubre conexiones entre conceptos
         - 📚 **Sistema de Citación**: Referencias a fuentes originales
         - 🔧 **Gestión de Cache**: Optimización de rendimiento
@@ -202,8 +199,7 @@ def render():
         "🔧 Gestión de Cache",
         "🔍 Conceptos Clave",
         "🎯 Análisis de Temas", 
-        "🔗 Análisis de Relaciones",
-        "😊 Análisis de Sentimientos"
+        "🔗 Análisis de Relaciones"
     ])
     
     # Tab 1: Gestión de Cache (IMPLEMENTADO)
@@ -221,10 +217,6 @@ def render():
     # Tab 4: Análisis de Relaciones (IMPLEMENTADO)
     with tabs[3]:
         render_relations_tab(chunks, config)
-    
-    # Tab 5: Análisis de Sentimientos (IMPLEMENTADO)
-    with tabs[4]:
-        render_sentiment_tab(chunks, config)
 
 
 def _get_processed_chunks_with_cache(cache_manager: RAGCacheManager) -> List[Dict[str, Any]]:
