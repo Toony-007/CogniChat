@@ -160,7 +160,7 @@ def render_relations_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
     
     with col1:
         if st.session_state.get('relations_analyzed', False):
-            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis"):
+            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis", key="relations_new_analysis"):
                 # Limpiar session state
                 st.session_state.relations_analyzed = False
                 st.session_state.relation_analysis_result = None
@@ -174,7 +174,8 @@ def render_relations_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 "🚀 Analizar Relaciones",
                 type="primary",
                 use_container_width=True,
-                help="Iniciar análisis híbrido de relaciones"
+                help="Iniciar análisis híbrido de relaciones",
+                key="relations_analyze"
             )
         else:
             analyze_button = False
@@ -739,7 +740,7 @@ def render_relation_export(result: RelationAnalysisResult):
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("📄 Generar Documento Word", type="primary", use_container_width=True):
+        if st.button("📄 Generar Documento Word", type="primary", use_container_width=True, key="relations_generate_word"):
             try:
                 doc_content = _generate_relation_word_document(
                     result=result,
@@ -804,7 +805,7 @@ def render_relation_export(result: RelationAnalysisResult):
         """)
     
     # Botón para limpiar resultados
-    if st.button("🗑️ Limpiar Resultados", type="secondary"):
+    if st.button("🗑️ Limpiar Resultados", type="secondary", key="relations_clear_results"):
         if 'relations_analyzed' in st.session_state:
             del st.session_state.relations_analyzed
         if 'relation_analysis_result' in st.session_state:
