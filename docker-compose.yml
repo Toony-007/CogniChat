@@ -1,0 +1,133 @@
+# ========================================
+# DOCKER COMPOSE PARA COGNICHAT - PRODUCCIÓN
+# ========================================
+
+# ========================================
+# DEFINICIÓN DE SERVICIOS
+# ========================================
+services:
+  # ========================================
+  # SERVICIO OLLAMA (SERVIDOR DE IA)
+  # ========================================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: cognichat-ollama
+    restart: unless-stopped
+    
+    # Configuración de puertos
+    ports:
+      - "11434:11434"
+    
+    # Configuración de volúmenes para persistencia
+    volumes:
+      - ollama_data:/root/.ollama
+    
+    # Variables de entorno para Ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+    
+    # Configuración de recursos (ajustar según hardware disponible)
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+    
+    # Configuración de red
+    networks:
+      - cognichat-network
+    
+    # Healthcheck para verificar que Ollama está funcionando
+    healthcheck:
+      test: ["CMD", "/bin/ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ========================================
+  # SERVICIO COGNICHAT (APLICACIÓN PRINCIPAL)
+  # ========================================
+  cognichat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cognichat-app
+    restart: unless-stopped
+    
+    # Configuración de puertos
+    ports:
+      - "8501:8501"
+    
+    # Configuración de volúmenes para persistencia de datos
+    volumes:
+      - cognichat_data:/app/data
+      - cognichat_logs:/app/logs
+    
+    # Variables de entorno (usar archivo .env.production)
+    env_file:
+      - .env.production
+    
+    # Variables de entorno adicionales
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - PYTHONPATH=/app
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    
+    # Dependencias - esperar a que Ollama esté listo
+    depends_on:
+      ollama:
+        condition: service_healthy
+    
+    # Configuración de red
+    networks:
+      - cognichat-network
+    
+    # Healthcheck para verificar que CogniChat está funcionando
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+# ========================================
+# DEFINICIÓN DE VOLÚMENES
+# ========================================
+volumes:
+  # Volumen para datos de Ollama (modelos descargados)
+  ollama_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker-data/ollama
+  
+  # Volumen para datos de CogniChat (base de datos, cache, etc.)
+  cognichat_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker-data/cognichat
+  
+  # Volumen para logs de CogniChat
+  cognichat_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker-data/logs
+
+# ========================================
+# DEFINICIÓN DE REDES
+# ========================================
+networks:
+  cognichat-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

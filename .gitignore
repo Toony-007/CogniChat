@@ -1,0 +1,85 @@
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Entornos virtuales
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+cognichat-env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Datos temporales
+data/uploads/*
+data/processed/*
+data/cache/*
+data/chat_history/*
+data/temp_exports/*
+!data/uploads/.gitkeep
+!data/processed/.gitkeep
+!data/cache/.gitkeep
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Configuración local
+config/local_settings.py
+
+# Reportes de pruebas y cobertura
+.coverage
+htmlcov/
+.pytest_cache/
+unit_tests/reports/
+tests/test_report.json
+
+# Archivos temporales de desarrollo
+*.tmp
+*.bak
+
+# Docker - Datos y volúmenes (NO subir)
+docker-data/
+uploads/
+*.env.local
+
+# Archivos sensibles
+.env

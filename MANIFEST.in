@@ -1,0 +1,38 @@
+# Incluir archivos de configuración
+include *.md
+include *.txt
+include *.env*
+include *.py
+include LICENSE
+
+# Incluir directorios de datos
+recursive-include data *
+recursive-include logs *.log
+recursive-include modules *.py
+recursive-include utils *.py
+recursive-include config *.py
+recursive-include scripts *.py
+recursive-include docs *.md
+recursive-include tests *.py
+
+# Incluir archivos de configuración de desarrollo
+include .gitignore
+include pyproject.toml
+
+# Excluir archivos temporales y cache
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .DS_Store
+global-exclude *.so
+global-exclude .git*
+global-exclude .pytest_cache
+global-exclude .coverage
+global-exclude htmlcov
+
+# Excluir archivos de entorno específicos
+exclude .env
+exclude *.local
+exclude .vscode
+exclude .idea

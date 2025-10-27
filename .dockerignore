@@ -1,0 +1,116 @@
+# ========================================
+# DOCKERIGNORE PARA COGNICHAT
+# ========================================
+# Archivos y directorios que no deben incluirse en el contexto de Docker
+
+# ========================================
+# ARCHIVOS DE CONTROL DE VERSIONES
+# ========================================
+.git
+.gitignore
+.gitattributes
+
+# ========================================
+# ARCHIVOS DE DOCUMENTACIÓN
+# ========================================
+README.md
+docs/
+*.md
+# Excluir archivos de texto excepto requirements.txt
+!requirements.txt
+
+# ========================================
+# ARCHIVOS DE CONFIGURACIÓN DE DESARROLLO
+# ========================================
+.env
+.env.local
+.env.development
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ========================================
+# ENTORNOS VIRTUALES
+# ========================================
+venv/
+env/
+.venv/
+.env/
+cognichat-env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ========================================
+# ARCHIVOS DE PRUEBAS
+# ========================================
+tests/
+unit_tests/
+.pytest_cache/
+.coverage
+htmlcov/
+*.coverage
+test_*.py
+*_test.py
+
+# ========================================
+# ARCHIVOS DE DATOS TEMPORALES
+# ========================================
+data/uploads/*
+data/processed/*
+data/cache/*
+data/chat_history/*
+data/temp_exports/*
+*.tmp
+*.bak
+*.log
+
+# ========================================
+# ARCHIVOS DE CONSTRUCCIÓN Y DISTRIBUCIÓN
+# ========================================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ========================================
+# ARCHIVOS DE DOCKER
+# ========================================
+Dockerfile.dev
+docker-compose.dev.yml
+docker-compose.override.yml
+.dockerignore
+
+# ========================================
+# ARCHIVOS DEL SISTEMA OPERATIVO
+# ========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================================
+# ARCHIVOS DE JUPYTER
+# ========================================
+.ipynb_checkpoints
+*.ipynb
+
+# ========================================
+# ARCHIVOS DE LOGS
+# ========================================
+logs/
+*.log
+
+# ========================================
+# ARCHIVOS DE CONFIGURACIÓN ESPECÍFICOS
+# ========================================
+.streamlit/
+config/local_settings.py
+
+# ========================================
+# DATOS DE DOCKER LOCALES
+# ========================================
+docker-data/
