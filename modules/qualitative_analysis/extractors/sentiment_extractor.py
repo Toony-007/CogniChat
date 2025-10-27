@@ -978,17 +978,6 @@ IMPORTANTE:
         
         return cleaned
     
-    def _is_json_complete(self, json_str: str) -> bool:
-        """Verificar si el JSON está completo"""
-        open_braces = json_str.count('{')
-        close_braces = json_str.count('}')
-        return open_braces == close_braces and json_str.strip().endswith('}')
-    
-    def _repair_truncated_json(self, json_str: str) -> str:
-        """Reparar JSON truncado"""
-        if not json_str.strip().endswith('}'):
-            json_str = json_str.rstrip(',') + '\n}'
-        return json_str
     
     def _aggressive_json_clean(self, json_str: str) -> str:
         """Limpieza agresiva de JSON"""
