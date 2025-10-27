@@ -158,7 +158,7 @@ def render_sentiment_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
     
     with col1:
         if st.session_state.get('sentiments_analyzed', False):
-            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis"):
+            if st.button("🔄 Nuevo Análisis", type="secondary", use_container_width=True, help="Limpiar resultados y realizar nuevo análisis", key="sentiment_new_analysis"):
                 # Limpiar session state
                 st.session_state.sentiments_analyzed = False
                 st.session_state.sentiment_analysis_result = None
@@ -172,7 +172,8 @@ def render_sentiment_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
                 "🚀 Analizar Sentimientos",
                 type="primary",
                 use_container_width=True,
-                help="Iniciar análisis híbrido de sentimientos"
+                help="Iniciar análisis híbrido de sentimientos",
+                key="sentiment_analyze"
             )
         else:
             analyze_button = False
@@ -425,14 +426,16 @@ def render_sentiment_export(result: SentimentAnalysisResult):
         include_emotions = st.checkbox(
             "Incluir análisis de emociones",
             value=True,
-            help="Incluye las emociones específicas identificadas por la IA"
+            help="Incluye las emociones específicas identificadas por la IA",
+            key="sentiment_include_emotions"
         )
     
     with col2:
         include_visualizations = st.checkbox(
             "Incluir datos de visualización",
             value=True,
-            help="Incluye métricas de polaridad y subjetividad"
+            help="Incluye métricas de polaridad y subjetividad",
+            key="sentiment_include_visualizations"
         )
     
     # Información del documento
@@ -444,21 +447,23 @@ def render_sentiment_export(result: SentimentAnalysisResult):
         document_title = st.text_input(
             "Título del documento",
             value="Análisis de Sentimientos",
-            help="Título que aparecerá en el documento"
+            help="Título que aparecerá en el documento",
+            key="sentiment_document_title"
         )
     
     with col2:
         author_name = st.text_input(
             "Autor",
             value="Investigador",
-            help="Nombre del autor del análisis"
+            help="Nombre del autor del análisis",
+            key="sentiment_author_name"
         )
     
     # Botones de exportación
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("📄 Generar Documento Word", type="primary", use_container_width=True):
+        if st.button("📄 Generar Documento Word", type="primary", use_container_width=True, key="sentiment_generate_word"):
             try:
                 doc_content = _generate_sentiment_word_document(
                     result=result,
@@ -523,7 +528,7 @@ def render_sentiment_export(result: SentimentAnalysisResult):
         """)
     
     # Botón para limpiar resultados
-    if st.button("🗑️ Limpiar Resultados", type="secondary"):
+    if st.button("🗑️ Limpiar Resultados", type="secondary", key="sentiment_clear_results"):
         if 'sentiments_analyzed' in st.session_state:
             del st.session_state.sentiments_analyzed
         if 'sentiment_analysis_result' in st.session_state:
