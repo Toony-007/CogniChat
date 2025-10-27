@@ -849,7 +849,16 @@ IMPORTANTE:
         """
         import re
         
-        # Paso 1: Escapar caracteres problemáticos en strings
+        print(f"🔧 Limpieza agresiva de JSON...")
+        print(f"📄 JSON original (últimos 200 chars): ...{json_str[-200:]}")
+        
+        # Paso 1: Limpiar caracteres problemáticos específicos
+        json_str = json_str.replace('"', '"').replace('"', '"')  # Comillas tipográficas
+        json_str = json_str.replace(''', "'").replace(''', "'")  # Apostrofes tipográficos
+        json_str = json_str.replace('…', '...')  # Puntos suspensivos
+        json_str = json_str.replace('–', '-').replace('—', '-')  # Guiones tipográficos
+        
+        # Paso 2: Escapar caracteres problemáticos en strings
         def escape_string(match):
             string_content = match.group(1)
             # Escapar caracteres problemáticos
@@ -858,30 +867,31 @@ IMPORTANTE:
             string_content = string_content.replace('\n', '\\n')
             string_content = string_content.replace('\t', '\\t')
             string_content = string_content.replace('\r', '\\r')
+            # Remover caracteres Unicode problemáticos
+            string_content = re.sub(r'[^\x20-\x7E]', '', string_content)
             return f'"{string_content}"'
         
         # Aplicar escape a strings
         json_str = re.sub(r'"([^"]*)"', escape_string, json_str)
         
-        # Paso 2: Corregir comas faltantes antes de llaves de cierre
-        # Buscar patrones como: "valor" } o "valor" ] y agregar coma
-        json_str = re.sub(r'"\s*}\s*', '",\n}', json_str)
-        json_str = re.sub(r'"\s*]\s*', '",\n]', json_str)
+        # Paso 3: Corregir comas faltantes antes de llaves de cierre
+        json_str = re.sub(r'"\s*}', '",\n}', json_str)
+        json_str = re.sub(r'"\s*]', '",\n]', json_str)
         
-        # Paso 3: Corregir comas faltantes después de valores
-        # Buscar patrones como: "valor" "siguiente" y agregar coma
-        json_str = re.sub(r'"\s*"', '",\n"', json_str)
+        # Paso 4: Corregir comas faltantes entre elementos del array
+        json_str = re.sub(r'}\s*{', '},\n{', json_str)
         
-        # Paso 4: Limpiar comas múltiples
+        # Paso 5: Limpiar comas duplicadas
         json_str = re.sub(r',\s*,', ',', json_str)
         
-        # Paso 5: Corregir comas antes de llaves de cierre (casos específicos)
+        # Paso 6: Remover comas antes de llaves de cierre
         json_str = re.sub(r',\s*}', '}', json_str)
         json_str = re.sub(r',\s*]', ']', json_str)
         
-        # Paso 6: Remover caracteres de control restantes
+        # Paso 7: Remover caracteres de control restantes
         json_str = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', json_str)
         
+        print(f"📄 JSON después de limpieza agresiva (últimos 200 chars): ...{json_str[-200:]}")
         return json_str
     
     def _is_json_complete(self, json_str: str) -> bool:
@@ -980,7 +990,13 @@ IMPORTANTE:
         print(f"🔧 Reparación manual de JSON...")
         print(f"📄 JSON problemático (últimos 300 chars): ...{json_str[-300:]}")
         
-        # Reparaciones básicas comunes
+        # Paso 1: Limpiar caracteres problemáticos específicos
+        json_str = json_str.replace('"', '"').replace('"', '"')  # Comillas tipográficas
+        json_str = json_str.replace(''', "'").replace(''', "'")  # Apostrofes tipográficos
+        json_str = json_str.replace('…', '...')  # Puntos suspensivos
+        json_str = json_str.replace('–', '-').replace('—', '-')  # Guiones tipográficos
+        
+        # Paso 2: Reparaciones básicas comunes
         # 1. Agregar comas faltantes antes de llaves de cierre
         json_str = re.sub(r'"\s*}\s*', '",\n}', json_str)
         json_str = re.sub(r'"\s*]\s*', '",\n]', json_str)
@@ -995,13 +1011,17 @@ IMPORTANTE:
         json_str = re.sub(r',\s*}', '}', json_str)
         json_str = re.sub(r',\s*]', ']', json_str)
         
-        # 5. Asegurar que el JSON esté bien formado
+        # Paso 3: Reparación específica para casos problemáticos
+        # Buscar patrones específicos que causan problemas
+        json_str = re.sub(r'"([^"]*)"([^,}\]]*)([}\]])', r'"\1"\2,\n\3', json_str)
+        
+        # Paso 4: Asegurar que el JSON esté bien formado
         if not json_str.strip().startswith('{'):
             json_str = '{' + json_str
         if not json_str.strip().endswith('}'):
             json_str = json_str + '}'
         
-        # 6. Reparación específica para el caso del usuario
+        # Paso 5: Reparación específica para el caso del usuario
         # Buscar objetos incompletos y cerrarlos
         lines = json_str.split('\n')
         repaired_lines = []
@@ -1032,6 +1052,10 @@ IMPORTANTE:
                     in_object = False
         
         json_str = '\n'.join(repaired_lines)
+        
+        # Paso 6: Limpieza final
+        json_str = re.sub(r',\s*}', '}', json_str)
+        json_str = re.sub(r',\s*]', ']', json_str)
         
         print(f"📄 JSON reparado manualmente (últimos 200 chars): ...{json_str[-200:]}")
         return json_str
