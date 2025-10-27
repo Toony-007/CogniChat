@@ -700,9 +700,9 @@ class SentimentExtractor:
         try:
             # Preparar datos para el LLM
             sentiments_data = []
-            for sentiment in raw_result.sentiments[:50]:  # Máximo 50 sentimientos para análisis profundo (aumentado de 20)
+            for sentiment in raw_result.sentiments[:100]:  # Máximo 100 sentimientos para análisis profundo (aumentado de 50)
                 sentiments_data.append({
-                    'text': sentiment.text[:200],  # Limitar texto para el prompt
+                    'text': sentiment.text[:400],  # Más contexto para análisis profundo (aumentado de 200)
                     'polarity': sentiment.polarity,
                     'subjectivity': sentiment.subjectivity,
                     'sentiment_label': sentiment.sentiment_label,
@@ -778,81 +778,67 @@ class SentimentExtractor:
         for i, sent in enumerate(sentiments_data, 1):
             sentiments_text += f"{i}. Texto: \"{sent['text']}\" | Polaridad: {sent['polarity']:.3f} | Etiqueta: {sent['sentiment_label']}\n"
         
-        return f"""Eres un experto en análisis cualitativo de sentimientos y emociones. Tu tarea es refinar y mejorar el análisis de sentimientos, generando interpretaciones emocionales profundas y académicas.
+        return f"""Eres un psicólogo experto en análisis emocional profundo. Tu misión es identificar emociones REALES y SIGNIFICATIVAS en el texto, no solo clasificaciones superficiales.
 
-IMPORTANTE: Responde ÚNICAMENTE en español. Todas las interpretaciones y análisis deben estar en español.
+IMPORTANTE: Responde ÚNICAMENTE en español. Sé específico y detallado en tus análisis emocionales.
 
 CONTEXTO DEL DOCUMENTO:
 {context_preview}
 
-SENTIMIENTOS IDENTIFICADOS:
+SENTIMIENTOS IDENTIFICADOS POR ALGORITMOS:
 {sentiments_text}
 
-DEFINICIÓN DE ANÁLISIS EMOCIONAL PROFUNDO:
-Un análisis emocional profundo en investigación cualitativa va más allá de la simple clasificación positivo/negativo para identificar:
-- Emociones específicas (alegría, tristeza, ira, miedo, sorpresa, asco)
-- Intensidad emocional y matices
-- Contexto emocional y significado cultural
-- Patrones emocionales emergentes
-- Relación entre emociones y contenido temático
+TU MISIÓN COMO EXPERTO EMOCIONAL:
+1. IGNORA las clasificaciones algorítmicas superficiales (neutral, positivo, negativo)
+2. BUSCA emociones REALES: frustración, esperanza, desilusión, orgullo, vergüenza, ansiedad, determinación, etc.
+3. ANALIZA el CONTEXTO emocional específico de cada texto
+4. IDENTIFICA la INTENSIDAD emocional real (no solo números)
+5. DETECTA emociones MIXTAS y CONTRADICTORIAS
+6. REVELA lo que el texto REALMENTE transmite emocionalmente
 
-INSTRUCCIONES ESPECÍFICAS:
-1. ANALIZA cada sentimiento identificado en su contexto específico
-2. REFINA las clasificaciones eliminando interpretaciones superficiales
-3. GENERA interpretaciones emocionales profundas que expliquen "qué emociones" y "por qué"
-4. IDENTIFICA emociones específicas más allá de positivo/negativo/neutral
-5. PRIORIZA análisis que revelen patrones emocionales significativos
-6. CADA interpretación debe ser ÚNICA y específica al contexto emocional
-7. NO uses plantillas genéricas - cada análisis debe ser diferente
+EJEMPLOS DE ANÁLISIS EMOCIONAL PROFUNDO:
+✅ "Frustración contenida por la inaccesibilidad del sistema político" (específico y real)
+✅ "Esperanza mezclada con escepticismo sobre el cambio social" (emocionalmente complejo)
+✅ "Indignación justificada hacia las desigualdades estructurales" (emocionalmente específico)
+✅ "Ansiedad sobre el futuro político y social" (emocionalmente real)
+
+EJEMPLOS DE ANÁLISIS SUPERFICIALES (EVITAR):
+❌ "El texto es neutral" (genérico y sin valor)
+❌ "Se detecta duda generalizada" (vago y repetitivo)
+❌ "Sentimiento positivo" (superficial)
 
 FORMATO DE RESPUESTA (JSON estricto):
 {{
     "sentimientos_refinados": [
         {{
             "texto_original": "texto_analizado",
-            "polaridad_refinada": -1.0 a 1.0,
+            "polaridad_refinada": -1.0 a 1.0 (usa el rango completo, no valores cercanos a 0),
             "subjetividad_refinada": 0.0 a 1.0,
             "etiqueta_emocional": "positivo|negativo|neutral",
-            "emocion_especifica": "alegria|tristeza|ira|miedo|sorpresa|asco|confianza|anticipacion",
-            "intensidad_emocional": 0.0 a 1.0,
-            "interpretacion_emocional": "Interpretación detallada y ÚNICA de las emociones presentes y su significado contextual.",
-            "patron_emocional": "Descripción del patrón emocional que emerge de este análisis",
-            "relevancia_investigacion": "Por qué este análisis emocional es importante para la investigación"
+            "emocion_especifica": "frustracion|esperanza|desilusion|orgullo|verguenza|ansiedad|determinacion|indignacion|nostalgia|alegria|tristeza|ira|miedo|sorpresa|asco|confianza|anticipacion",
+            "intensidad_emocional": 0.0 a 1.0 (usa valores variados, no todos iguales),
+            "interpretacion_emocional": "Análisis emocional PROFUNDO y ESPECÍFICO que explique QUÉ emociones reales están presentes y POR QUÉ. Debe ser único para cada texto.",
+            "patron_emocional": "Descripción del patrón emocional específico que emerge",
+            "relevancia_investigacion": "Por qué este análisis emocional es crucial para entender el fenómeno estudiado"
         }}
     ]
 }}
 
-CRITERIOS DE CALIDAD:
-- Los análisis deben ser emocionalmente específicos y no genéricos
-- Las interpretaciones deben ser únicas y contextuales
-- Deben revelar patrones emocionales profundos
-- Deben ser útiles para la comprensión del fenómeno estudiado
-- NO deben ser análisis superficiales o obvios
-- Cada interpretación debe aportar valor emocional específico
-
-EJEMPLOS DE ANÁLISIS VÁLIDOS:
-✅ "El texto expresa una alegría contenida mezclada con nostalgia" (emocionalmente específico)
-✅ "Se detecta una ira justificada hacia la injusticia social" (contextual y específico)
-✅ "La confianza se mezcla con incertidumbre sobre el futuro" (emocionalmente complejo)
-
-EJEMPLOS DE ANÁLISIS INVÁLIDOS:
-❌ "El texto es positivo" (genérico)
-❌ "Se siente tristeza" (superficial)
-❌ "Es neutral" (obvio)
-
-REGLAS CRÍTICAS:
-- Cada interpretación debe ser completamente diferente
-- Las interpretaciones deben ser específicas al contexto emocional del documento
-- NO uses frases genéricas o plantillas repetidas
-- Si un sentimiento no es emocionalmente significativo, es mejor excluirlo
-- Prioriza calidad emocional sobre cantidad
+REGLAS CRÍTICAS PARA ANÁLISIS EMOCIONAL PROFUNDO:
+- USA el rango completo de polaridad (-1.0 a 1.0), no valores cercanos a 0
+- VARÍA la intensidad emocional (0.2, 0.7, 0.9, etc.), no valores idénticos
+- IDENTIFICA emociones específicas reales, no genéricas
+- CADA interpretación debe ser completamente diferente y específica
+- BUSCA emociones complejas y mixtas
+- ANALIZA el contexto emocional real del contenido
+- EVITA plantillas repetitivas o genéricas
 
 IMPORTANTE:
 - Responde SOLO con JSON válido
 - Máximo {self.config.max_sentiment_samples} sentimientos refinados
-- Cada sentimiento debe tener una interpretación emocional única y específica
+- Cada análisis debe ser emocionalmente específico y único
 - TODO debe estar en español
-- Si no encuentras sentimientos emocionalmente significativos, es mejor devolver menos análisis pero de mayor calidad"""
+- Si no encuentras emociones reales, es mejor devolver menos análisis pero de mayor calidad emocional"""
 
     def _parse_llm_sentiment_response(self, response: str, original_sentiments: List[SentimentData]) -> List[SentimentData]:
         """
