@@ -294,7 +294,7 @@ def delete_selected_documents(uploaded_files, selected_files):
         logger.error(f"Error en delete_selected_documents: {e}")
 
 def reprocess_all_documents(file_paths):
-    """Reprocesar todos los documentos"""
+    """Reprocesar todos los documentos de manera optimizada"""
     if not file_paths:
         return
     
@@ -302,22 +302,101 @@ def reprocess_all_documents(file_paths):
         # Limpiar cache primero
         rag_processor.clear_cache()
         
-        success_count = 0
-        for file_path in file_paths:
-            if file_path.is_file():
-                try:
-                    # Procesar documento (pasar Path object directamente)
-                    chunks = rag_processor.process_document(file_path)
-                    if chunks:
-                        # Generar embeddings
+        # Usar la nueva función optimizada para procesamiento paralelo
+        try:
+            # Procesar documentos en paralelo (sin embeddings por ahora)
+            results = rag_processor.process_multiple_documents(file_paths, max_workers=2)
+            
+            success_count = 0
+            total_chunks = 0
+            
+            # Generar embeddings solo para documentos procesados exitosamente
+            for file_path, chunks in results.items():
+                if chunks:
+                    try:
+                        # Generar embeddings en lotes para mejor rendimiento
                         chunks_with_embeddings = rag_processor.generate_embeddings(chunks)
                         success_count += 1
-                        logger.info(f"Documento reprocesado: {file_path.name} ({len(chunks)} chunks)")
-                except Exception as e:
-                    logger.error(f"Error reprocesando {file_path}: {e}")
+                        total_chunks += len(chunks)
+                        logger.info(f"Documento reprocesado: {Path(file_path).name} ({len(chunks)} chunks)")
+                    except Exception as e:
+                        logger.error(f"Error generando embeddings para {file_path}: {e}")
+            
+            st.success(f"✅ {success_count}/{len(file_paths)} documentos reprocesados ({total_chunks} chunks total)")
+            
+        except Exception as e:
+            logger.error(f"Error en procesamiento paralelo: {e}")
+            # Fallback al método secuencial
+            success_count = 0
+            for file_path in file_paths:
+                if file_path.is_file():
+                    try:
+                        chunks = rag_processor.process_document(file_path)
+                        if chunks:
+                            chunks_with_embeddings = rag_processor.generate_embeddings(chunks)
+                            success_count += 1
+                            logger.info(f"Documento reprocesado: {file_path.name} ({len(chunks)} chunks)")
+                    except Exception as e:
+                        logger.error(f"Error reprocesando {file_path}: {e}")
+            
+            st.success(f"✅ {success_count}/{len(file_paths)} documentos reprocesados")
         
-        st.success(f"✅ {success_count}/{len(file_paths)} documentos reprocesados")
+        # Forzar actualización de la UI
         st.rerun()
+
+def reprocess_all_documents_with_progress(file_paths, progress_bar, status_text):
+    """Reprocesar todos los documentos con barra de progreso"""
+    if not file_paths:
+        return
+    
+    total_files = len(file_paths)
+    processed_files = 0
+    
+    try:
+        # Limpiar cache primero
+        status_text.text("🧹 Limpiando cache...")
+        rag_processor.clear_cache()
+        progress_bar.progress(0.1)
+        
+        # Procesar documentos
+        status_text.text("📄 Procesando documentos...")
+        results = rag_processor.process_multiple_documents(file_paths, max_workers=2)
+        progress_bar.progress(0.5)
+        
+        # Generar embeddings
+        status_text.text("🧠 Generando embeddings...")
+        success_count = 0
+        total_chunks = 0
+        
+        for i, (file_path, chunks) in enumerate(results.items()):
+            if chunks:
+                try:
+                    chunks_with_embeddings = rag_processor.generate_embeddings(chunks)
+                    success_count += 1
+                    total_chunks += len(chunks)
+                    processed_files += 1
+                    
+                    # Actualizar progreso
+                    progress = 0.5 + (0.4 * processed_files / total_files)
+                    progress_bar.progress(progress)
+                    status_text.text(f"✅ Procesado: {Path(file_path).name} ({len(chunks)} chunks)")
+                    
+                except Exception as e:
+                    logger.error(f"Error generando embeddings para {file_path}: {e}")
+        
+        # Completar
+        progress_bar.progress(1.0)
+        status_text.text(f"🎉 Completado: {success_count}/{total_files} documentos ({total_chunks} chunks)")
+        
+        st.success(f"✅ {success_count}/{total_files} documentos reprocesados ({total_chunks} chunks total)")
+        
+    except Exception as e:
+        logger.error(f"Error en procesamiento: {e}")
+        status_text.text(f"❌ Error: {str(e)}")
+        st.error(f"Error durante el procesamiento: {e}")
+    
+    # Forzar actualización de la UI
+    st.rerun()
 
 def test_rag_search():
     """Probar búsqueda RAG"""
@@ -671,10 +750,17 @@ def main():
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            if st.button("🔄 Reprocesar Todos", type="primary"):
+            if st.button("🔄 Reprocesar Todos", type="primary", key="reprocess_all_btn"):
                 # Obtener lista de archivos usando función estandarizada
                 uploaded_files = get_valid_uploaded_files()
-                reprocess_all_documents(uploaded_files)
+                if uploaded_files:
+                    # Mostrar progreso en tiempo real
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    
+                    reprocess_all_documents_with_progress(uploaded_files, progress_bar, status_text)
+                else:
+                    st.warning("No hay documentos para reprocesar")
         
         with col2:
             if st.button("📊 Actualizar Estadísticas", key="update_stats_processor"):

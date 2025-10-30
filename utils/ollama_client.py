@@ -91,7 +91,10 @@ class OllamaClient:
                          prompt: str, 
                          context: Optional[str] = None,
                          stream: bool = False,
-                         max_tokens: Optional[int] = None) -> str:
+                         max_tokens: Optional[int] = None,
+                         format_json: bool = False,
+                         seed: Optional[int] = None,
+                         temperature: Optional[float] = None) -> str:
         """
         Generar respuesta usando un modelo LLM
         
@@ -119,22 +122,34 @@ class OllamaClient:
             elif hasattr(config, 'MAX_RESPONSE_TOKENS'):
                 options["num_predict"] = config.MAX_RESPONSE_TOKENS
             
-            # Configuraciones optimizadas para DeepSeek
-            if "deepseek" in model.lower():
-                options.update({
-                    "temperature": 0.7,
-                    "top_p": 0.9,
-                    "top_k": 40,
-                    "repeat_penalty": 1.1,
-                    "num_ctx": 8192,  # Contexto máximo
-                })
+            # Configuraciones optimizadas y estables
+            default_temp = 0.3 if "deepseek" in model.lower() else 0.5
+            options.update({
+                "temperature": temperature if temperature is not None else default_temp,
+                "top_p": 0.9,
+                "top_k": 40,
+                "repeat_penalty": 1.1,
+                "num_ctx": 8192,  # Contexto máximo
+            })
+            # Semilla para resultados reproducibles si está disponible
+            try:
+                if seed is not None:
+                    options["seed"] = int(seed)
+                elif hasattr(config, 'LLM_SEED') and config.LLM_SEED is not None:
+                    options["seed"] = int(config.LLM_SEED)
+            except Exception:
+                pass
             
             payload = {
                 "model": model,
                 "prompt": full_prompt,
                 "stream": stream,
-                "options": options
+                "options": options,
+                "keep_alive": 0
             }
+            if format_json:
+                # Solicitar salida en formato JSON cuando el modelo lo soporte
+                payload["format"] = "json"
             
             response = requests.post(
                 f"{self.base_url}/api/generate",

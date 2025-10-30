@@ -160,7 +160,10 @@ class TopicExtractor:
             # Llamar al LLM sin límites de tokens
             response = ollama_client.generate_response(
                 model=self.config.llm_model,
-                prompt=prompt
+                prompt=prompt,
+                format_json=True,
+                seed=43,
+                temperature=0.3
             )
             
             # Parsear respuesta del LLM

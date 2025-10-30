@@ -150,19 +150,73 @@ class RAGProcessor:
             return ""
     
     def _extract_from_excel(self, file_path: Path) -> str:
-        """Extraer texto de Excel"""
+        """Extraer texto de Excel de manera optimizada"""
         try:
-            df = pd.read_excel(file_path)
-            return df.to_string()
+            # Leer todas las hojas del Excel
+            excel_file = pd.ExcelFile(file_path)
+            all_text = []
+            
+            for sheet_name in excel_file.sheet_names:
+                try:
+                    # Leer hoja específica
+                    df = pd.read_excel(file_path, sheet_name=sheet_name)
+                    
+                    # Filtrar filas y columnas vacías para optimizar
+                    df = df.dropna(how='all').dropna(axis=1, how='all')
+                    
+                    if df.empty:
+                        continue
+                    
+                    # Convertir a texto de manera más eficiente
+                    sheet_text = f"=== HOJA: {sheet_name} ===\n"
+                    
+                    # Procesar por lotes para archivos grandes
+                    batch_size = 1000
+                    for i in range(0, len(df), batch_size):
+                        batch_df = df.iloc[i:i+batch_size]
+                        
+                        # Convertir solo las columnas con datos
+                        for col in batch_df.columns:
+                            if batch_df[col].dtype == 'object':  # Solo columnas de texto
+                                non_null_values = batch_df[col].dropna().astype(str)
+                                if not non_null_values.empty:
+                                    sheet_text += f"{col}: " + " | ".join(non_null_values.tolist()) + "\n"
+                    
+                    all_text.append(sheet_text)
+                    
+                except Exception as e:
+                    logger.warning(f"Error procesando hoja {sheet_name} en {file_path}: {e}")
+                    continue
+            
+            return "\n".join(all_text)
+            
         except Exception as e:
             logger.error(f"Error al leer Excel {file_path}: {e}")
             return ""
     
     def _extract_from_csv(self, file_path: Path) -> str:
-        """Extraer texto de CSV"""
+        """Extraer texto de CSV de manera optimizada"""
         try:
-            df = pd.read_csv(file_path)
-            return df.to_string()
+            # Leer CSV en chunks para archivos grandes
+            chunk_size = 10000
+            all_text = []
+            
+            for chunk_df in pd.read_csv(file_path, chunksize=chunk_size):
+                # Filtrar filas y columnas vacías
+                chunk_df = chunk_df.dropna(how='all').dropna(axis=1, how='all')
+                
+                if chunk_df.empty:
+                    continue
+                
+                # Convertir solo columnas de texto
+                for col in chunk_df.columns:
+                    if chunk_df[col].dtype == 'object':  # Solo columnas de texto
+                        non_null_values = chunk_df[col].dropna().astype(str)
+                        if not non_null_values.empty:
+                            all_text.append(f"{col}: " + " | ".join(non_null_values.tolist()))
+            
+            return "\n".join(all_text)
+            
         except Exception as e:
             logger.error(f"Error al leer CSV {file_path}: {e}")
             return ""
@@ -188,15 +242,20 @@ class RAGProcessor:
             return ""
     
     def chunk_text(self, text: str, chunk_size: int = None, overlap: int = None) -> List[str]:
-        """Dividir texto en chunks con overlap"""
+        """Dividir texto en chunks con overlap optimizado para archivos grandes"""
         if not text.strip():
             return []
         
         chunk_size = chunk_size or config.CHUNK_SIZE
         overlap = overlap or config.CHUNK_OVERLAP
         
-        # Limpiar texto
+        # Limpiar texto de manera más eficiente
         text = re.sub(r'\s+', ' ', text).strip()
+        
+        # Para archivos muy grandes, usar chunking más agresivo
+        if len(text) > 1000000:  # Más de 1MB de texto
+            chunk_size = min(chunk_size, 1500)  # Chunks más pequeños
+            overlap = min(overlap, 200)  # Menos overlap
         
         chunks = []
         start = 0
@@ -214,7 +273,7 @@ class RAGProcessor:
                         break
             
             chunk = text[start:end].strip()
-            if chunk:
+            if chunk and len(chunk) > 50:  # Filtrar chunks muy pequeños
                 chunks.append(chunk)
             
             start = max(start + 1, end - overlap)
@@ -222,7 +281,7 @@ class RAGProcessor:
         return chunks
     
     def process_document(self, file_path: Path) -> List[DocumentChunk]:
-        """Procesar un documento completo"""
+        """Procesar un documento completo con optimizaciones"""
         try:
             file_hash = self._get_file_hash(file_path)
             cache_key = f"{file_path.name}_{file_hash}"
@@ -233,15 +292,22 @@ class RAGProcessor:
                 cached_chunks = self.chunks_cache[cache_key]
                 return [DocumentChunk(**chunk_data) for chunk_data in cached_chunks]
             
+            logger.info(f"Iniciando procesamiento de {file_path.name}...")
+            start_time = datetime.now()
+            
             # Extraer texto
             text = self.extract_text_from_file(file_path)
             if not text:
+                logger.warning(f"No se pudo extraer texto de {file_path.name}")
                 return []
+            
+            logger.info(f"Texto extraído: {len(text)} caracteres")
             
             # Dividir en chunks
             text_chunks = self.chunk_text(text)
+            logger.info(f"Texto dividido en {len(text_chunks)} chunks")
             
-            # Crear objetos DocumentChunk
+            # Crear objetos DocumentChunk de manera más eficiente
             document_chunks = []
             for i, chunk_text in enumerate(text_chunks):
                 chunk_id = f"{file_path.stem}_{i}_{hashlib.md5(chunk_text.encode()).hexdigest()[:8]}"
@@ -255,26 +321,30 @@ class RAGProcessor:
                         'chunk_index': i,
                         'total_chunks': len(text_chunks),
                         'file_size': file_path.stat().st_size,
-                        'created_at': datetime.now().isoformat()
+                        'created_at': datetime.now().isoformat(),
+                        'processing_time': (datetime.now() - start_time).total_seconds()
                     },
                     source_file=file_path.name,
                     chunk_index=i
                 )
                 document_chunks.append(chunk)
             
-            # Guardar en cache
-            self.chunks_cache[cache_key] = [
-                {
+            # Guardar en cache de manera más eficiente
+            cache_data = []
+            for chunk in document_chunks:
+                cache_data.append({
                     'id': chunk.id,
                     'content': chunk.content,
                     'metadata': chunk.metadata,
                     'source_file': chunk.source_file,
                     'chunk_index': chunk.chunk_index
-                }
-                for chunk in document_chunks
-            ]
+                })
             
-            logger.info(f"Documento {file_path.name} procesado: {len(document_chunks)} chunks")
+            self.chunks_cache[cache_key] = cache_data
+            self._save_cache()  # Guardar cache inmediatamente
+            
+            processing_time = (datetime.now() - start_time).total_seconds()
+            logger.info(f"Documento {file_path.name} procesado: {len(document_chunks)} chunks en {processing_time:.2f}s")
             return document_chunks
             
         except Exception as e:
@@ -282,26 +352,42 @@ class RAGProcessor:
             return []
     
     def generate_embeddings(self, chunks: List[DocumentChunk], model: str = None) -> List[DocumentChunk]:
-        """Generar embeddings para los chunks"""
+        """Generar embeddings para los chunks de manera optimizada"""
         model = model or config.DEFAULT_EMBEDDING_MODEL
         
+        # Filtrar chunks que ya tienen embeddings
+        chunks_to_process = []
         for chunk in chunks:
-            try:
-                # Verificar cache de embeddings
-                embedding_key = f"{chunk.id}_{model}"
-                if embedding_key in self.embeddings_cache:
-                    chunk.embedding = self.embeddings_cache[embedding_key]
-                    continue
-                
-                # Generar embedding
-                embedding = self.ollama_client.generate_embeddings(model, chunk.content)
-                if embedding:
-                    chunk.embedding = embedding
-                    self.embeddings_cache[embedding_key] = embedding
-                
-            except Exception as e:
-                logger.error(f"Error al generar embedding para chunk {chunk.id}: {e}")
+            embedding_key = f"{chunk.id}_{model}"
+            if embedding_key in self.embeddings_cache:
+                chunk.embedding = self.embeddings_cache[embedding_key]
+            else:
+                chunks_to_process.append(chunk)
         
+        if not chunks_to_process:
+            logger.info("Todos los chunks ya tienen embeddings en cache")
+            return chunks
+        
+        logger.info(f"Generando embeddings para {len(chunks_to_process)} chunks...")
+        
+        # Procesar en lotes para mejor rendimiento
+        batch_size = 10
+        for i in range(0, len(chunks_to_process), batch_size):
+            batch = chunks_to_process[i:i+batch_size]
+            
+            for chunk in batch:
+                try:
+                    # Generar embedding
+                    embedding = self.ollama_client.generate_embeddings(model, chunk.content)
+                    if embedding:
+                        chunk.embedding = embedding
+                        embedding_key = f"{chunk.id}_{model}"
+                        self.embeddings_cache[embedding_key] = embedding
+                    
+                except Exception as e:
+                    logger.error(f"Error al generar embedding para chunk {chunk.id}: {e}")
+        
+        logger.info(f"Embeddings generados para {len(chunks_to_process)} chunks")
         return chunks
     
     def similarity_search(self, query: str, chunks: List[DocumentChunk], 
@@ -579,6 +665,48 @@ class RAGProcessor:
             logger.info("Cache RAG limpiado")
         except Exception as e:
             logger.error(f"Error al limpiar cache: {e}")
+    
+    def process_multiple_documents(self, file_paths: List[Path], max_workers: int = 4) -> Dict[str, List[DocumentChunk]]:
+        """Procesar múltiples documentos de manera eficiente"""
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        import threading
+        
+        results = {}
+        lock = threading.Lock()
+        
+        def process_single_doc(file_path: Path) -> Tuple[str, List[DocumentChunk]]:
+            try:
+                chunks = self.process_document(file_path)
+                return str(file_path), chunks
+            except Exception as e:
+                logger.error(f"Error procesando {file_path}: {e}")
+                return str(file_path), []
+        
+        logger.info(f"Procesando {len(file_paths)} documentos con {max_workers} workers...")
+        start_time = datetime.now()
+        
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Enviar todas las tareas
+            future_to_path = {executor.submit(process_single_doc, path): path for path in file_paths}
+            
+            # Recoger resultados conforme se completan
+            for future in as_completed(future_to_path):
+                path = future_to_path[future]
+                try:
+                    file_path, chunks = future.result()
+                    with lock:
+                        results[file_path] = chunks
+                        logger.info(f"Completado: {Path(file_path).name} ({len(chunks)} chunks)")
+                except Exception as e:
+                    logger.error(f"Error en {path}: {e}")
+                    with lock:
+                        results[str(path)] = []
+        
+        total_time = (datetime.now() - start_time).total_seconds()
+        total_chunks = sum(len(chunks) for chunks in results.values())
+        
+        logger.info(f"Procesamiento completado: {total_chunks} chunks en {total_time:.2f}s")
+        return results
 
 # Instancia global del procesador RAG
 rag_processor = RAGProcessor()

@@ -11,7 +11,7 @@ from ..core.analyzer import QualitativeAnalyzer
 from ..core.rag_cache_manager import RAGCacheManager
 from .tabs.concepts_tab import render_concepts_tab
 from .tabs.topics_tab import render_topics_tab
-from .tabs.relations_tab import render_relations_tab
+from .tabs.coding_tab import render_coding_tab
 from .components.cache_management import render_cache_management_panel
 
 
@@ -75,11 +75,10 @@ def render():
         ### 📋 Sub-módulos Disponibles
         
         **Actualmente implementado:**
-        - ✅ **Extracción de Conceptos Clave**: Identifica términos y frases más relevantes con TF-IDF
+        - ✅ **Extracción de Conceptos Clave**: Identifica términos y frases más relevantes con TF-IDF + DeepSeek R1
+        - ✅ **Análisis de Temas**: Identificación de temas principales con LDA/Clustering + DeepSeek R1
         
         **En desarrollo futuro:**
-        - 🔜 **Análisis de Temas**: Identificación de temas principales con LDA
-        - 🔜 **Triangulación**: Validación cruzada entre múltiples fuentes
         - 🔜 **Mapas Conceptuales**: Visualización de relaciones entre conceptos
         - 🔜 **Análisis de Relaciones**: Identificación de conexiones y patrones
         
@@ -187,9 +186,8 @@ def render():
         
         st.markdown("""
         **Funcionalidades Implementadas:**
-        - 🔍 **Conceptos Clave**: Identifica términos importantes con TF-IDF
-        - 🎯 **Análisis de Temas**: Extrae temas principales usando LDA
-        - 🔗 **Análisis de Relaciones**: Descubre conexiones entre conceptos
+        - 🔍 **Conceptos Clave**: Identifica términos importantes con TF-IDF + DeepSeek R1
+        - 🎯 **Análisis de Temas**: Extrae temas principales usando LDA/Clustering + DeepSeek R1
         - 📚 **Sistema de Citación**: Referencias a fuentes originales
         - 🔧 **Gestión de Cache**: Optimización de rendimiento
         """)
@@ -198,8 +196,8 @@ def render():
     tabs = st.tabs([
         "🔧 Gestión de Cache",
         "🔍 Conceptos Clave",
-        "🎯 Análisis de Temas", 
-        "🔗 Análisis de Relaciones"
+        "🎯 Análisis de Temas",
+        "🛠️ Asistente de Codificación"
     ])
     
     # Tab 1: Gestión de Cache (IMPLEMENTADO)
@@ -214,9 +212,10 @@ def render():
     with tabs[2]:
         render_topics_tab(chunks, config)
     
-    # Tab 4: Análisis de Relaciones (IMPLEMENTADO)
+    # Tab 4: Asistente de Codificación (NUEVO)
     with tabs[3]:
-        render_relations_tab(chunks, config)
+        render_coding_tab(chunks, config)
+    
 
 
 def _get_processed_chunks_with_cache(cache_manager: RAGCacheManager) -> List[Dict[str, Any]]:

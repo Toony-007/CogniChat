@@ -438,8 +438,10 @@ class ConceptExtractor:
             # Llamar al LLM sin límites de tokens para evitar JSON truncado
             response = ollama_client.generate_response(
                 model=self.config.llm_model,
-                prompt=prompt
-                # Sin max_tokens para permitir respuestas completas
+                prompt=prompt,
+                format_json=True,
+                seed=42,
+                temperature=0.3
             )
             
             # Parsear respuesta del LLM

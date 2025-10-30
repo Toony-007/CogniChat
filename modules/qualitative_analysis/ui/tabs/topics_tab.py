@@ -28,7 +28,20 @@ def render_topics_tab(chunks: List[Dict[str, Any]], config: AnalysisConfig):
         chunks: Lista de chunks de texto para análisis
         config: Configuración del análisis
     """
-    st.markdown("### 🎯 Análisis de Temas")
+    st.markdown("""
+    <div style="
+        background: linear-gradient(90deg, #3498db 0%, #2ecc71 100%);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        text-align: center;
+    ">
+        <h1 style="color: white; margin: 0; font-size: 2rem;">🎯 Análisis de Temas</h1>
+        <p style="color: white; margin: 0.5rem 0 0 0; font-size: 1.1rem; opacity: 0.9;">
+            Identifica, visualiza y fundamenta los temas principales con enfoque híbrido avanzado
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Mostrar metodología
     show_methodology_box(

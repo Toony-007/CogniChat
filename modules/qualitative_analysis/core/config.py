@@ -89,32 +89,7 @@ class AnalysisConfig:
     include_topic_explanations: bool = True
     """Incluir explicaciones detalladas de cada tema - MODIFICAR AQUÍ"""
     
-    # Configuración de análisis de relaciones (OPTIMIZADA)
-    enable_relation_analysis: bool = True
-    """Activar análisis de relaciones - MODIFICAR AQUÍ"""
-    
-    relation_algorithm: str = "hybrid"
-    """Algoritmo para análisis de relaciones: 'cooccurrence', 'semantic', 'causal', 'hybrid' - MODIFICAR AQUÍ"""
-    
-    max_relations: int = 50
-    """Número máximo de relaciones a identificar - MODIFICAR AQUÍ"""
-    
-    min_relation_strength: float = 0.3
-    """Fuerza mínima para considerar una relación válida - MODIFICAR AQUÍ"""
-    
-    enable_relation_refinement: bool = True
-    """Activar refinamiento de relaciones con IA - MODIFICAR AQUÍ"""
-    
-    include_relation_explanations: bool = True
-    """Incluir explicaciones detalladas de cada relación - MODIFICAR AQUÍ"""
-    
-    relation_window_size: int = 50
-    """Tamaño de ventana para análisis de co-ocurrencias - MODIFICAR AQUÍ"""
-    
-    min_cooccurrence: int = 2
-    """Co-ocurrencias mínimas para considerar relación - MODIFICAR AQUÍ"""
-    
-    # Configuración de procesamiento
+
     chunk_size: int = 2000
     """Tamaño de fragmentos de texto para procesamiento"""
     
@@ -147,6 +122,28 @@ class AnalysisConfig:
     
     max_workers: int = 4
     """Número máximo de workers para procesamiento paralelo"""
+
+    # Configuración del asistente de codificación cualitativa
+    enable_coding_assistant: bool = True
+    """Activar asistente de codificación cualitativa - MODIFICAR AQUÍ"""
+
+    max_code_suggestions: int = 25
+    """Número máximo de códigos sugeridos inicialmente - MODIFICAR AQUÍ"""
+
+    coding_use_ngrams: bool = True
+    """Detectar n-gramas (1-3) para candidatos de códigos - MODIFICAR AQUÍ"""
+
+    coding_ngram_range: tuple = (1, 3)
+    """Rango de n-gramas para candidatos de códigos - MODIFICAR AQUÍ"""
+
+    enable_coding_llm_refinement: bool = True
+    """Refinar nombres/definiciones/ejemplos de códigos con LLM - MODIFICAR AQUÍ"""
+
+    coding_llm_model: str = "deepseek-r1:7b"
+    """Modelo LLM para refinamiento de códigos - MODIFICAR AQUÍ"""
+
+    coding_llm_temperature: float = 0.3
+    """Temperatura LLM para codificación - MODIFICAR AQUÍ"""
     
     def to_dict(self) -> Dict[str, Any]:
         """Convertir configuración a diccionario"""
@@ -169,14 +166,6 @@ class AnalysisConfig:
             'min_topic_frequency': self.min_topic_frequency,
             'enable_topic_refinement': self.enable_topic_refinement,
             'include_topic_explanations': self.include_topic_explanations,
-            'enable_relation_analysis': self.enable_relation_analysis,
-            'relation_algorithm': self.relation_algorithm,
-            'max_relations': self.max_relations,
-            'min_relation_strength': self.min_relation_strength,
-            'enable_relation_refinement': self.enable_relation_refinement,
-            'include_relation_explanations': self.include_relation_explanations,
-            'relation_window_size': self.relation_window_size,
-            'min_cooccurrence': self.min_cooccurrence,
             'chunk_size': self.chunk_size,
             'chunk_overlap': self.chunk_overlap,
             'enable_citations': self.enable_citations,
@@ -187,6 +176,13 @@ class AnalysisConfig:
             'enable_cache': self.enable_cache,
             'parallel_processing': self.parallel_processing,
             'max_workers': self.max_workers
+            , 'enable_coding_assistant': self.enable_coding_assistant
+            , 'max_code_suggestions': self.max_code_suggestions
+            , 'coding_use_ngrams': self.coding_use_ngrams
+            , 'coding_ngram_range': self.coding_ngram_range
+            , 'enable_coding_llm_refinement': self.enable_coding_llm_refinement
+            , 'coding_llm_model': self.coding_llm_model
+            , 'coding_llm_temperature': self.coding_llm_temperature
         }
     
     @classmethod
